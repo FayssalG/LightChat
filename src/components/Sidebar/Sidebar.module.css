@@ -1,0 +1,94 @@
+.container{
+    border: 2px solid white;
+    border-radius: .5rem;
+    color: white;
+    max-width: 70px;
+    height: 100svh;
+    background-color: var(--primary);
+    padding-block: .5em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.user{
+    height: 10%;
+    border-bottom: 1px solid grey;
+
+    img{
+        border-radius: 50%;
+        width: 100%;
+        width: 40x;
+        height: 40px;
+        border-radius: 50%;    
+    }
+}
+
+
+
+.sidebar_btn{
+    background-color: unset;
+    color: inherit;
+    border: unset;
+    cursor: pointer;
+
+  
+}
+
+.sections{
+    height: 80%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+    justify-content: flex-start;
+    padding-top: 2em;
+
+    .section{
+        font-size: .7rem;
+        font-weight: 400;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        row-gap: .5rem;
+        padding-block: .4em;
+        &:hover , &:focus{
+            background-color: var(--secondary);
+        }
+    }  
+
+    .friends{
+        
+    }
+    .messages{
+
+    }
+
+    .groups{
+        
+    }
+}
+
+
+.logout{
+    padding-top: 1em;
+    width: 60%;
+    border-top: 1px solid grey;
+
+    button{
+        width: 100%;
+        svg{
+            color: var(--danger);
+        }
+    
+        &:hover{
+            svg{
+                opacity: .7;
+            }
+        }
+    
+    }
+
+}
+
