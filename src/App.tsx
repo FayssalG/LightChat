@@ -1,7 +1,7 @@
 import styles from './App.module.css';
-import Navbar from './components/Navbar/Navbar'
-import FriendsSection from './components/Sections/Friends/FriendsSection'
-
+import Navbar from './components/Navbar/Navbar';
+import FriendsSection from './components/Sections/Friends/FriendsSection';
+import ActiveConversation from './components/ActiveConversation/ActiveConversation';
 
 function App() {
   
@@ -10,6 +10,7 @@ function App() {
       <Navbar/>
     
         <FriendsSection/>
+      <ActiveConversation/>
     </div>
   )
 }

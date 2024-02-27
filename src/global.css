@@ -21,3 +21,14 @@ body{
     --success : #00FF66; 
 
 }
+
+*{
+    scrollbar-color: var(--secondary);
+  }
+  *::-webkit-scrollbar{
+    width: 5px;
+    background-color: transparent;
+  }
+  *::-webkit-scrollbar-thumb{
+    background-color: var(--primary-dark);
+  }

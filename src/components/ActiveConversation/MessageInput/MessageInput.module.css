@@ -1,0 +1,38 @@
+.message_input{
+    height: 50px;
+    margin: 0 1rem;
+    margin-top: 1rem;
+    padding: .2em .9em;
+    border-radius: .5rem;
+    background-color: var(--primary-dark);
+    display: flex;
+    gap : .5rem;
+
+    button{
+        /* Removing button default styles */
+        font-family: inherit;
+        background-color: unset;
+        border: unset;
+        color: inherit;
+        text-align: left;
+        cursor: pointer;
+        /* $$$$$$$$$$$$ */
+        svg{
+            width: 25px;
+            height: 25px;
+        }
+    }
+    input{
+        flex-grow: 1;
+        height: 100%;
+        background-color: unset;
+        border: unset;
+    }
+
+    .attach_btn{
+        
+    }
+
+    .send_btn{
+    }
+}

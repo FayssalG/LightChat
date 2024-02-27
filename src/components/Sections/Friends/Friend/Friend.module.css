@@ -1,6 +1,7 @@
 
 .friend{
     /* Removing button default styles */
+    font-family: inherit;
     background-color: unset;
     border: unset;
     color: inherit;
