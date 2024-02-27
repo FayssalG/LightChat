@@ -1,40 +1,65 @@
-.container{
-    border: 2px solid white;
-    border-radius: .5rem;
-    color: white;
-    max-width: 70px;
-    height: 100svh;
-    background-color: var(--primary);
-    padding-block: .5em;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-
-.user{
-    height: 10%;
-    border-bottom: 1px solid grey;
-
-    img{
-        border-radius: 50%;
-        width: 100%;
-        width: 40x;
-        height: 40px;
-        border-radius: 50%;    
-    }
-}
-
-
 
 .sidebar_btn{
     background-color: unset;
     color: inherit;
     border: unset;
     cursor: pointer;
+    svg{
+        width: 29px;
+        height: 29px;
+    }
 
+    @media (max-width:700px) {        
+        svg{
+            width: 20px;
+            height: 20px;
+        }
+    
+    }
   
 }
+
+.container{
+    color: white;
+    height: 100svh;
+    background-color: var(--primary);
+    padding-block: .5em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    @media (max-width:700px) {
+        padding-bottom: 0;
+        height: fit-content;
+        max-width: 100svw;
+        align-items: center;
+        gap: 1rem;
+    }
+}
+
+
+.user{
+    height: 40px;
+    cursor: pointer;
+    @media (max-width:700px) {
+        grid-area: 1/span 2;
+        max-width: 40px;
+        height: 40px;    
+    }
+ 
+ 
+ 
+    img{
+        border-radius: 50%;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;    
+    }
+
+    
+}
+
+
 
 .sections{
     height: 80%;
@@ -45,6 +70,13 @@
     justify-content: flex-start;
     padding-top: 2em;
 
+    @media (max-width:700px) {
+        flex-direction: row;
+        column-gap: .5rem;
+        justify-content: center;
+        padding-top: 0;
+    }
+
     .section{
         font-size: .7rem;
         font-weight: 400;
@@ -52,7 +84,14 @@
         flex-direction: column;
         align-items: center;
         row-gap: .5rem;
-        padding-block: .4em;
+        padding: 1em;
+
+        @media (max-width:700px) {
+            p{
+                display: none;
+            }
+        }
+
         &:hover , &:focus{
             background-color: var(--secondary);
         }
@@ -73,8 +112,12 @@
 
 .logout{
     padding-top: 1em;
-    width: 60%;
+    padding-inline: .5em;
     border-top: 1px solid grey;
+    @media (max-width:700px) {
+        display: none;
+    }
+
 
     button{
         width: 100%;

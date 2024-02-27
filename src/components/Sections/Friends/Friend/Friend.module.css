@@ -1,0 +1,60 @@
+
+.friend{
+    /* Removing button default styles */
+    background-color: unset;
+    border: unset;
+    color: inherit;
+    text-align: left;
+    /* $$$$$$$$$$$$ */
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+    .picture{
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        position: relative;
+        img{
+            border-radius: 50%;
+            width: 100%;
+            height: 100%;
+        }
+        &::after{
+            content: '';
+            position: absolute;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background-color: var(--success);
+            right: 0;
+            bottom: 0;
+            border: 2px solid var(--secondary);
+        }
+    }
+
+    .name_status{
+        flex-grow: 1;
+        .name{
+            font-weight: 400;
+            font-size: 1.2rem;
+        }
+        .status{
+            font-weight: 200;
+            font-size: .9rem;
+        }
+    }
+
+    .options{
+        cursor: pointer;
+        height: 35px;
+        width: 35px;
+        border-radius: 50%;
+        background-color: var(--primary);
+        padding: .3em;            
+        svg{
+            opacity: .5;
+            width: 100%;
+            height: 100%;
+        }
+    }
+}

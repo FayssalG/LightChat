@@ -1,12 +1,16 @@
-import { useState } from 'react'
-import Sidebar from './components/Sidebar/Sidebar'
+import styles from './App.module.css';
+import Navbar from './components/Navbar/Navbar'
+import FriendsSection from './components/Sections/Friends/FriendsSection'
+
 
 function App() {
   
   return (
-    <>
-      <Sidebar/>
-    </>
+    <div className={styles.container}>
+      <Navbar/>
+    
+        <FriendsSection/>
+    </div>
   )
 }
 
