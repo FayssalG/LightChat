@@ -6,7 +6,7 @@
   
     color: white;
     height: 100svh;
-    background-color: var(--primary);
+    background-image: linear-gradient(  rgb(0, 82, 65), rgb(0, 123, 98),rgb(0, 42, 38)  );
     padding-block: .5em;
     display: flex;
     flex-direction: column;

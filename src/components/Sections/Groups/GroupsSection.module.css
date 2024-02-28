@@ -1,7 +1,6 @@
 .container{
     border: 2px solid white;
-    border-radius: 1rem;
-  
+    border-radius: 1rem;  
     color: white;
     background-color: var(--secondary);
     width: 299px;
@@ -13,63 +12,37 @@
     }
 }
 
-
 .header{
     padding: .9em;
-    .title_addbtn{
+    .title{
         display: flex;
         justify-content: space-between;
         align-items: center;
+
         h1{
             font-weight: bold;
             font-size: 1.5rem;
         }
+
         button{
             padding-inline: .4em;
             padding-block: .2em;
             border-radius: 4px;
             background-color: var(--accent);
         }
-    }
+    
+    }    
 
-    
-    .search{
+    .subtext{
         margin-top: 1rem;
-        background-color:  var(--primary);
-        padding: .4em .9em;
-        border-radius: .2rem;
-        input{
-            border: none;
-            background-color: transparent;
-            box-shadow: unset;
-        }
+        font-size: .9rem;
+        font-weight: 200;
     }
-    
-    .filters{
-        margin-top: 1rem;
-        display: flex;
-        gap: 1rem;
-    
-        button{
-            cursor: pointer;
-            border: none;
-            background-color: unset;
-            /* background-color: var(--accent); */
-            color: inherit;
-            padding: .2em .4em;
-            border-radius: .2rem ;
-            font-weight: 200;
-        }
-    }
-    
 }
 
 
-
-
-
-
-.friends_list{
+.groups_list{
+    margin-top: 1rem;
     margin-left: .9rem;
     padding-inline-end: .5rem;
     display: flex;
@@ -78,3 +51,5 @@
     height: 75%;
     overflow-y: scroll;
 }
+
+

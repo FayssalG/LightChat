@@ -1,5 +1,6 @@
 import styles from './FriendsSection.module.css';
 import Friend from './Friend/Friend';
+import UnstyledButton from '../../shared/UnstyledButton/UnstyledButton';
 
 export default function FriendsSection() {
   return (
@@ -7,7 +8,7 @@ export default function FriendsSection() {
         <div className={styles.header}>
           <div className={styles.title_addbtn}>
             <h1 >Friends</h1>
-            <button>Add Friend</button>
+            <UnstyledButton>Add Friend</UnstyledButton>
           </div>
 
           <div className={styles.search}>
