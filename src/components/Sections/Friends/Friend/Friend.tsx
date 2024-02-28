@@ -2,12 +2,13 @@ import styles from './Friend.module.css';
 import avatar from '../../../../assets/avatar.png';
 
 import { IoMdMore } from "react-icons/io";
+import UnstyledButton from '../../../shared/UnstyledButton/UnstyledButton';
 
 
 export default function Friend() {
   return (
     <>
-         <button className={styles.friend}>
+         <UnstyledButton className={styles.friend}>
               <div className={styles.picture}>
                 <img src={avatar} alt="avatar" />
               </div>
@@ -20,7 +21,7 @@ export default function Friend() {
               <div className={styles.options}>
                 <IoMdMore/>
               </div>
-          </button>
+          </UnstyledButton>
 
     </>
   )

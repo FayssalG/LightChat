@@ -3,6 +3,7 @@ import avatar from '../../assets/avatar.png';
 import Topbar from './Topbar/Topbar';
 import Message from './Message/Message';
 import MessageInput from './MessageInput/MessageInput';
+import UnstyledButton from '../shared/UnstyledButton/UnstyledButton';
 
 export default function ActiveConversation() {
   return (
@@ -20,8 +21,8 @@ export default function ActiveConversation() {
                     <p className={styles.username}>@jackmartins</p>
                 </div>
                 <div className={styles.btns}>
-                    <button className={styles.remove}>Remove Friend</button>
-                    <button className={styles.block}>Block</button>
+                    <UnstyledButton className={styles.remove}>Remove Friend</UnstyledButton>
+                    <UnstyledButton className={styles.block}>Block</UnstyledButton>
                 </div>
             </div>
             

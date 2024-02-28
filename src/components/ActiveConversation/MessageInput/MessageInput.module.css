@@ -9,14 +9,6 @@
     gap : .5rem;
 
     button{
-        /* Removing button default styles */
-        font-family: inherit;
-        background-color: unset;
-        border: unset;
-        color: inherit;
-        text-align: left;
-        cursor: pointer;
-        /* $$$$$$$$$$$$ */
         svg{
             width: 25px;
             height: 25px;

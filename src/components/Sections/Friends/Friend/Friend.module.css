@@ -1,12 +1,5 @@
 
 .friend{
-    /* Removing button default styles */
-    font-family: inherit;
-    background-color: unset;
-    border: unset;
-    color: inherit;
-    text-align: left;
-    /* $$$$$$$$$$$$ */
     display: flex;
     gap: .5rem;
     align-items: center;

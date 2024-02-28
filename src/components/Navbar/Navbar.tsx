@@ -6,6 +6,7 @@ import { MdGroups } from "react-icons/md";
 import { IoLogOut } from "react-icons/io5";
 import { useDispatch, useSelector } from 'react-redux';
 import { changeActiveSection } from '../../redux/features/UiSlice';
+import UnstyledButton from '../shared/UnstyledButton/UnstyledButton';
 
 export default function Navbar() {
     const activeSection = useSelector((state : any)=>state.ui.activeSection)
@@ -23,38 +24,38 @@ export default function Navbar() {
             </div>
             
             <div className={styles.sections}>
-                <button 
+                <UnstyledButton 
                     onClick={()=>handleChangeSection('friends')} 
-                    className={styles.section+' '+styles.sidebar_btn+' '+styles.friends}
+                    className={styles.section+' '+styles.friends}
                 >
                     <FaUserFriends />
                     <p>Friends</p>
-                </button>
+                </UnstyledButton>
 
-                <button 
+                <UnstyledButton 
                     onClick={()=>handleChangeSection('messages')} 
-                    className={styles.section+' '+styles.sidebar_btn +' '+ styles.messages}
+                    className={styles.section+' '+ styles.messages}
                 >
                     
                     <BiSolidMessageSquare />
                     <p>Messages</p>
 
-                </button>
+                </UnstyledButton>
 
-                <button 
+                <UnstyledButton 
                     onClick={()=>handleChangeSection('groups')} 
-                    className={styles.section+' '+styles.sidebar_btn+' '+styles.groups}
+                    className={styles.section+' '+styles.groups}
                 >
                 
                     <MdGroups />
                     <p>Groups</p>
-                </button>
+                </UnstyledButton>
             </div>
 
             <div className={styles.logout}>
-                <button className={styles.sidebar_btn }>
+                <UnstyledButton>
                     <IoLogOut size={25}/>
-                </button>
+                </UnstyledButton>
             </div>
         
         </div>

@@ -1,25 +1,9 @@
 
-.sidebar_btn{
-    background-color: unset;
-    color: inherit;
-    border: unset;
-    cursor: pointer;
-    svg{
-        width: 29px;
-        height: 29px;
-    }
-
-    @media (max-width:700px) {        
-        svg{
-            width: 20px;
-            height: 20px;
-        }
-    
-    }
-  
-}
 
 .container{
+    border: 2px solid white;
+    border-radius: 1rem;
+  
     color: white;
     height: 100svh;
     background-color: var(--primary);
@@ -86,7 +70,17 @@
         row-gap: .5rem;
         padding: 1em;
 
+        svg{
+            width: 29px;
+            height: 29px;
+        }
+        
         @media (max-width:700px) {
+            svg{
+                width: 20px;
+                height: 20px;
+            }
+
             p{
                 display: none;
             }
@@ -122,6 +116,8 @@
     button{
         width: 100%;
         svg{
+            height: 29px;
+            width: 29px;
             color: var(--danger);
         }
     

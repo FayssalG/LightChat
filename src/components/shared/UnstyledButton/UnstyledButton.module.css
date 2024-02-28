@@ -1,0 +1,10 @@
+.unstyled_btn{
+    /* Removing button default styles */
+    font-family: inherit;
+    background-color: unset;
+    border: unset;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    /* $$$$$$$$$$$$ */
+}
