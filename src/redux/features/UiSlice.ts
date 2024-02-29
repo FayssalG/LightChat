@@ -4,17 +4,17 @@ const UiSlice = createSlice({
     name : 'ui',
     initialState : {
         activeSection : 'friends',
-        activeConversation : 'test'
+        conversationVisibility : false
     },
     reducers: {
         changeActiveSection : (state , action)=>{
             state.activeSection = action.payload;
         },
-        changeActiveConversation : (state , action)=>{
-            state.activeConversation = action.payload;
+        toggleConversationVisibility : (state )=>{
+            state.conversationVisibility = !state.conversationVisibility;
         }
     }
 })
 
 export default UiSlice.reducer;
-export const {changeActiveSection , changeActiveConversation} = UiSlice.actions;
+export const {changeActiveSection , toggleConversationVisibility} = UiSlice.actions;

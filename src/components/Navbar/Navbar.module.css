@@ -13,10 +13,7 @@
     align-items: center;
 
     @media (max-width:700px) {
-        padding-bottom: 0;
-        height: fit-content;
-        max-width: 100svw;
-        align-items: center;
+        height: 20svh;
         gap: 1rem;
     }
 }
@@ -55,6 +52,7 @@
     padding-top: 2em;
 
     @media (max-width:700px) {
+        height:fit-content;
         flex-direction: row;
         column-gap: .5rem;
         justify-content: center;
@@ -87,7 +85,10 @@
         }
 
         &:hover , &:focus{
-            background-color: var(--secondary);
+            color:  var(--secondary);
+            svg{
+                color:  var(--secondary);
+            }
         }
     }  
 

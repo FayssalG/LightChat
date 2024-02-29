@@ -6,6 +6,23 @@
     background-color: var(--primary);
     color: white;
     flex-grow: 1;
+    @media (max-width:700px){
+        position: fixed;
+        width: 100svw;
+        top: 0;
+        left: 0;
+    }
+}
+
+@media (max-width:700px){
+    .container[data-visible='true']{
+        display: block;
+    }
+    
+    .container[data-visible='false']{
+        display: none;
+    }
+    
 }
 
 .inner_container{

@@ -4,10 +4,13 @@ import Topbar from './Topbar/Topbar';
 import Message from './Message/Message';
 import MessageInput from './MessageInput/MessageInput';
 import UnstyledButton from '../shared/UnstyledButton/UnstyledButton';
+import { useSelector } from 'react-redux';
 
 export default function ActiveConversation() {
+  const conversationVisibility = useSelector((state)=>state.ui.conversationVisibility);
+
   return (
-    <div className={styles.container}>
+    <div data-visible={conversationVisibility ? 'true' : 'false'} className={styles.container}>
         
         <Topbar/>
         

@@ -12,8 +12,7 @@ export default function Navbar() {
     const activeSection = useSelector((state : any)=>state.ui.activeSection)
     const dispatch = useDispatch()
 
-    console.log(activeSection)
-
+    
     const handleChangeSection = (newSection : string)=>{
         dispatch(changeActiveSection(newSection))
     }
