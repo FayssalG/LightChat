@@ -1,6 +1,6 @@
 import styles from './Conversation.module.css';
-import avatar from '../../../../assets/avatar.png';
-import UnstyledButton from '../../../../../shared/UnstyledButton/UnstyledButton';
+import avatar from '@/assets/avatar.png';
+import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import { IoClose } from 'react-icons/io5';
 
 export default function Conversation() {

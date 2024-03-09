@@ -6,6 +6,7 @@ import MessageInput from './MessageInput/MessageInput';
 import UnstyledButton from '../../../shared/UnstyledButton/UnstyledButton';
 import { useSelector } from 'react-redux';
 
+
 export default function ActiveConversation() {
   const conversationVisibility = useSelector((state)=>state.ui.conversationVisibility);
 
@@ -40,6 +41,7 @@ export default function ActiveConversation() {
         </div>
 
         <MessageInput/>
+
     </div>
   )
 }
