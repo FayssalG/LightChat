@@ -1,7 +1,7 @@
 import styles from './MessageInput.module.css';
 import { IoSend } from "react-icons/io5";
 import { CiCirclePlus } from "react-icons/ci";
-import UnstyledButton from '../../shared/UnstyledButton/UnstyledButton';
+import UnstyledButton from '../../../../shared/UnstyledButton/UnstyledButton';
 
 export default function MessageInput() {
   return (

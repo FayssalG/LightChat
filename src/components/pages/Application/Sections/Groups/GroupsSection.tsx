@@ -1,6 +1,6 @@
 import styles from './GroupsSection.module.css';
 import Group from './Group/Group';
-import UnstyledButton from '../../shared/UnstyledButton/UnstyledButton';
+import UnstyledButton from '../../../../shared/UnstyledButton/UnstyledButton';
 
 export default function GroupsSection() {
   return (

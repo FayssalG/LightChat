@@ -1,9 +1,9 @@
 import styles from './Topbar.module.css';
-import avatar from '../../../assets/avatar.png';
-import UnstyledButton from '../../shared/UnstyledButton/UnstyledButton';
+import avatar from '../../../../../assets/avatar.png';
+import UnstyledButton from '../../../../shared/UnstyledButton/UnstyledButton';
 import { IoClose } from 'react-icons/io5';
 import { useDispatch } from 'react-redux';
-import { toggleConversationVisibility } from '../../../redux/features/UiSlice';
+import { toggleConversationVisibility } from '../../../../../redux/features/UiSlice';
 
 export default function Topbar() {
   const dispatch = useDispatch();

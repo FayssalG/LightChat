@@ -1,12 +1,12 @@
 import styles from './Navbar.module.css';
-import avatar from '../../assets/avatar.png';
+import avatar from '../../../../assets/avatar.png';
 import { FaUserFriends } from "react-icons/fa";
 import { BiSolidMessageSquare } from "react-icons/bi";
 import { MdGroups } from "react-icons/md";
 import { IoLogOut } from "react-icons/io5";
 import { useDispatch, useSelector } from 'react-redux';
-import { changeActiveSection } from '../../redux/features/UiSlice';
-import UnstyledButton from '../shared/UnstyledButton/UnstyledButton';
+import { changeActiveSection } from '../../../../redux/features/UiSlice';
+import UnstyledButton from '../../../shared/UnstyledButton/UnstyledButton';
 
 export default function Navbar() {
     const activeSection = useSelector((state : any)=>state.ui.activeSection)

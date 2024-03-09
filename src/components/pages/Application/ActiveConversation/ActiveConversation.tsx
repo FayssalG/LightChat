@@ -1,9 +1,9 @@
 import styles from './ActiveConversation.module.css';
-import avatar from '../../assets/avatar.png';
+import avatar from '../../../../assets/avatar.png';
 import Topbar from './Topbar/Topbar';
 import Message from './Message/Message';
 import MessageInput from './MessageInput/MessageInput';
-import UnstyledButton from '../shared/UnstyledButton/UnstyledButton';
+import UnstyledButton from '../../../shared/UnstyledButton/UnstyledButton';
 import { useSelector } from 'react-redux';
 
 export default function ActiveConversation() {

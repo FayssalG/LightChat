@@ -1,8 +1,8 @@
 import styles from './Group.module.css';
-import UnstyledButton from '../../../shared/UnstyledButton/UnstyledButton';
-import avatar from '../../../../assets/avatar.png';
+import UnstyledButton from '../../../../../shared/UnstyledButton/UnstyledButton';
+import avatar from '../../../../../../assets/avatar.png';
 import { useDispatch } from 'react-redux';
-import { toggleConversationVisibility } from '../../../../redux/features/UiSlice';
+import { toggleConversationVisibility } from '../../../../../../redux/features/UiSlice';
 
 export default function Group() {
   const  dispatch = useDispatch();
