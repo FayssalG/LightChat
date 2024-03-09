@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+;
 import styles from './Navbar.module.css';
 import avatar from '../../../../assets/avatar.png';
 import { FaUserFriends } from "react-icons/fa";
@@ -18,9 +20,9 @@ export default function Navbar() {
     }
     return (
         <div className={styles.container}>
-            <div className={styles.user}>
+            <Link to='/profil' className={styles.user}>
                 <img src={avatar} alt="avatar" />
-            </div>
+            </Link>
             
             <div className={styles.sections}>
                 <UnstyledButton 

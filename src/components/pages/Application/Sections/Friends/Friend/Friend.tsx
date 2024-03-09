@@ -1,11 +1,26 @@
 import styles from './Friend.module.css';
-import avatar from '../../../../assets/avatar.png';
+import avatar from '@/assets/avatar.png';
 
 import { IoMdMore } from "react-icons/io";
-import UnstyledButton from '../../../shared/UnstyledButton/UnstyledButton';
+import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
+import { RefObject, useEffect, useRef, useState } from 'react';
 
 
 export default function Friend() {
+  const optionsRef : RefObject<HTMLElement> = useRef(null)
+  
+  useEffect(()=>{
+    const hideOptionsMenu = (e : MouseEvent)=>{
+      if(optionsRef.current && !optionsRef.current.contains(e.target)){
+        setShowOptionsMenu(false)
+      }
+    }
+    document.addEventListener('click', hideOptionsMenu )
+    return ()=>document.removeEventListener('click' , hideOptionsMenu)
+  },[])
+
+  const [showOptionsMenu , setShowOptionsMenu] : [Boolean , Function] = useState(false)
+
   return (
     <>
          <div className={styles.friend}>
@@ -18,9 +33,19 @@ export default function Friend() {
                   <p className={styles.status}>online</p>
               </UnstyledButton>
 
-              <div className={styles.options}>
-                <IoMdMore/>
+              <div ref={optionsRef} className={styles.options} >
+                 <UnstyledButton onClick={()=>setShowOptionsMenu(!showOptionsMenu)} className={styles.options_btn}>
+                   <IoMdMore/>
+                 </UnstyledButton>
+                 <div data-visible={showOptionsMenu ? 'true' : 'false'}  className={styles.options_menu}>
+                    <ul>
+                      <li className={styles.option}><UnstyledButton> Send a message </UnstyledButton></li>
+                      <li className={styles.option+' '+styles.option_red }><UnstyledButton> Remove </UnstyledButton></li>
+                    </ul>
+                  </div>
               </div>
+
+
           </div>
 
     </>

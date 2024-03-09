@@ -7,6 +7,7 @@ import EditModal from './EditModal/EditModal';
 //redux
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleShowEditModal } from '@/redux/features/UiSlice';
+import { Link } from 'react-router-dom';
 
 export default function ProfileSettings() { 
   const showEditModal = useSelector(state=>state.ui.showEditModal);
@@ -14,9 +15,9 @@ export default function ProfileSettings() {
     
   return (
     <div className={styles.container}>
-        <a href='/' className={styles.back}>
+        <Link to='/' className={styles.back}>
             <IoArrowBack/>
-        </a>
+        </Link>
         <div className={styles.inner_container}>
             <div className={styles.header}>
                 <div className={styles.picture}>
