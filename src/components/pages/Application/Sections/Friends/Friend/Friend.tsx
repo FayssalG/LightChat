@@ -4,9 +4,12 @@ import avatar from '@/assets/avatar.png';
 import { IoMdMore } from "react-icons/io";
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import { RefObject, useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { openConfirmRemoveFriendModal } from '@/redux/features/UiSlice';
 
 
 export default function Friend() {
+  const dispatch = useDispatch()
   const optionsRef : RefObject<HTMLElement> = useRef(null)
   
   useEffect(()=>{
@@ -40,7 +43,7 @@ export default function Friend() {
                  <div data-visible={showOptionsMenu ? 'true' : 'false'}  className={styles.options_menu}>
                     <ul>
                       <li className={styles.option}><UnstyledButton> Send a message </UnstyledButton></li>
-                      <li className={styles.option+' '+styles.option_red }><UnstyledButton> Remove </UnstyledButton></li>
+                      <li className={styles.option+' '+styles.option_red }><UnstyledButton onClick={()=>dispatch(openConfirmRemoveFriendModal())}> Remove </UnstyledButton></li>
                     </ul>
                   </div>
               </div>

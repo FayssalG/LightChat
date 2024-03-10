@@ -8,6 +8,7 @@ import GroupsSection from "./Sections/Groups/GroupsSection";
 
 import FriendDetailsModal from "@/components/modals/FriendDetailsModal/FriendDetailsModal";
 import ConfirmRemoveFriendModal from "@/components/modals/ConfirmRemoveFriendModal/ConfirmRemoveFriendModal";
+import ConfirmBlockFriendModal from "@/components/modals/ConfirmBlockFriendModal/ConfirmBlockFriendModal";
 
 
 
@@ -23,6 +24,7 @@ export default function Application() {
         <FriendDetailsModal/>
         <AddFriendModal/>
         <ConfirmRemoveFriendModal/>
+        <ConfirmBlockFriendModal/>
     </>
   )
 }

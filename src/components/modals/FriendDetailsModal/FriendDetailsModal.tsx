@@ -3,7 +3,7 @@ import styles from './FriendDetailsModal.module.css';
 import avatar from '@/assets/avatar.png';
 import { IoClose } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
-import { closeFriendDetailsModal } from '@/redux/features/UiSlice';
+import { closeFriendDetailsModal, openConfirmBlockFriendModal, openConfirmRemoveFriendModal } from '@/redux/features/UiSlice';
 import { RefObject, useEffect, useRef, useState } from 'react';
 import useBiAnimation from '@/components/hooks/useBiAnimation';
 
@@ -12,11 +12,12 @@ export default function FriendDetailsModal()   {
     const {shouldRender , animation ,onAnimationEnd} = useBiAnimation(showFriendDetailsModal , {enter : 'popUp' , leave:'popOut'})
 
     const modalRef : RefObject<HTMLElement> = useRef(null);
+    const overlayRef : RefObject<HTMLElement> = useRef(null);
     const dispatch : Function = useDispatch();
     //handle click outside of the component to close it 
     useEffect(()=>{
         const closeModal = (e : MouseEvent)=>{
-            if(modalRef.current && !modalRef.current.contains(e.target)) {
+            if(e.target == overlayRef.current) {
                 dispatch(closeFriendDetailsModal());
             }
         }; 
@@ -28,7 +29,7 @@ export default function FriendDetailsModal()   {
     if(!shouldRender) return null
 
     return (
-    <div  className={styles.container}>
+    <div ref={overlayRef}  className={styles.container}>
         <div ref={modalRef} onAnimationEnd={onAnimationEnd} style={{animation : animation }}    className={styles.inner_container}>
             <UnstyledButton className={styles.close} onClick={()=>dispatch(closeFriendDetailsModal())}>
                 <IoClose/>
@@ -64,8 +65,8 @@ export default function FriendDetailsModal()   {
 
             <div className={styles.footer}>
                 <UnstyledButton className={styles.success_btn}>Send a message</UnstyledButton>
-                <UnstyledButton className={styles.danger_btn}>Remove Friend</UnstyledButton>
-                <UnstyledButton className={styles.danger_btn}>Block</UnstyledButton>
+                <UnstyledButton className={styles.danger_btn} onClick={()=>dispatch(openConfirmRemoveFriendModal())}>Remove Friend</UnstyledButton>
+                <UnstyledButton className={styles.danger_btn} onClick={()=>dispatch(openConfirmBlockFriendModal())}>Block</UnstyledButton>
 
             </div>
         </div>
