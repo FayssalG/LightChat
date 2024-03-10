@@ -92,10 +92,14 @@
         }
     }  
 
+    .active{
+        color: var(--secondary);
+    }
+
     .friends{
         
     }
-    .messages{
+    .conversations{
 
     }
 

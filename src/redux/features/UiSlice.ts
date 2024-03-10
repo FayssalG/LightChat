@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const UiSlice = createSlice({
     name : 'ui',
     initialState : {
-        activeSection : 'friends',
+        visibleSection : 'friends',
         conversationVisibility : false,
         showEditModal : false, 
         showFriendDetailsModal:false,
@@ -12,8 +12,8 @@ const UiSlice = createSlice({
         showConfirmBlockFriendModal : false,
     },
     reducers: {
-        changeActiveSection : (state , action)=>{
-            state.activeSection = action.payload;
+        changeVisibleSection : (state , action)=>{
+            state.visibleSection = action.payload;
         },
         toggleConversationVisibility : (state )=>{
             state.conversationVisibility = !state.conversationVisibility;
@@ -58,7 +58,7 @@ const UiSlice = createSlice({
 
 export default UiSlice.reducer;
 export const {
-    changeActiveSection , 
+    changeVisibleSection , 
     toggleConversationVisibility , 
     toggleShowEditModal,
     
