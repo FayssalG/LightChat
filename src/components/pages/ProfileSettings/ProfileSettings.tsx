@@ -1,16 +1,15 @@
-import avatar from '../../../assets/avatar.png';
+import avatar from '@/assets/avatar.png';
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import styles from './ProfileSettings.module.css';
 import { IoArrowBack } from 'react-icons/io5';
-import EditModal from './EditModal/EditModal';
+import EditModal from '@/components/modals/EditModal/EditModal';
 
 //redux
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { toggleShowEditModal } from '@/redux/features/UiSlice';
 import { Link } from 'react-router-dom';
 
 export default function ProfileSettings() { 
-  const showEditModal = useSelector(state=>state.ui.showEditModal);
   const dispatch = useDispatch()
     
   return (
@@ -63,7 +62,8 @@ export default function ProfileSettings() {
             </div>
         </div>
         
-        {showEditModal ? <EditModal/> : null }
+        {/* Modals */}
+        <EditModal/> 
     </div>
     
   )

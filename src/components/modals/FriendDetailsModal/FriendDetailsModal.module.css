@@ -15,7 +15,6 @@
     min-width:  600px;
     border-radius: .5rem;
     background-color: var(--secondary);
-    animation: popUp 400ms forwards;
     @media (max-width:700px) {
         min-width: 100svw;
         height: 100svh;
@@ -150,11 +149,5 @@
     }
 }
 
-@keyframes popUp {
-    0%{
-        transform: scale(.5);
-    }
-    100%{
-        transform: scale(1);
-    }
-}
+
+

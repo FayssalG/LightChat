@@ -13,10 +13,10 @@ export default function Topbar() {
         <div className={styles.picture}>
             <img src={avatar} alt="Avatar" />
         </div>
-        <div className={styles.name_status} onClick={(e)=>{e.stopPropagation();dispatch(openFriendDetailsModal())}}>
+        <UnstyledButton className={styles.name_status} onClick={(e)=>{e.stopPropagation();dispatch(openFriendDetailsModal())}}>
             <h2 className={styles.name} >Jack Martins</h2>
             <p className={styles.status}>online</p>
-        </div>
+        </UnstyledButton>
 
         <UnstyledButton onClick={()=>dispatch(toggleConversationVisibility())} className={styles.close}>
           <IoClose/>

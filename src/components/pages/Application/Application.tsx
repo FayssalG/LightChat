@@ -1,25 +1,28 @@
+import AddFriendModal from "@/components/modals/AddFriendModal/AddFriendModal";
 import ActiveConversation from "./ActiveConversation/ActiveConversation";
 import Navbar from "./Navbar/Navbar";
 import ConversationsSection from "./Sections/Conversations/ConversationsSection";
 import FriendsSection from "./Sections/Friends/FriendsSection";
 import GroupsSection from "./Sections/Groups/GroupsSection";
-import FriendDetailsModal from "./ActiveConversation/FriendDetailsModal/FriendDetailsModal";
 
-import { useSelector } from "react-redux";
+
+import FriendDetailsModal from "@/components/modals/FriendDetailsModal/FriendDetailsModal";
+import ConfirmRemoveFriendModal from "@/components/modals/ConfirmRemoveFriendModal/ConfirmRemoveFriendModal";
+
 
 
 export default function Application() {
-  const showFriendDetailsModal = useSelector(state=>state.ui.showFriendDetailsModal);
 
   return (
     <>
         <Navbar/>
-        <GroupsSection/>
+        <FriendsSection/>
         <ActiveConversation/>
 
         {/* Modals */}
-        { showFriendDetailsModal ?  <FriendDetailsModal/> : null }
-
+        <FriendDetailsModal/>
+        <AddFriendModal/>
+        <ConfirmRemoveFriendModal/>
     </>
   )
 }

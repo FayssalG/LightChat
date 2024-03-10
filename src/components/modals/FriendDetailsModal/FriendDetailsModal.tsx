@@ -4,12 +4,16 @@ import avatar from '@/assets/avatar.png';
 import { IoClose } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
 import { closeFriendDetailsModal } from '@/redux/features/UiSlice';
-import { RefObject, useEffect, useRef } from 'react';
+import { RefObject, useEffect, useRef, useState } from 'react';
+import useBiAnimation from '@/components/hooks/useBiAnimation';
 
-export default function FriendDetailsModal() {
+export default function FriendDetailsModal()   {
+    const showFriendDetailsModal : Boolean = useSelector(state=>state.ui.showFriendDetailsModal);
+    const {shouldRender , animation ,onAnimationEnd} = useBiAnimation(showFriendDetailsModal , {enter : 'popUp' , leave:'popOut'})
+
     const modalRef : RefObject<HTMLElement> = useRef(null);
     const dispatch : Function = useDispatch();
-    
+    //handle click outside of the component to close it 
     useEffect(()=>{
         const closeModal = (e : MouseEvent)=>{
             if(modalRef.current && !modalRef.current.contains(e.target)) {
@@ -21,11 +25,11 @@ export default function FriendDetailsModal() {
         return ()=>document.removeEventListener('click' , closeModal);
     },[])
 
-    
+    if(!shouldRender) return null
 
     return (
     <div  className={styles.container}>
-        <div ref={modalRef} className={styles.inner_container}>
+        <div ref={modalRef} onAnimationEnd={onAnimationEnd} style={{animation : animation }}    className={styles.inner_container}>
             <UnstyledButton className={styles.close} onClick={()=>dispatch(closeFriendDetailsModal())}>
                 <IoClose/>
             </UnstyledButton>

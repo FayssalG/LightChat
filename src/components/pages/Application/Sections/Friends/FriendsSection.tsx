@@ -1,14 +1,18 @@
 import styles from './FriendsSection.module.css';
 import Friend from './Friend/Friend';
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
+import { useDispatch } from 'react-redux';
+import { openAddFriendModal } from '@/redux/features/UiSlice';
 
 export default function FriendsSection() {
+  const dispatch = useDispatch();
+
   return (
     <div className={styles.container}>
         <div className={styles.header}>
           <div className={styles.title_addbtn}>
             <h1 >Friends</h1>
-            <UnstyledButton>Add Friend</UnstyledButton>
+            <UnstyledButton onClick={()=>dispatch(openAddFriendModal())}>Add Friend</UnstyledButton>
           </div>
 
           <div className={styles.search}>

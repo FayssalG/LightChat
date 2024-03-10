@@ -7,6 +7,7 @@ const UiSlice = createSlice({
         conversationVisibility : false,
         showEditModal : false, 
         showFriendDetailsModal:false,
+        showAddFriendModal : false,
     },
     reducers: {
         changeActiveSection : (state , action)=>{
@@ -25,7 +26,14 @@ const UiSlice = createSlice({
         },
         closeFriendDetailsModal : (state )=>{
             state.showFriendDetailsModal = false;
-        }
+        },
+
+        openAddFriendModal : (state)=>{
+            state.showAddFriendModal = true
+        },
+        closeAddFriendModal : (state)=>{
+            state.showAddFriendModal = false
+        },
     
         
     }
@@ -36,6 +44,10 @@ export const {
     changeActiveSection , 
     toggleConversationVisibility , 
     toggleShowEditModal,
+    
     openFriendDetailsModal,
-    closeFriendDetailsModal
+    closeFriendDetailsModal,
+    
+    openAddFriendModal,
+    closeAddFriendModal
 } = UiSlice.actions;
