@@ -9,6 +9,8 @@ body{
     box-sizing: border-box;
 }
 :root{
+    --background : #242424;
+
     --primary : #242424;
     --primary-dark : #1B1B1B;
     

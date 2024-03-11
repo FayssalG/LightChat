@@ -10,6 +10,7 @@ const UiSlice = createSlice({
         showAddFriendModal : false,
         showConfirmRemoveFriendModal : false,
         showConfirmBlockFriendModal : false,
+        showCreateGroupModal : false,
     },
     reducers: {
         changeVisibleSection : (state , action)=>{
@@ -52,7 +53,12 @@ const UiSlice = createSlice({
             state.showConfirmBlockFriendModal = false;
         },
         
-        
+        openCreateGroupModal : (state)=>{
+            state.showCreateGroupModal = true
+        },
+        closeCreateGroupModal : (state)=>{
+            state.showCreateGroupModal = false
+        }
     }
 })
 
@@ -72,6 +78,9 @@ export const {
     closeConfirmRemoveFriendModal,
 
     openConfirmBlockFriendModal,
-    closeConfirmBlockFriendModal
+    closeConfirmBlockFriendModal,
+
+    openCreateGroupModal,
+    closeCreateGroupModal
 
 } = UiSlice.actions;
