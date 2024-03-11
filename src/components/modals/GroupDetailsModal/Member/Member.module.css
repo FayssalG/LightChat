@@ -1,0 +1,94 @@
+.member{
+    position: relative;
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+    .picture{
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        position: relative;
+        img{
+            border-radius: 50%;
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    .displayname_username{
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        .displayname{
+            font-weight: 400;
+            font-size: 1rem;
+        }
+        .username{
+            font-weight: 200;
+            font-size: .9rem;
+        }
+    }
+
+    .options{
+        .options_btn{
+            cursor: pointer;
+            height: 30px;
+            width: 30px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            padding: .3em;            
+            svg{
+                opacity: .5;
+                width: 100%;
+                height: 100%;
+            }    
+        }
+
+        .options_menu{
+            position: absolute;
+            background-color: var(--primary);
+            padding: .5em;
+            border-radius: .2rem;
+            right: 0;
+            z-index: 1;
+            display: none;
+
+            ul{
+                list-style: none;
+                display: flex;
+                flex-direction: column;
+                gap: .5rem;
+                
+                .option{
+                    button{
+                        width: 100%;
+                        padding: .4em;
+                        border-radius: .2rem;
+                    }
+                    button:hover{
+                        background-color: var(--accent);
+                    }
+                }
+                .option_red{
+                    button{color: var(--danger);}
+                    button:hover{background-color: var(--danger);color: white;}
+                }
+
+            }
+        }
+    
+        .options_menu[data-visible='true']{
+            display: block;
+        }
+
+        
+        .options_menu[data-visible='false']{
+            display: none;
+        }
+     
+    }
+
+    
+    
+}

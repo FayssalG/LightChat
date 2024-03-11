@@ -7,6 +7,7 @@ const UiSlice = createSlice({
         conversationVisibility : false,
         showEditModal : false, 
         showFriendDetailsModal:false,
+        showGroupDetailsModal : false,
         showAddFriendModal : false,
         showConfirmRemoveFriendModal : false,
         showConfirmBlockFriendModal : false,
@@ -29,6 +30,13 @@ const UiSlice = createSlice({
         },
         closeFriendDetailsModal : (state )=>{
             state.showFriendDetailsModal = false;
+        },
+
+        openGroupDetailsModal : (state)=>{
+            state.showGroupDetailsModal = true;
+        },
+        closeGroupDetailsModal : (state)=>{
+            state.showGroupDetailsModal = false;
         },
 
         openAddFriendModal : (state)=>{
@@ -81,6 +89,9 @@ export const {
     closeConfirmBlockFriendModal,
 
     openCreateGroupModal,
-    closeCreateGroupModal
+    closeCreateGroupModal,
+
+    openGroupDetailsModal,
+    closeGroupDetailsModal
 
 } = UiSlice.actions;
