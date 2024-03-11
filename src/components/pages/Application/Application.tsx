@@ -10,6 +10,7 @@ import FriendDetailsModal from "@/components/modals/FriendDetailsModal/FriendDet
 import ConfirmRemoveFriendModal from "@/components/modals/ConfirmRemoveFriendModal/ConfirmRemoveFriendModal";
 import ConfirmBlockFriendModal from "@/components/modals/ConfirmBlockFriendModal/ConfirmBlockFriendModal";
 import { useSelector } from "react-redux";
+import CreateGroupModal from "@/components/modals/CreateGroupModal/CreateGroupModal";
 
 
 
@@ -40,6 +41,7 @@ export default function Application() {
         <AddFriendModal/>
         <ConfirmRemoveFriendModal/>
         <ConfirmBlockFriendModal/>
+        <CreateGroupModal/>
     </>
   )
 }

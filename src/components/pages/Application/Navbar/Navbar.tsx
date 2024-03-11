@@ -11,7 +11,7 @@ import {  changeVisibleSection } from '../../../../redux/features/UiSlice';
 import UnstyledButton from '../../../shared/UnstyledButton/UnstyledButton';
 
 export default function Navbar() {
-    const visibleSection = useSelector(state=>state.ui.visibleSection);
+    const visibleSection : string = useSelector(state=>state.ui.visibleSection);
     const dispatch = useDispatch();
 
     const handleVisibleSection = (newSection : string)=>{

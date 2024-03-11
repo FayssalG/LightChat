@@ -6,7 +6,7 @@
   
     color: white;
     height: 100svh;
-    background-image: linear-gradient(  rgb(0, 82, 65), rgb(0, 123, 98),rgb(0, 42, 38)  );
+    background-image: linear-gradient(   rgb(2, 4, 81),rgb(26, 0, 42)  );
     padding-block: .5em;
     display: flex;
     flex-direction: column;
@@ -85,15 +85,14 @@
         }
 
         &:hover , &:focus{
-            color:  var(--secondary);
-            svg{
-                color:  var(--secondary);
-            }
+            color:  var(--success);
+            
         }
     }  
 
     .active{
-        color: var(--secondary);
+        color: var(--success);
+        
     }
 
     .friends{
