@@ -6,6 +6,7 @@ import useAuth from '@/components/hooks/useAuth';
 import { Link, Navigate } from 'react-router-dom';
 import { useRef, useState } from 'react';
 import Spinner from '@/components/shared/Spinner/Spinner';
+import { IoCheckmark } from 'react-icons/io5';
 
 export default function Login() {
     const {isAuth, isAuthenticating , loginUser } = useAuth();
@@ -32,17 +33,26 @@ export default function Login() {
                 <h1 className={styles.title}>Log in</h1>
                 <form onSubmit={handleLogin} className={styles.form}>
                     <div className= {`${styles.input_container} ${styles.email}`} >
-                        <p>Email</p>
+                        <p className={styles.label}>Email</p>
                         <input ref={emailRef} type="text" placeholder='Email' />
                     </div>
                     <div className= {`${styles.input_container} ${styles.password}`} >
-                        <p>Password</p>
-                        <input ref={passwordRef} type="text" placeholder='Password' />
+                        <p className={styles.label}>Password</p>
+                        <input ref={passwordRef} type="password" placeholder='Password' />
                     </div>
                     <p className={styles.forget_password}>
                         {!isAuthenticating && <a href='/login'>Forgot password?</a>}
                     </p>
+
                     
+                    {/* <label htmlFor='remember_me' className={styles.remember_me}>
+                        <p className={styles.label}>Remember me</p>
+                        <input  type="checkbox" name="remember_me"  />
+                        <div className={styles.checkmark_container}>
+                            <IoCheckmark className={styles.checkmark}/>
+                        </div>
+                    </label> */}
+
                     <p className={styles.error}>
                         { error ? error : '' }
                     </p>

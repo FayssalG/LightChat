@@ -55,13 +55,13 @@ export default function Register() {
 
                 <div className= {`${styles.input_container} ${styles.password}`} >
                     <p className={styles.label}>Password</p>
-                    <input ref={passwordRef} type="text" placeholder='Password' />
+                    <input ref={passwordRef} type="password" placeholder='Password' />
                     {errors.password && <p className={styles.error}>{errors.password}</p>}
                 </div>
 
                 <div className= {`${styles.input_container} ${styles.confirm_password}`} >
                     <p className={styles.label}>Confirm Password</p>
-                    <input ref={passwordConfirmationRef} type="text" placeholder='Confirm Password' />
+                    <input ref={passwordConfirmationRef} type="password" placeholder='Confirm Password' />
                 </div>
 
                 <UnstyledButton disabled={isAuthenticating} className={styles.submit_btn}>
