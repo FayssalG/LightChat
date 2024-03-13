@@ -5,6 +5,7 @@ import { CgSpinner } from 'react-icons/cg';
 import useAuth from '@/components/hooks/useAuth';
 import { Link, Navigate } from 'react-router-dom';
 import { useRef, useState } from 'react';
+import Spinner from '@/components/shared/Spinner/Spinner';
 
 export default function Login() {
     const {isAuth, isAuthenticating , loginUser } = useAuth();
@@ -39,7 +40,7 @@ export default function Login() {
                         <input ref={passwordRef} type="text" placeholder='Password' />
                     </div>
                     <p className={styles.forget_password}>
-                        <a href='/login'>Forgot password?</a>
+                        {!isAuthenticating && <a href='/login'>Forgot password?</a>}
                     </p>
                     
                     <p className={styles.error}>
@@ -47,11 +48,11 @@ export default function Login() {
                     </p>
 
                     <UnstyledButton disabled={isAuthenticating} className={styles.submit_btn}>
-                        {isAuthenticating ? <CgSpinner className={styles.spinner}/> : 'Log In'}
+                        {isAuthenticating ? <Spinner size={25}/> : 'Log In'}
                     </UnstyledButton>
                     
                     <p className={styles.register}>
-                        Need an account? <Link to='/register'>Register</Link>
+                        {!isAuthenticating && <span> Need an account? <Link to='/register'>Register</Link> </span>}
                     </p>
                 </form>
             </div>

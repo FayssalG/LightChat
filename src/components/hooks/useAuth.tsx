@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import {login, register , logout, getUser} from '@/axios/axios';
 import { useDispatch, useSelector } from "react-redux";
-import { setIsAuth, setIsAuthenticating } from "@/redux/features/AuthSlice";
+import { setAuthenticatedUser, setIsAuth, setIsAuthenticating } from "@/redux/features/AuthSlice";
 
 export default function useAuth(){
     const isAuth = useSelector(state => state.auth.isAuth);
@@ -18,7 +18,9 @@ export default function useAuth(){
             await login(email ,password)
             dispatch(setIsAuth(true))
         }catch(err){
-            setError(err.response.data.message)
+            if(err.response.status = 422){
+                setError(err.response.data.message)
+            }
         }
         finally{
             dispatch(setIsAuthenticating(false))
@@ -32,9 +34,10 @@ export default function useAuth(){
             dispatch(setIsAuth(true))
         }
         catch(err){
-            console.log(err.response.data.errors);
-            const {display_name:displayName } = err.response.data.errors
-            setErrors({...err.response.data.errors , displayName})
+            if(err.response.status === 422 ){
+                const {display_name:displayName } = err.response.data.errors
+                setErrors({...err.response.data.errors , displayName})                    
+            } 
         }
         finally{
             dispatch(setIsAuthenticating(false))
@@ -47,13 +50,14 @@ export default function useAuth(){
     }
       
     const getAuthenticatedUser = async ()=>{
-            const {user , error} = await getUser()
-            console.log(user)
-            if(error){
-                console.log(error)
-                dispatch(setIsAuth(false))
-            }
-      }
+        try{
+            const response = await getUser()
+            dispatch(setAuthenticatedUser(response.data))
+            return response.data
+        }catch(err){
+            dispatch(setIsAuth(false))
+        }
+    }
       
     return {isAuth, isAuthenticating , loginUser , registerUser , logoutUser , getAuthenticatedUser}
 }

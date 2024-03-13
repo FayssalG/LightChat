@@ -28,14 +28,9 @@ const register = async (email : string , displaName : string , username:string ,
     return res
 }
 
-const getUser = ()=>{
-    return api.get('/api/user')
-    .then((res)=>{
-        return {user: res.data , error:null};
-    })
-    .catch((err)=>{
-        return {user:null ,error :err.response.data.message}
-    })
+const getUser = async ()=>{
+    const res = await api.get('/api/user')
+    return res
 }
 
 async function logout(){

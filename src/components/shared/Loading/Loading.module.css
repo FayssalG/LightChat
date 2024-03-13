@@ -1,0 +1,8 @@
+.container{
+    background-color: var(--background);
+    height: 100svh;
+    width: 100%;
+    display: grid;
+    place-items: center;
+}
+
