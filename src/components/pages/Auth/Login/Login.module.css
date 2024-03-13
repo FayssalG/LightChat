@@ -33,6 +33,7 @@
                 font-weight: 500;
             }
             input{
+                color: white;
                 margin-top: .4rem;
                 width: 100%;
                 border-radius: .2rem;
@@ -56,12 +57,27 @@
                 color: var(--accent);
             }
         }
+        .error{
+            font-weight: 200;
+            margin-top: 1rem;
+            color: var(--danger);
+            font-size: .9rem;
+        }
+
         .submit_btn{
             margin-top: 1rem;
             text-align: center;
             background-color: var(--accent);
             width: 100%;
             padding: 1em;
+            &:disabled{
+                background-color: grey;
+            }         
+            .spinner{
+                animation: spin  1s linear infinite;
+                width: 22px;
+                height: 22px;
+            }           
         }
         .register{
             margin-top: .2rem;
@@ -73,3 +89,9 @@
         }
     }
 }
+
+
+@keyframes spin {
+    0% {transform: rotate(0deg);}
+    100% {transform: rotate(360deg);}
+  }

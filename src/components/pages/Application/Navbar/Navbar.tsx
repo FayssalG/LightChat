@@ -9,10 +9,12 @@ import { IoLogOut } from "react-icons/io5";
 import { useDispatch, useSelector } from 'react-redux';
 import {  changeVisibleSection } from '../../../../redux/features/UiSlice';
 import UnstyledButton from '../../../shared/UnstyledButton/UnstyledButton';
+import useAuth from '@/components/hooks/useAuth';
 
 export default function Navbar() {
     const visibleSection : string = useSelector(state=>state.ui.visibleSection);
     const dispatch = useDispatch();
+    const {logoutUser} = useAuth()
 
     const handleVisibleSection = (newSection : string)=>{
         dispatch(changeVisibleSection(newSection))
@@ -56,7 +58,7 @@ export default function Navbar() {
             </div>
 
             <div className={styles.logout}>
-                <UnstyledButton>
+                <UnstyledButton onClick={logoutUser}>
                     <IoLogOut size={25}/>
                 </UnstyledButton>
             </div>

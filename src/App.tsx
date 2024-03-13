@@ -1,18 +1,22 @@
 import styles from './App.module.css';
-import {BrowserRouter , Route , Routes} from 'react-router-dom'
-
+import {BrowserRouter , Route , Routes , Navigate, Outlet} from 'react-router-dom'
 import Application from './components/pages/Application/Application';
 import ProfileSettings from './components/pages/ProfileSettings/ProfileSettings';
 import Login from './components/pages/Auth/Login/Login';
 import Register from './components/pages/Auth/Register/Register';
+import { useEffect, useState } from 'react';
+import useAuth from './components/hooks/useAuth';
 
-function App() {  
+function App() {
+  
   return (
     <div className={styles.container}>
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Application/>}></Route>
-          <Route path='/profil' element={<ProfileSettings/>}></Route>          
+          <Route element={<ProtectedRoute/>}>
+            <Route path='/' element={<Application/>} ></Route>
+            <Route path='/profil' element={<ProfileSettings/>}></Route>          
+          </Route>
           <Route path='/login' element={<Login/>}></Route>          
           <Route path='/register' element={<Register/>}></Route>          
         </Routes>
@@ -21,4 +25,13 @@ function App() {
   )
 }
 
+function ProtectedRoute(){
+  // if user is authenticated show the component otherwise redirect to login page
+  // you can customize this logic according to your needs
+  const {isAuth , getAuthenticatedUser} = useAuth()
+  getAuthenticatedUser();
+  
+  if(!isAuth) return <Navigate replace to='/login' />
+  return <Outlet/>
+} 
 export default App

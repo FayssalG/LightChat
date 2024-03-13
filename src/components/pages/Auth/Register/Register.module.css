@@ -27,13 +27,14 @@
     .form{
         margin-top: 1rem;
         .input_container{
-            p{
+            .label{
                 opacity: .5;
                 font-weight: 500;
                 text-transform: uppercase;
                 font-size: .8rem;
             }
             input{
+                color: white;
                 margin-top: .4rem;
                 width: 100%;
                 border-radius: .2rem;
@@ -49,14 +50,29 @@
         .displayname,.username,.password,.confirm_password{
             margin-top: 2rem;
         }
-
+        .error{
+            margin-top: .2rem;
+            color: var(--danger);
+            font-size: .9rem;
+            font-weight: 200;
+        }
+        
         .submit_btn{
             margin-top: 1rem;
             text-align: center;
             background-color: var(--accent);
             width: 100%;
             padding: 1em;
+            &:disabled{
+                background-color: grey;
+            }         
+            .spinner{
+                animation: spin  1s linear infinite;
+                width: 22px;
+                height: 22px;
+            }           
         }
+        
         .login{
             margin-top: .2rem;
             font-size: .9rem;
@@ -67,3 +83,10 @@
         }
     }
 }
+
+
+
+@keyframes spin {
+    0% {transform: rotate(0deg);}
+    100% {transform: rotate(360deg);}
+  }
