@@ -54,6 +54,7 @@ export default function useAuth(){
         try{
             const response = await getUser()
             dispatch(setAuthenticatedUser(response.data))
+            console.log(response.data)
             return response.data
         }catch(err){
             dispatch(setIsAuth(false))

@@ -1,6 +1,7 @@
 .container{
-    border: 2px solid white;
-    border-radius: 1rem;  
+    /* border: 2px solid white;
+    border-radius: 1rem;   */
+
     color: white;
     background-color: var(--secondary);
     width: 299px;

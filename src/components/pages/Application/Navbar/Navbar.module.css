@@ -1,9 +1,9 @@
 
 
 .container{
-    border: 2px solid white;
+    /* border: 2px solid white;
     border-radius: 1rem;
-  
+   */
     color: white;
     height: 100svh;
     background-image: linear-gradient(   rgb(2, 4, 81),rgb(26, 0, 42)  );

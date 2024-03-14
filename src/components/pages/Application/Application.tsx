@@ -1,3 +1,4 @@
+import styles from './Application.module.css';
 import AddFriendModal from "@/components/modals/AddFriendModal/AddFriendModal";
 import ActiveConversation from "./ActiveConversation/ActiveConversation";
 import Navbar from "./Navbar/Navbar";
@@ -12,6 +13,7 @@ import ConfirmBlockFriendModal from "@/components/modals/ConfirmBlockFriendModal
 import { useSelector } from "react-redux";
 import CreateGroupModal from "@/components/modals/CreateGroupModal/CreateGroupModal";
 import GroupDetailsModal from "@/components/modals/GroupDetailsModal/GroupDetailsModal";
+import EmailNotVerified from '@/components/shared/EmailNotVerified/EmailNotVerified';
 
 
 
@@ -32,11 +34,11 @@ export default function Application() {
   return (
     <>
         <Navbar/>
-        {
-            selectedSection()
-        }
-        <ActiveConversation/>
-
+        <div className={styles.sections_activeconversation}>
+          {selectedSection()}
+          <ActiveConversation/>
+        </div>        
+        
         {/* Modals */}
         <FriendDetailsModal/>
         <GroupDetailsModal/>
