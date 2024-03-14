@@ -35,6 +35,7 @@ export default function Application() {
     <>
         <Navbar/>
         <div className={styles.sections_activeconversation}>
+          <div className={styles.email_verification}><EmailNotVerified/></div>
           {selectedSection()}
           <ActiveConversation/>
         </div>        

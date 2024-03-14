@@ -2,12 +2,14 @@
     /* border: 2px solid white;
     border-radius: 1rem; */
   
-    height: 100svh;
     background-color: var(--primary);
     color: white;
     flex-grow: 1;
+    max-height: 96vh;
     @media (max-width:700px){
         position: fixed;
+        max-height: revert;
+        height: 100svh;
         width: 100svw;
         top: 0;
         left: 0;
@@ -28,7 +30,7 @@
 .inner_container{
     padding: 1em;
     height: 75%;
-    overflow-y: scroll;
+    overflow-y: auto;
 
 }
 
