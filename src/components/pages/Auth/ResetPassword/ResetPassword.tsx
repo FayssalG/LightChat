@@ -15,7 +15,7 @@ export default function ResetPassword() {
     const {token } = useParams()
     const [query , setQuery] = useSearchParams()
 
-    const {resetPassword , isAuthenticating} = useAuth()
+    const {resetPassword , isLoading} = useAuth()
     const [errors , setErrors] : [ [string?] , Function ]   = useState([]);
     const passwordRef = useRef<HTMLInputElement>(null)
     const confirmRef = useRef<HTMLInputElement>(null)
@@ -67,8 +67,8 @@ export default function ResetPassword() {
                     
                 }
 
-                <UnstyledButton disabled={isAuthenticating}>
-                    {isAuthenticating ? <Spinner size={25}/> : 'Reset your password'  }
+                <UnstyledButton disabled={isLoading}>
+                    {isLoading ? <Spinner size={25}/> : 'Reset your password'  }
                 </UnstyledButton>
             </form>
         

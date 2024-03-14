@@ -9,7 +9,7 @@ import Spinner from '@/components/shared/Spinner/Spinner';
 import { IoCheckmark } from 'react-icons/io5';
 
 export default function Login() {
-    const {isAuth, isAuthenticating , loginUser , forgotPassword } = useAuth();
+    const {isAuth, isLoading , loginUser , forgotPassword } = useAuth();
     const emailRef  = useRef(null);
     const passwordRef = useRef(null);
     const [error , setError] : [string , Function]= useState('') 
@@ -51,7 +51,7 @@ export default function Login() {
                         <input ref={passwordRef} type="password" placeholder='Password' />
                     </div>
                     <p className={styles.forgot_password}>
-                        {!isAuthenticating && <a onClick={handleForgot}>Forgot password?</a>}
+                        {!isLoading && <a onClick={handleForgot}>Forgot password?</a>}
                     </p>
 
                     
@@ -67,12 +67,12 @@ export default function Login() {
                         { error ? error : '' }
                     </p>
 
-                    <UnstyledButton disabled={isAuthenticating} className={styles.submit_btn}>
-                        {isAuthenticating ? <Spinner size={25}/> : 'Log In'}
+                    <UnstyledButton disabled={isLoading} className={styles.submit_btn}>
+                        {isLoading ? <Spinner size={25}/> : 'Log In'}
                     </UnstyledButton>
                     
                     <p className={styles.register}>
-                        {!isAuthenticating && <span> Need an account? <Link to='/register'>Register</Link> </span>}
+                        {!isLoading && <span> Need an account? <Link to='/register'>Register</Link> </span>}
                     </p>
                 </form>
             </div>

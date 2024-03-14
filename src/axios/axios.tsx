@@ -50,10 +50,16 @@ const reset = async (token : string , email : string, password : string , passwo
     return res
 }
 
+const verify = async ()=>{
+    await api.get('/sanctum/csrf-cookie');
+    const res = await api.post('/email/verification-notification');
+    return res
+}
+
 async function logout(){
     const response = await api.post('/logout')
     return response
 }
 
 
-export {login , register, forgot , reset , logout , getUser};
+export {login , register, forgot , reset , logout , getUser , verify};

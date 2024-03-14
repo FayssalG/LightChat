@@ -3,11 +3,10 @@ import styles from './Register.module.css';
 import useAuth from '@/components/hooks/useAuth';
 import { useRef, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
-import { CgSpinner } from 'react-icons/cg';
 import Spinner from '@/components/shared/Spinner/Spinner';
 
 export default function Register() {
-    const {registerUser , isAuth , isAuthenticating} = useAuth();
+    const {registerUser , isAuth , isLoading} = useAuth();
     const [errors  , setErrors] = useState({email : '' , displayName : '' , username:'',password:''})
     const emailRef = useRef(null)
     const usernameRef = useRef(null)
@@ -64,12 +63,12 @@ export default function Register() {
                     <input ref={passwordConfirmationRef} type="password" placeholder='Confirm Password' />
                 </div>
 
-                <UnstyledButton disabled={isAuthenticating} className={styles.submit_btn}>
-                    { isAuthenticating ? <Spinner size={25}/> : 'Create'}
+                <UnstyledButton disabled={isLoading} className={styles.submit_btn}>
+                    { isLoading ? <Spinner size={25}/> : 'Create'}
                 </UnstyledButton>
                 
                 <p className={styles.login}>
-                    {!isAuthenticating && <span>You already have an account?  <Link to='/login'>Login</Link></span>}
+                    {!isLoading && <span>You already have an account?  <Link to='/login'>Login</Link></span>}
                 </p>
             </form>
         </div>

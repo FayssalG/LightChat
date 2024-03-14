@@ -5,7 +5,8 @@ const AuthSlice = createSlice({
     name:'auth',
     initialState : {
         isAuth : JSON.parse(localStorage.getItem('newchat-isAuth')) || false,
-        isAuthenticating : false,
+        isVerified : JSON.parse(localStorage.getItem("newchat-isVerified")) || false,
+        isLoading : false,
         authenticatedUser : null,
     },
     reducers:{
@@ -15,12 +16,15 @@ const AuthSlice = createSlice({
         setAuthenticatedUser : (state , action)=>{
             state.authenticatedUser = action.payload;
         },
-        setIsAuthenticating : (state , action)=>{
-            state.isAuthenticating = action.payload;
+        setIsLoading : (state , action)=>{
+            state.isLoading = action.payload;
         },
+        setIsVerified:(state , action)=>{
+            state.isVerified=action.payload;
+        }
 
     }
 })
 
 export default  AuthSlice.reducer;
-export const { setIsAuth, setIsAuthenticating , setAuthenticatedUser } = AuthSlice.actions;
+export const { setIsAuth , setIsVerified, setIsLoading , setAuthenticatedUser } = AuthSlice.actions;

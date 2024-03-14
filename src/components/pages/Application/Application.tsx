@@ -13,13 +13,14 @@ import ConfirmBlockFriendModal from "@/components/modals/ConfirmBlockFriendModal
 import { useSelector } from "react-redux";
 import CreateGroupModal from "@/components/modals/CreateGroupModal/CreateGroupModal";
 import GroupDetailsModal from "@/components/modals/GroupDetailsModal/GroupDetailsModal";
-import EmailNotVerified from '@/components/shared/EmailNotVerified/EmailNotVerified';
+import EmailNotVerified from '@/components/pages/Application/EmailNotVerified/EmailNotVerified';
 
 
 
 export default function Application() {
   const visibleSection : string = useSelector(state=>state.ui.visibleSection)
-
+  const isVerified : Boolean = useSelector(state => state.auth.isVerified);
+  
   const selectedSection  = ()=>{
     switch(visibleSection){
       case 'friends':
@@ -34,11 +35,17 @@ export default function Application() {
   return (
     <>
         <Navbar/>
+
         <div className={styles.sections_activeconversation}>
-          <div className={styles.email_verification}><EmailNotVerified/></div>
+          { !isVerified &&
+            <div className={styles.email_verification}><EmailNotVerified/></div>
+          }
+          
           {selectedSection()}
           <ActiveConversation/>
         </div>        
+        
+        
         
         {/* Modals */}
         <FriendDetailsModal/>
