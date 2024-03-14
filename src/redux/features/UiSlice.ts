@@ -12,6 +12,7 @@ const UiSlice = createSlice({
         showConfirmRemoveFriendModal : false,
         showConfirmBlockFriendModal : false,
         showCreateGroupModal : false,
+        showPasswordResetSuccessAlert : false,
     },
     reducers: {
         changeVisibleSection : (state , action)=>{
@@ -38,6 +39,7 @@ const UiSlice = createSlice({
         closeGroupDetailsModal : (state)=>{
             state.showGroupDetailsModal = false;
         },
+
 
         openAddFriendModal : (state)=>{
             state.showAddFriendModal = true
@@ -66,7 +68,15 @@ const UiSlice = createSlice({
         },
         closeCreateGroupModal : (state)=>{
             state.showCreateGroupModal = false
-        }
+        },
+
+        openPasswordResetSuccessAlert:(state)=>{
+            state.showPasswordResetSuccessAlert = true;
+        },
+        closePasswordResetSuccessAlert : (state)=>{
+            state.showPasswordResetSuccessAlert = false;
+        },
+
     }
 })
 
@@ -92,6 +102,9 @@ export const {
     closeCreateGroupModal,
 
     openGroupDetailsModal,
-    closeGroupDetailsModal
+    closeGroupDetailsModal,
+
+    openPasswordResetSuccessAlert,
+    closePasswordResetSuccessAlert
 
 } = UiSlice.actions;

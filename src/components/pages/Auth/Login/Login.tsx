@@ -9,7 +9,7 @@ import Spinner from '@/components/shared/Spinner/Spinner';
 import { IoCheckmark } from 'react-icons/io5';
 
 export default function Login() {
-    const {isAuth, isAuthenticating , loginUser } = useAuth();
+    const {isAuth, isAuthenticating , loginUser , forgotPassword } = useAuth();
     const emailRef  = useRef(null);
     const passwordRef = useRef(null);
     const [error , setError] : [string , Function]= useState('') 
@@ -25,6 +25,16 @@ export default function Login() {
         }  
     }
 
+    async function handleForgot(e : React.MouseEvent<HTMLAnchorElement>) {
+        e.preventDefault();
+        const email : string = emailRef.current.value;
+        if(email){
+            await forgotPassword(email) ;
+        }else{
+            setError('Type your email address')
+        } 
+    }
+    
     if(isAuth)  return <Navigate replace to={'/'} /> 
     
     return (
@@ -40,8 +50,8 @@ export default function Login() {
                         <p className={styles.label}>Password</p>
                         <input ref={passwordRef} type="password" placeholder='Password' />
                     </div>
-                    <p className={styles.forget_password}>
-                        {!isAuthenticating && <a href='/login'>Forgot password?</a>}
+                    <p className={styles.forgot_password}>
+                        {!isAuthenticating && <a onClick={handleForgot}>Forgot password?</a>}
                     </p>
 
                     

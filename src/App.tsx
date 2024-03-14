@@ -6,8 +6,8 @@ import Login from './components/pages/Auth/Login/Login';
 import Register from './components/pages/Auth/Register/Register';
 import { useEffect, useState } from 'react';
 import useAuth from './components/hooks/useAuth';
-import { useSelector } from 'react-redux';
 import Loading from './components/shared/Loading/Loading';
+import ResetPassword from './components/pages/Auth/ResetPassword/ResetPassword';
 
 function App() {
   
@@ -21,15 +21,16 @@ function App() {
           </Route>
           <Route path='/login' element={<Login/>}></Route>          
           <Route path='/register' element={<Register/>}></Route>          
+          <Route path='/password-reset/:token' element={<ResetPassword/>}></Route>
         </Routes>
       </BrowserRouter>
     </div>
   )
 }
 
+
 function ProtectedRoute(){
   // if user is authenticated show the component otherwise redirect to login page
-  // you can customize this logic according to your needs
   const {isAuth , getAuthenticatedUser} = useAuth()  
   const [isLoading ,setIsLoading] = useState(true)
 

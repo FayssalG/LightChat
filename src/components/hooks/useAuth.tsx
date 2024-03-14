@@ -1,11 +1,12 @@
 import { useEffect } from "react";
-import {login, register , logout, getUser} from '@/axios/axios';
+import {login, register , logout, getUser, forgot, reset} from '@/axios/axios';
 import { useDispatch, useSelector } from "react-redux";
 import { setAuthenticatedUser, setIsAuth, setIsAuthenticating } from "@/redux/features/AuthSlice";
 
 export default function useAuth(){
     const isAuth = useSelector(state => state.auth.isAuth);
     const isAuthenticating = useSelector(state => state.auth.isAuthenticating);
+    const authenticatedUser = useSelector(state=>state.auth.authenticatedUser);
     const dispatch = useDispatch();
 
     useEffect(()=>{
@@ -59,5 +60,32 @@ export default function useAuth(){
         }
     }
       
-    return {isAuth, isAuthenticating , loginUser , registerUser , logoutUser , getAuthenticatedUser}
+    const forgotPassword = async  (email : string)=>{
+        try{
+            dispatch(setIsAuthenticating(true))
+            const response = await forgot(email);
+            return response.data; 
+        }catch(err){
+            console.log(err)
+        }
+        finally{
+            dispatch(setIsAuthenticating(false))
+        }
+    }
+
+    const resetPassword = async (token : string , email : string, password : string , passwordConfirmation : string )=>{
+        try{
+            dispatch(setIsAuthenticating(true))
+            const res = await reset(token,email,password,passwordConfirmation);
+            return res
+        }catch(err){
+            throw err;
+        }
+        finally{
+            dispatch(setIsAuthenticating(false))
+        }
+    }
+ 
+
+    return {isAuth, isAuthenticating , authenticatedUser , loginUser , registerUser , logoutUser , getAuthenticatedUser , forgotPassword  , resetPassword}
 }

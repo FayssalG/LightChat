@@ -8,8 +8,11 @@ import EditModal from '@/components/modals/EditModal/EditModal';
 import { useDispatch } from 'react-redux';
 import { toggleShowEditModal } from '@/redux/features/UiSlice';
 import { Link } from 'react-router-dom';
+import useAuth from '@/components/hooks/useAuth';
 
 export default function ProfileSettings() { 
+  const {authenticatedUser : user} = useAuth()
+  
   const dispatch = useDispatch()
     
   return (
@@ -24,10 +27,10 @@ export default function ProfileSettings() {
                 </div>         
                 <div className={styles.displayname_username}>
                     <h2 className={styles.displayname}>
-                        GyroZ
+                        {user.display_name}
                     </h2>
                     <p className={styles.username}>
-                        @gyroz01
+                        @{user.username}
                     </p>
                 </div>       
             </div>
@@ -36,7 +39,7 @@ export default function ProfileSettings() {
                 <div className={styles.setting}>
                     <div>
                         <h2>Display name</h2>
-                        <p>GyroZ</p>
+                        <p>{user.display_name}</p>
                     </div>
                     <UnstyledButton onClick={()=>dispatch(toggleShowEditModal())}>Edit</UnstyledButton>
                 
@@ -45,7 +48,7 @@ export default function ProfileSettings() {
                 <div className={styles.setting}>
                     <div>
                         <h2>username</h2>
-                        <p>gyroz01</p>
+                        <p>{user.username}</p>
                     </div>
                     <UnstyledButton>Edit</UnstyledButton>
                 </div>
@@ -54,7 +57,7 @@ export default function ProfileSettings() {
                 <div className={styles.setting}>
                     <div>
                         <h2>Email</h2>
-                        <p>pizza******@gmail.com</p>
+                        <p>{user.email}</p>
                     </div>
                     <UnstyledButton>Edit</UnstyledButton>
                 </div>

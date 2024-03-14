@@ -50,11 +50,15 @@
             margin-top: 1rem;
         }    
 
-        .forget_password{
+        .forgot_password{
             margin-top: .4rem;
             font-size: .8rem;
             a{
+                cursor: pointer;
                 color: var(--accent);
+                &:hover{
+                    text-decoration: underline;
+                }
             }
         }
         

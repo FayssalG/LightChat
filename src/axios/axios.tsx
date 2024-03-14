@@ -33,9 +33,27 @@ const getUser = async ()=>{
     return res
 }
 
+const forgot = async (email : string)=>{
+    await api.get('/sanctum/csrf-cookie')
+    const res = await api.post('/forgot-password' , {email});
+    return res
+}
+
+const reset = async (token : string , email : string, password : string , passwordConfirmation : string )=>{
+    await api.get('/sanctum/csrf-cookie');
+    const res = await api.post('/reset-password' , {
+        token ,
+        email,
+        password,
+        password_confirmation:passwordConfirmation
+    })
+    return res
+}
+
 async function logout(){
     const response = await api.post('/logout')
     return response
 }
 
-export {login , register , logout , getUser};
+
+export {login , register, forgot , reset , logout , getUser};
