@@ -1,0 +1,102 @@
+.header{
+    padding: 1em;
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 4rem;
+    text-align: center;
+
+    .title{
+        font-size: 1.2rem;
+    }
+    .comment{
+        font-size: .9rem;
+        margin-top: .5rem;
+        color: grey;
+    }
+
+
+    .close{
+        
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        svg{
+            width: 30px;
+            height: 30px;
+            color: grey;
+        }
+    }
+}
+
+
+.body{
+    padding:  1em;
+    .picture{
+        margin: auto;
+        position: relative;
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        transition: padding 200ms ease;
+        &::after{
+            content: 'EDIT';
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 500;
+            position: absolute;
+            border-radius: 50%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        &:hover{
+            padding: .2em;
+            border: 1px solid white;
+        }
+        
+        img{
+            object-fit: cover;
+            border-radius: 100%;
+            width: 100%;
+            height: 100%;
+        }
+        input{
+            cursor: pointer;
+            opacity: 0;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+    }
+
+    .input{
+        margin-top: 1rem;
+        display: flex;
+        flex-direction: column;
+        
+        label{
+            color: grey;
+            font-size: .8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        input{
+            padding: 0 .5em ;
+            color: white;
+            min-height: 35px;
+            margin-top: .5rem;
+            background-color: var(--primary-dark);
+            border: none;
+            border-radius: .2rem;
+        }
+    }
+}
