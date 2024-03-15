@@ -55,23 +55,6 @@
             border-radius: .2rem;
         }
     }
+
 }
 
-.footer{
-    padding: 1em;
-    margin-top: 2rem;
-    background-color: var(--primary);
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-
-    .cancel{
-
-    }
-
-    .confirm{
-        background-color: var(--accent);
-        padding: 1em;
-        border-radius: .2rem;
-    }
-}

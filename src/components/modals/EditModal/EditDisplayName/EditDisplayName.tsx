@@ -4,6 +4,7 @@ import styles from './EditDisplayName.module.css';
 
 interface EditDisplayNameProps {
     onClose : Function,
+    onSubmit :(e:React.FormEvent<HTMLFormElement>)=>void,
     old : string,
     infoRef :  React.RefObject<HTMLInputElement>,
     passwordRef : React.RefObject<HTMLInputElement>
@@ -11,7 +12,7 @@ interface EditDisplayNameProps {
 
 
 export default function EditDisplayName(props : EditDisplayNameProps) {
-    const {onClose , old , infoRef,passwordRef} = props;
+    const {onClose, onSubmit , old , infoRef,passwordRef} = props;
 
   return (
     <>
@@ -25,7 +26,7 @@ export default function EditDisplayName(props : EditDisplayNameProps) {
             </UnstyledButton>
         </div>
 
-            <div className={styles.body}>
+            <form id='form' onSubmit={onSubmit} className={styles.body}>
                 <div className={styles.input}>
                     <label htmlFor="">Display name</label>
                     <input ref={infoRef} defaultValue={old} type="text" />
@@ -34,8 +35,9 @@ export default function EditDisplayName(props : EditDisplayNameProps) {
                     <label htmlFor="">Password</label>
                     <input ref={passwordRef} type="password" />
                 </div>
-            </div>
 
+                
+            </form>
     </>
   )
   

@@ -7,37 +7,45 @@ import { toggleShowEditModal } from '@/redux/features/UiSlice';
 import useBiAnimation from '@/components/hooks/useBiAnimation';
 import EditDisplayName from './EditDisplayName/EditDisplayName';
 import EditPicture from './EditPicture/EditPicture';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import EditEmail from './EditEmail/EditEmail';
 import EditUsername from './EditUsername/EditUsername';
+import { setIsLoading } from '@/redux/features/AuthSlice';
+import Spinner from '@/components/shared/Spinner/Spinner';
 
 interface Update{
     updateTarget:string,
     updateFn:Function
 }
 
-interface User {
-    id ?: number,
+interface Infos {
     username : string,
-    display_name : string,
-    created_at ?: string,
+    displayName : string,
     email :string,
-    email_verified_at ?:string,
-    image : {id : number , image:string, url:string}
+    image : string
 }
 
-export default function EditModal(props : {update:Update , user: User }) {
-    const {update , user} = props;
+export default function EditModal(props : {update:Update , infos: Infos }) {
 
+    const {update , infos} = props;
     const dispatch = useDispatch()
     const showEditModal = useSelector(state=>state.ui.showEditModal);
+    const isLoading = useSelector(state=>state.auth.isLoading);
     const {shouldRender , onAnimationEnd , animation} = useBiAnimation(showEditModal , {enter : 'popUp' , leave:'popOut'})
 
     const [errors , setErrors] : [ [string?] ,Function ] = useState([]);
     const infoRef = useRef<HTMLInputElement>(null)
     const passwordRef = useRef<HTMLInputElement>(null)
+    
+    //empty errors when modal closes
+    useEffect(()=>{
+        if(shouldRender == false){
+            setErrors([]);
+        }
+    },[shouldRender])
 
-    const handleUpdate = ()=>{
+    const handleUpdate = (e:React.FormEvent)=>{
+        e.preventDefault();
         const info = infoRef.current?.files?.[0] || infoRef.current?.value;
         const password= passwordRef.current?.value;
 
@@ -46,31 +54,40 @@ export default function EditModal(props : {update:Update , user: User }) {
             return
         }
         
+        dispatch(setIsLoading(true))
         update.updateFn(info , password)
         .then((res)=>{
-            if(res.status == 204){
+            if([204,200,201].includes(res.status)){
+                setErrors([]);
                 dispatch(toggleShowEditModal());
             }
         })
         .catch((err)=>{
             setErrors(err.response.data.errors)
         })
+        .finally(()=>{
+            dispatch(setIsLoading(false))
+        })
     }
 
-    const editProps =
-    {
-        passwordRef:passwordRef,
-        infoRef:infoRef ,
-        onClose:()=>dispatch(toggleShowEditModal()) ,
-    }
+   
 
     const renderEdit = ()=>{
+        const editProps =
+        {
+            passwordRef:passwordRef,
+            infoRef:infoRef ,
+            onClose:()=>dispatch(toggleShowEditModal()) ,
+            onSubmit : handleUpdate
+        }   
+         
         switch(update?.updateTarget){
-            case "displayname": return <EditDisplayName {...editProps} old={user?.display_name}  />;
-            case "username"   : return <EditUsername {...editProps}  old={user?.username}/> ;
-            case "picture"   : return <EditPicture {...editProps}  old={user?.image?.url}/> ;
-            case "email"     : return <EditEmail {...editProps} old={user?.email}/>
+            case "displayname": return <EditDisplayName {...editProps} old={infos.displayName}  />;
+            case "username"   : return <EditUsername {...editProps}  old={infos.username}/> ;
+            case "picture"   : return <EditPicture {...editProps}  old={infos.image}/> ;
+            case "email"     : return <EditEmail {...editProps} old={infos.email}/> ;
         }
+        
     }
 
 
@@ -80,19 +97,22 @@ export default function EditModal(props : {update:Update , user: User }) {
     <div className={styles.container}>
         <div style={{animation:animation}} onAnimationEnd={onAnimationEnd} className={styles.inner_container}>
 
+                {renderEdit() }
 
-            {renderEdit() }
-
-            <div className={styles.errors}>
-                {
+                <div className={styles.errors}>
+                    {
                     errors.map((err)=><p>{err}</p>)
-                }
-            </div>
+                    }
+                </div>
+        
 
-            <div className={styles.footer}>
-                <UnstyledButton onClick={()=>dispatch(toggleShowEditModal())} className={styles.cancel}>Cancel</UnstyledButton>
-                <UnstyledButton onClick={handleUpdate} className={styles.confirm}>Done</UnstyledButton>
-            </div>
+            {
+                <div className={styles.footer}>
+                    <UnstyledButton  disabled={isLoading} onClick={()=>dispatch(toggleShowEditModal())} className={styles.cancel}>Cancel</UnstyledButton>
+                    <UnstyledButton type='submit' form='form' disabled={isLoading} className={styles.confirm}>{isLoading ? <Spinner size={25}/> : 'Done'}</UnstyledButton>
+                </div>
+            }
+
         </div>
     </div>
   )

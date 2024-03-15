@@ -4,6 +4,7 @@ import styles from './EditEmail.module.css';
 
 interface EditEmailProps {
     onClose : Function,
+    onSubmit:(e:React.FormEvent<HTMLFormElement>)=>void,
     old : string,
     infoRef :  React.RefObject<HTMLInputElement>,
     passwordRef : React.RefObject<HTMLInputElement>
@@ -11,7 +12,7 @@ interface EditEmailProps {
 
 
 export default function EditEmail(props : EditEmailProps) {
-    const {  onClose , old , infoRef,passwordRef} = props;
+    const {  onClose, onSubmit , old , infoRef,passwordRef} = props;
 
   return (
     <>
@@ -25,16 +26,17 @@ export default function EditEmail(props : EditEmailProps) {
             </UnstyledButton>
         </div>
 
-            <div className={styles.body}>
+            <form id='form' onSubmit={onSubmit} className={styles.body}>
                 <div className={styles.input}>
                     <label htmlFor="">Email</label>
-                    <input ref={infoRef} value={old} type="text" />
+                    <input ref={infoRef} defaultValue={old} type="text" />
                 </div>
                 <div className={styles.input}>
                     <label htmlFor="">Password</label>
                     <input ref={passwordRef} type="password" />
                 </div>
-            </div>
+
+            </form>
 
     </>
   )

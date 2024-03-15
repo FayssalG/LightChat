@@ -13,20 +13,20 @@ const update_image = async (id : string , image : File , password:string)=>{
 
 const update_display_name = async (id : string , newDisplayName : string , password:string)=>{
     await api.get('/sanctum/csrf-cookie');
-    const res = api.post('/api/user/displayname/update' , {id , new_display_name:newDisplayName , password} )
+    const res = api.post('/api/user/displayname/update' , {id , display_name:newDisplayName , password} )
     return res
 }
 
 const update_username = async (id : string , newUsername : string , password:string)=>{
     await api.get('/sanctum/csrf-cookie');
-    const res = api.post('/api/user/username/update' , {id , new_username:newUsername , password} )
+    const res = api.post('/api/user/username/update' , {id , username:newUsername , password} )
     return res
 }
 
 
 const update_email = async (id : string , newEmail : string , password:string)=>{
     await api.get('/sanctum/csrf-cookie');
-    const res = api.post('/api/user/username/update' , {id , new_email:newEmail , password} )
+    const res = api.post('/api/user/email/update' , {id , email:newEmail , password} )
     return res
 }
 
