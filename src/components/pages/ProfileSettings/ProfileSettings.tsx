@@ -1,5 +1,6 @@
 import {update_image} from '@/axios/user';
 
+import avatar from '@/assets/avatar.png';
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import styles from './ProfileSettings.module.css';
 import { IoArrowBack } from 'react-icons/io5';
@@ -38,7 +39,7 @@ export default function ProfileSettings() {
         <div className={styles.inner_container}>
             <div className={styles.header}>
                 <div className={styles.picture}>
-                    <img src={user.image.url} alt="" />
+                    <img src={user.image ? user.image.url : avatar} alt="" />
                     <input ref={imageRef} onChange={handleImageUpdate} type="file" />
                 </div>
 

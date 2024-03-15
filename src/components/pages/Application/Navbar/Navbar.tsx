@@ -23,7 +23,7 @@ export default function Navbar() {
     return (
         <div className={styles.container}>
             <Link to='/profil' className={styles.user}>
-                <img src={user.image.url} alt="avatar" />
+                <img src={user.image ? user.image.url : avatar} alt="avatar" />
             </Link>
             
             <div className={styles.sections}>
