@@ -62,4 +62,4 @@ async function logout(){
 }
 
 
-export {login , register, forgot , reset , logout , getUser , verify};
+export {api , login , register, forgot , reset , logout , getUser , verify};

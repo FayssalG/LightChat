@@ -1,4 +1,5 @@
-import avatar from '@/assets/avatar.png';
+import {update_image} from '@/axios/user';
+
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import styles from './ProfileSettings.module.css';
 import { IoArrowBack } from 'react-icons/io5';
@@ -9,10 +10,24 @@ import { useDispatch } from 'react-redux';
 import { toggleShowEditModal } from '@/redux/features/UiSlice';
 import { Link } from 'react-router-dom';
 import useAuth from '@/components/hooks/useAuth';
+import { useRef } from 'react';
 
 export default function ProfileSettings() { 
   const {authenticatedUser : user} = useAuth()
-  
+  const imageRef = useRef<HTMLInputElement>(null)  
+
+  const handleImageUpdate = ()=>{
+    const image : File | undefined = imageRef.current?.files?.[0];
+
+    if(image){
+        update_image(user.id , image)
+        .then((res)=>console.log(res))
+        .catch((err)=>{
+            console.log(err)
+        })
+    }
+  }
+
   const dispatch = useDispatch()
     
   return (
@@ -23,8 +38,11 @@ export default function ProfileSettings() {
         <div className={styles.inner_container}>
             <div className={styles.header}>
                 <div className={styles.picture}>
-                    <img src={avatar} alt="" />
-                </div>         
+                    <img src={user.image.url} alt="" />
+                    <input ref={imageRef} onChange={handleImageUpdate} type="file" />
+                </div>
+
+
                 <div className={styles.displayname_username}>
                     <h2 className={styles.displayname}>
                         {user.display_name}

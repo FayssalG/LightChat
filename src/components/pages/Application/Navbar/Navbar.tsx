@@ -14,7 +14,7 @@ import useAuth from '@/components/hooks/useAuth';
 export default function Navbar() {
     const visibleSection : string = useSelector(state=>state.ui.visibleSection);
     const dispatch = useDispatch();
-    const {logoutUser} = useAuth()
+    const {logoutUser , authenticatedUser:user} = useAuth()
 
     const handleVisibleSection = (newSection : string)=>{
         dispatch(changeVisibleSection(newSection))
@@ -23,7 +23,7 @@ export default function Navbar() {
     return (
         <div className={styles.container}>
             <Link to='/profil' className={styles.user}>
-                <img src={avatar} alt="avatar" />
+                <img src={user.image.url} alt="avatar" />
             </Link>
             
             <div className={styles.sections}>
