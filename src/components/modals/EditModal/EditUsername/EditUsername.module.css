@@ -17,8 +17,7 @@
     }
 
 
-    .close{
-        
+    .close{        
         position: absolute;
         top: 1rem;
         right: 1rem;
@@ -26,6 +25,9 @@
             width: 30px;
             height: 30px;
             color: grey;
+        }
+        @media (max-width:700px) {
+            display: none;
         }
     }
 }
