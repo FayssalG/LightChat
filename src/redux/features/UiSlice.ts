@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const UiSlice = createSlice({
     name : 'ui',
     initialState : {
+        isLoading : false,
         visibleSection : 'friends',
         conversationVisibility : false,
         showEditModal : false, 
@@ -15,6 +16,10 @@ const UiSlice = createSlice({
         showPasswordResetSuccessAlert : false,
     },
     reducers: {
+        setIsLoading : (state , action)=>{
+            state.isLoading = action.payload;
+        },
+
         changeVisibleSection : (state , action)=>{
             state.visibleSection = action.payload;
         },
@@ -82,6 +87,7 @@ const UiSlice = createSlice({
 
 export default UiSlice.reducer;
 export const {
+    setIsLoading,
     changeVisibleSection , 
     toggleConversationVisibility , 
     toggleShowEditModal,

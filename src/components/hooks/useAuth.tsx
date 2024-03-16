@@ -1,12 +1,13 @@
 import { useEffect } from "react";
 import {login, register , logout, getUser, forgot, reset , verify} from '@/axios/axios';
 import { useDispatch, useSelector } from "react-redux";
-import { setAuthenticatedUser, setIsAuth, setIsLoading, setIsVerified } from "@/redux/features/AuthSlice";
+import { setAuthenticatedUser, setIsAuth, setIsVerified } from "@/redux/features/AuthSlice";
+import { setIsLoading } from "@/redux/features/UiSlice";
 
 export default function useAuth(){
+    const isLoading = useSelector(state => state.ui.isLoading);
     const isAuth = useSelector(state => state.auth.isAuth);
     const isVerified = useSelector(state=>state.auth.isVerified);
-    const isLoading = useSelector(state => state.auth.isLoading);
     const authenticatedUser = useSelector(state=>state.auth.authenticatedUser);
     const dispatch = useDispatch();
 

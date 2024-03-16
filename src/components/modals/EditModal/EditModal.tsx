@@ -10,7 +10,7 @@ import EditPicture from './EditPicture/EditPicture';
 import { useEffect, useRef, useState } from 'react';
 import EditEmail from './EditEmail/EditEmail';
 import EditUsername from './EditUsername/EditUsername';
-import { setIsLoading } from '@/redux/features/AuthSlice';
+import { setIsLoading } from '@/redux/features/UiSlice';
 import Spinner from '@/components/shared/Spinner/Spinner';
 
 interface Update{
@@ -26,11 +26,10 @@ interface Infos {
 }
 
 export default function EditModal(props : {update:Update , infos: Infos }) {
-
     const {update , infos} = props;
     const dispatch = useDispatch()
     const showEditModal = useSelector(state=>state.ui.showEditModal);
-    const isLoading = useSelector(state=>state.auth.isLoading);
+    const isLoading = useSelector(state=>state.ui.isLoading);
     const {shouldRender , onAnimationEnd , animation} = useBiAnimation(showEditModal , {enter : 'popUp' , leave:'popOut'})
 
     const [errors , setErrors] : [ [string?] ,Function ] = useState([]);

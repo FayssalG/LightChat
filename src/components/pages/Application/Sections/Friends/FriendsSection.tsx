@@ -1,12 +1,28 @@
 import styles from './FriendsSection.module.css';
 import Friend from './Friend/Friend';
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { openAddFriendModal } from '@/redux/features/UiSlice';
+import { useEffect } from 'react';
+import { get_all_friends } from '@/axios/friend';
+import { setFriends } from '@/redux/features/FriendSlice';
 
 export default function FriendsSection() {
   const dispatch = useDispatch();
+  const friends = useSelector(state=>state.friend.friends);
 
+  useEffect(()=>{
+    get_all_friends()
+    .then((res)=>{
+      dispatch(setFriends(res.data));
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+
+  },[])
+
+  
   return (
     <div className={styles.container}>
         <div className={styles.header}>
@@ -28,17 +44,7 @@ export default function FriendsSection() {
 
 
         <div className={styles.friends_list}>
-            <Friend/>
-            <Friend />
-            <Friend />
-            <Friend />
-            <Friend />
-            <Friend />
-            <Friend />
-            <Friend />
-            <Friend />
-            <Friend />
-
+          {friends.map((friend , key)=><Friend key={key} friend={friend}/>)}
         </div>
     </div>
   )

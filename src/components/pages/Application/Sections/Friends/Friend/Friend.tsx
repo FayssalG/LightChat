@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import { openConfirmRemoveFriendModal } from '@/redux/features/UiSlice';
 
 
-export default function Friend() {
+export default function Friend({friend}) {
   const dispatch = useDispatch()
   const optionsRef : RefObject<HTMLElement> = useRef(null)
   
@@ -28,11 +28,11 @@ export default function Friend() {
     <>
          <div className={styles.friend}>
               <div className={styles.picture}>
-                <img src={avatar} alt="avatar" />
+                <img src={friend?.image?.url || avatar} alt="avatar" />
               </div>
 
               <UnstyledButton className={styles.name_status}>
-                  <h2 className={styles.name}>Jack Martins</h2>
+                  <h2 className={styles.name}>{friend.display_name}</h2>
                   <p className={styles.status}>online</p>
               </UnstyledButton>
 
