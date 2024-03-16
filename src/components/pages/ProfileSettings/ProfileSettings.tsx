@@ -16,10 +16,10 @@ import { useRef, useState } from 'react';
 export default function ProfileSettings() {
 
   const [update , setUpdate] : [{updateTarget:string , updateFn:Function} | null , Function] = useState(null);
-  const {authenticatedUser : user} = useAuth()
+  const { user} = useAuth()
   const dispatch = useDispatch()
 
-  const [image , setImage] = useState(user?.image?.url || avatar);
+  const [image , setImage] = useState(user.image || avatar);
   const [displayName , setDisplayName] = useState(user.display_name);
   const [username , setUsername] = useState(user.username);
   const [email , setEmail ] = useState(user.email);

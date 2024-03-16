@@ -1,14 +1,14 @@
 import { useEffect } from "react";
 import {login, register , logout, getUser, forgot, reset , verify} from '@/axios/axios';
 import { useDispatch, useSelector } from "react-redux";
-import { setAuthenticatedUser, setIsAuth, setIsVerified } from "@/redux/features/AuthSlice";
+import { setUser, setIsAuth, setIsVerified } from "@/redux/features/AuthSlice";
 import { setIsLoading } from "@/redux/features/UiSlice";
 
 export default function useAuth(){
     const isLoading = useSelector(state => state.ui.isLoading);
     const isAuth = useSelector(state => state.auth.isAuth);
     const isVerified = useSelector(state=>state.auth.isVerified);
-    const authenticatedUser = useSelector(state=>state.auth.authenticatedUser);
+    const user = useSelector(state=>state.auth.user);
     const dispatch = useDispatch();
 
     useEffect(()=>{
@@ -69,25 +69,28 @@ export default function useAuth(){
    
     const logoutUser = async ()=>{
         const response = await logout();
-        if(response.status = 204) dispatch(setIsAuth(false))
+        if(response.status == 204){
+            dispatch(setUser(null))
+            dispatch(setIsAuth(false))
+        } 
     }
-      
+    
     const getAuthenticatedUser = async ()=>{
         try{
             const response = await getUser()
             const user = response.data 
-            dispatch(setAuthenticatedUser(user))
+            dispatch(setUser(user))
             if(user.email_verified_at){
                 dispatch(setIsVerified(true));
             }else{
                 dispatch(setIsVerified(false));
             }
-            console.log(user)
             return user
         }catch(err){
             dispatch(setIsAuth(false))
         }
     }
+    console.log(user)      
       
     const forgotPassword = async  (email : string)=>{
         try{
@@ -116,5 +119,5 @@ export default function useAuth(){
     }
  
 
-    return {isAuth, isLoading , authenticatedUser , loginUser , registerUser , logoutUser , getAuthenticatedUser , forgotPassword  , resetPassword , verifyEmail}
+    return {isAuth, isLoading , user , loginUser , registerUser , logoutUser , getAuthenticatedUser , forgotPassword  , resetPassword , verifyEmail}
 }
