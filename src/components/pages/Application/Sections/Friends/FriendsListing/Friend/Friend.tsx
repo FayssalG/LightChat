@@ -6,12 +6,21 @@ import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import { RefObject, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { openConfirmRemoveFriendModal } from '@/redux/features/UiSlice';
+import ConfirmRemoveFriendModal from '@/components/modals/ConfirmRemoveFriendModal/ConfirmRemoveFriendModal';
+import { setSelectedFriend } from '@/redux/features/FriendSlice';
 
 
 export default function Friend({friend} : {friend:Friend}) {
   const dispatch = useDispatch()
   const optionsRef = useRef<HTMLDivElement | null>(null)
   
+  const handleRemoveClick = ()=>{
+    setShowOptionsMenu(false)
+    //set the selected friend for the operation
+    dispatch(setSelectedFriend(friend))
+    dispatch(openConfirmRemoveFriendModal())
+  }
+
   useEffect(()=>{
     const hideOptionsMenu = (e)=>{
       if(optionsRef.current && !optionsRef.current.contains(e.target)){
@@ -43,14 +52,12 @@ export default function Friend({friend} : {friend:Friend}) {
                  <div data-visible={showOptionsMenu ? 'true' : 'false'}  className={styles.options_menu}>
                     <ul>
                       <li className={styles.option}><UnstyledButton> Send a message </UnstyledButton></li>
-                      <li className={styles.option+' '+styles.option_red }><UnstyledButton onClick={()=>dispatch(openConfirmRemoveFriendModal())}> Remove </UnstyledButton></li>
+                      <li className={styles.option+' '+styles.option_red }><UnstyledButton onClick={handleRemoveClick}> Remove </UnstyledButton></li>
                     </ul>
                   </div>
               </div>
-
-
           </div>
-
+  
     </>
   )
 }

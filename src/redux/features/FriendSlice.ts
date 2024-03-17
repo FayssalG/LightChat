@@ -5,12 +5,16 @@ const FriendSlice = createSlice({
     name : 'friend',
     initialState : {
         isLoadingFriend : false,
+        selectedFriend : null,
         friends : [],
         pendingFriends : []
     },
     reducers: {
         setIsLoadingFriend : (state , action)=>{
             state.isLoadingFriend=action.payload;
+        },
+        setSelectedFriend : (state , action)=>{
+            state.selectedFriend=action.payload;
         },
         setFriends : (state , action)=>{
             state.friends = action.payload;
@@ -43,4 +47,4 @@ const FriendSlice = createSlice({
 })
 
 export default FriendSlice.reducer;
-export const {setIsLoadingFriend, setFriends  ,addFriend , removeFriend ,setPendingFriends , addPendingFriend, removePendingFriend} = FriendSlice.actions;  
+export const {setIsLoadingFriend, setSelectedFriend, setFriends  ,addFriend , removeFriend ,setPendingFriends , addPendingFriend, removePendingFriend} = FriendSlice.actions;  

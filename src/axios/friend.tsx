@@ -36,6 +36,12 @@ const accept_friend_request = async (friendship_id : string)=>{
     return res;
 }
 
+const remove_friend = async (friendship_id : string)=>{
+    console.log({friendship_id});
+    await api.get('/sanctum/csrf-cookie');
+    const res = await api.post('/api/friends/remove' , {friendship_id});
+    return res;
+}
 
 
-export {get_friends , get_pending_friends , send_friend_request , accept_friend_request , cancel_friend_request , ignore_friend_request}
+export {get_friends , get_pending_friends , send_friend_request , accept_friend_request , cancel_friend_request , ignore_friend_request , remove_friend}
