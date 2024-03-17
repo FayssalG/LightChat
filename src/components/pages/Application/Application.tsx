@@ -9,17 +9,36 @@ import GroupsSection from "./Sections/Groups/GroupsSection";
 
 import FriendDetailsModal from "@/components/modals/FriendDetailsModal/FriendDetailsModal";
 import ConfirmBlockFriendModal from "@/components/modals/ConfirmBlockFriendModal/ConfirmBlockFriendModal";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CreateGroupModal from "@/components/modals/CreateGroupModal/CreateGroupModal";
 import GroupDetailsModal from "@/components/modals/GroupDetailsModal/GroupDetailsModal";
 import EmailNotVerified from '@/components/pages/Application/EmailNotVerified/EmailNotVerified';
+import { useEffect } from 'react';
+import { get_friend_requests, get_friends } from '@/axios/friend';
+import { setFriends, setIsLoadingFriend, setPendingFriends } from '@/redux/features/FriendSlice';
 
 
 
 export default function Application() {
   const visibleSection : string = useSelector(state=>state.ui.visibleSection)
   const isVerified : Boolean = useSelector(state => state.auth.isVerified);
-  
+  const dispatch = useDispatch();
+
+  useEffect(()=>{
+    const fetchFriends = async ()=>{
+      const res1 = await get_friend_requests()
+      if(res1.status == 200) dispatch(setPendingFriends(res1.data));
+      const res2 = await  get_friends()
+      if (res2.status === 200) dispatch(setFriends(res2.data));      
+    }
+
+    dispatch(setIsLoadingFriend(true))
+    
+    fetchFriends()
+    .catch((err)=>console.log(err))
+    .finally(()=>dispatch(setIsLoadingFriend(false)))
+  })
+
   const selectedSection  = ()=>{
     switch(visibleSection){
       case 'friends':

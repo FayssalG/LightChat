@@ -12,17 +12,6 @@ export default function FriendsListing() {
     const friends : [Friend?] = useSelector(state=>state.friend.friends);
     const selectedFriend  : Friend | null = useSelector(state=>state.friend.selectedFriend);
 
-    useEffect(()=>{
-            get_friends()
-            .then((res)=>{
-                if (res.status === 200) dispatch(setFriends(res.data));
-
-            })
-            .catch( (err)=>{
-                console.log(err)
-            })
-        
-      },[])
     
     return (
     <>

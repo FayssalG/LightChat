@@ -6,9 +6,9 @@ const get_friends = async ()=>{
     return res;
 }
 
-const get_pending_friends = async ()=>{
+const get_friend_requests = async ()=>{
     await api.get('/sanctum/csrf-cookie');
-    const res = await api.get('/api/friends/pending');
+    const res = await api.get('/api/friends/requests');
     return res;
 }
 
@@ -18,21 +18,21 @@ const send_friend_request = async (username : string)=>{
     return res;
 }
 
-const cancel_friend_request = async (friendship_id : string)=>{
+const cancel_friend_request = async (request_id : string)=>{
     await api.get('/sanctum/csrf-cookie');
-    const res = await api.post('/api/friends/cancel-request' , {friendship_id});
+    const res = await api.post('/api/friends/cancel-request' , {request_id});
     return res;
 }
 
-const ignore_friend_request = async (friendship_id : string)=>{
+const ignore_friend_request = async (request_id : string)=>{
     await api.get('/sanctum/csrf-cookie');
-    const res = await api.post('/api/friends/ignore-request' , {friendship_id});
+    const res = await api.post('/api/friends/ignore-request' , {request_id});
     return res;
 }
 
-const accept_friend_request = async (friendship_id : string)=>{
+const accept_friend_request = async (request_id : string)=>{
     await api.get('/sanctum/csrf-cookie');
-    const res = await api.post('/api/friends/accept-request' , {friendship_id});
+    const res = await api.post('/api/friends/accept-request' , {request_id});
     return res;
 }
 
@@ -44,4 +44,4 @@ const remove_friend = async (friendship_id : string)=>{
 }
 
 
-export {get_friends , get_pending_friends , send_friend_request , accept_friend_request , cancel_friend_request , ignore_friend_request , remove_friend}
+export {get_friends , get_friend_requests , send_friend_request , accept_friend_request , cancel_friend_request , ignore_friend_request , remove_friend}
