@@ -2,26 +2,87 @@ import styles from './PendingFriend.module.css';
 import { IoMdMore } from "react-icons/io";
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import { RefObject, useEffect, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { openConfirmRemoveFriendModal } from '@/redux/features/UiSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { openConfirmRemoveFriendModal, setIsLoading } from '@/redux/features/UiSlice';
+import { IoClose } from 'react-icons/io5';
+import { accept_friend_request, cancel_friend_request, ignore_friend_request } from '@/axios/friend';
+import { addFriend, removePendingFriend, setIsLoadingFriend } from '@/redux/features/FriendSlice';
+import Spinner from '@/components/shared/Spinner/Spinner';
 
 
 export default function PendingFriend({pendingFriend} : {pendingFriend:Friend}) {
+  const user = useSelector(state=>state.auth.user);
+  const isLoadingFriend = useSelector(state=>state.friend.isLoadingFriend);
   const dispatch = useDispatch()
-  const optionsRef : RefObject<HTMLElement> = useRef(null)
   
-  useEffect(()=>{
-    const hideOptionsMenu = (e : MouseEvent)=>{
-      if(optionsRef.current && !optionsRef.current.contains(e.target)){
-        setShowOptionsMenu(false)
+  
+  const handleAccept = ()=>{
+    dispatch(setIsLoadingFriend(true));
+    accept_friend_request(pendingFriend.friendship_id)
+    .then((res)=>{
+      if(res.status == 200){
+        dispatch(removePendingFriend(pendingFriend.id))
+        dispatch(addFriend(pendingFriend))
       }
+    })
+    .finally(()=>{
+      dispatch(setIsLoadingFriend(false));
+    })
+  }
+
+  const handleIgnore = ()=>{
+    dispatch(setIsLoadingFriend(true));
+    
+    ignore_friend_request(pendingFriend.friendship_id)
+    .then((res)=>{
+      if(res.status == 200){
+        dispatch(removePendingFriend(pendingFriend.id));
+      }
+      console.log(res);
+    })
+    .finally(()=>{
+      dispatch(setIsLoadingFriend(false));
+   
+    })
+  }
+
+  const handleCancel = ()=>{
+    dispatch(setIsLoadingFriend(true));
+
+    cancel_friend_request(pendingFriend.friendship_id)
+    .then((res)=>{
+      if(res.status == 200){
+          dispatch(removePendingFriend(pendingFriend.id));  
+      }
+      console.log(res);
+    })
+    .finally(()=>{
+      dispatch(setIsLoadingFriend(false));   
+    })
+  }
+ 
+  console.log(pendingFriend);
+  const renderActions = ()=>{
+    if(pendingFriend.initiator == user.id){
+      return (
+        <UnstyledButton title='Cancel' className={styles.cancel_btn} onClick={handleCancel}>
+          <IoClose/>
+        </UnstyledButton>
+      )
+    } 
+    else{
+      return(
+        <div className={styles.accept_ignore} >
+          <UnstyledButton className={styles.accept_btn} onClick={handleAccept}>
+              Accept
+          </UnstyledButton>
+          <UnstyledButton className={styles.ignore_btn} onClick={handleIgnore}>
+              Ignore
+          </UnstyledButton>
+        </div> 
+      )
     }
-    document.addEventListener('click', hideOptionsMenu )
-    return ()=>document.removeEventListener('click' , hideOptionsMenu)
-  },[])
-
-  const [showOptionsMenu , setShowOptionsMenu] : [Boolean , Function] = useState(false)
-
+  }
   return (
     <>
          <div className={styles.friend}>
@@ -29,26 +90,17 @@ export default function PendingFriend({pendingFriend} : {pendingFriend:Friend}) 
                 <img src={pendingFriend.image} alt="avatar" />
               </div>
 
-              <UnstyledButton className={styles.name_status}>
-                  <h2 className={styles.name}>{pendingFriend.display_name}</h2>
-                  <p className={styles.status}>online</p>
+              <UnstyledButton className={styles.name}>
+                  {pendingFriend.display_name}
               </UnstyledButton>
 
-              <div ref={optionsRef} className={styles.options} >
-                 <UnstyledButton onClick={()=>setShowOptionsMenu(!showOptionsMenu)} className={styles.options_btn}>
-                   <IoMdMore/>
-                 </UnstyledButton>
-                 <div data-visible={showOptionsMenu ? 'true' : 'false'}  className={styles.options_menu}>
-                    <ul>
-                      <li className={styles.option}><UnstyledButton> Send a message </UnstyledButton></li>
-                      <li className={styles.option+' '+styles.option_red }><UnstyledButton onClick={()=>dispatch(openConfirmRemoveFriendModal())}> Remove </UnstyledButton></li>
-                    </ul>
-                  </div>
-              </div>
-
-
+              {
+                isLoadingFriend ?
+                  <Spinner size={20}/>
+                :
+                renderActions()
+              }
           </div>
-
     </>
   )
 }

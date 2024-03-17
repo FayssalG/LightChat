@@ -35,6 +35,7 @@
         margin-top: 2rem;
         
         input{
+            color: white;
             height: 40px;
             width: 100%;
             border-radius: .2rem;
@@ -44,11 +45,31 @@
             background-color: var(--primary-dark);
         }
 
+        .message{
+            margin-top: .4rem;
+            font-size: .9rem;
+            font-weight: 400;
+            .error{
+                color: var(--danger);
+            }
+            .success{
+                color: var(--success);
+            }
+        }
+
         button{
             margin-top: 1.5rem;
             border-radius: .2rem;
             padding: .5em 1em;
             background-color: var(--accent);
+            transition: background 200ms ease;
+            &:hover{
+                background-color: white;
+                color: var(--accent);
+            }
+            &:disabled{
+                background-color: grey;
+            }
         }
     }
 }
