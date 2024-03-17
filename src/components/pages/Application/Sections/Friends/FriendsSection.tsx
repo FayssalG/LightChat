@@ -1,27 +1,32 @@
 import styles from './FriendsSection.module.css';
-import Friend from './Friend/Friend';
+import Friend from './FriendsListing/Friend/Friend';
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { openAddFriendModal } from '@/redux/features/UiSlice';
-import { useEffect } from 'react';
-import { get_all_friends } from '@/axios/friend';
-import { setFriends } from '@/redux/features/FriendSlice';
+import { useEffect, useState } from 'react';
+import { get_friends, get_pending_friends} from '@/axios/friend';
+import { setFriends , setPendingFriends} from '@/redux/features/FriendSlice';
+import PendingFriend from './PendingFriendsListing/PendingFriend/PendingFriend';
+import BlockedFriend from './BlockedListing/Blocked/Blocked';
+import PendingFriendsListing from './PendingFriendsListing/PendingFriendsListing';
+import FriendsListing from './FriendsListing/FriendsListing';
 
 export default function FriendsSection() {
-  const dispatch = useDispatch();
-  const friends = useSelector(state=>state.friend.friends);
+  const dispatch = useDispatch();  
+  const [selected , setSelected] : [string , Function]= useState('all');
 
-  useEffect(()=>{
-    get_all_friends()
-    .then((res)=>{
-      dispatch(setFriends(res.data));
-    })
-    .catch((err)=>{
-      console.log(err)
-    })
+  const renderListings = ()=>{
+    switch(selected){
+      case 'all':
+        return <FriendsListing/>
+      case 'pending':
+        return <PendingFriendsListing/>
+      case 'blocked':
+        return null
 
-  },[])
-
+    }
+  }
+  
   
   return (
     <div className={styles.container}>
@@ -36,15 +41,15 @@ export default function FriendsSection() {
           </div>
 
           <div className={styles.filters}>
-            <button>All</button>
-            <button>Blocked</button>
-            <button>Pending</button>
+            <UnstyledButton onClick={()=>setSelected('all')} data-active={selected=='all' ? true : false}>All</UnstyledButton>
+            <UnstyledButton onClick={()=>setSelected('blocked')} data-active={selected=='blocked' ? true : false}>Blocked</UnstyledButton>
+            <UnstyledButton onClick={()=>setSelected('pending')} data-active={selected=='pending' ? true : false}>Pending</UnstyledButton>
           </div>  
         </div>
 
 
         <div className={styles.friends_list}>
-          {friends.map((friend , key)=><Friend key={key} friend={friend}/>)}
+          {renderListings()}
         </div>
     </div>
   )

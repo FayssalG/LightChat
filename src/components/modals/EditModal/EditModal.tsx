@@ -18,14 +18,8 @@ interface Update{
     updateFn:Function
 }
 
-interface Infos {
-    username : string,
-    displayName : string,
-    email :string,
-    image : string
-}
 
-export default function EditModal(props : {update:Update , infos: Infos }) {
+export default function EditModal(props : {update:Update , infos: User }) {
     const {update , infos} = props;
     const dispatch = useDispatch()
     const showEditModal = useSelector(state=>state.ui.showEditModal);

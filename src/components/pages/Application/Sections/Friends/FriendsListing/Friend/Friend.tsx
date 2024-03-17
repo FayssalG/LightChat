@@ -8,12 +8,12 @@ import { useDispatch } from 'react-redux';
 import { openConfirmRemoveFriendModal } from '@/redux/features/UiSlice';
 
 
-export default function Friend({friend}) {
+export default function Friend({friend} : {friend:Friend}) {
   const dispatch = useDispatch()
-  const optionsRef : RefObject<HTMLElement> = useRef(null)
+  const optionsRef = useRef<HTMLDivElement | null>(null)
   
   useEffect(()=>{
-    const hideOptionsMenu = (e : MouseEvent)=>{
+    const hideOptionsMenu = (e)=>{
       if(optionsRef.current && !optionsRef.current.contains(e.target)){
         setShowOptionsMenu(false)
       }
@@ -28,7 +28,7 @@ export default function Friend({friend}) {
     <>
          <div className={styles.friend}>
               <div className={styles.picture}>
-                <img src={friend?.image?.url || avatar} alt="avatar" />
+                <img src={friend.image} alt="avatar" />
               </div>
 
               <UnstyledButton className={styles.name_status}>
