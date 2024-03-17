@@ -12,7 +12,6 @@ import Spinner from '@/components/shared/Spinner/Spinner';
 
 export default function PendingFriend({pendingFriend} : {pendingFriend:Friend}) {
   const user = useSelector(state=>state.auth.user);
-  const isLoadingFriend = useSelector(state=>state.friend.isLoadingFriend);
   const dispatch = useDispatch()
   
   
@@ -90,16 +89,17 @@ export default function PendingFriend({pendingFriend} : {pendingFriend:Friend}) 
                 <img src={pendingFriend.image} alt="avatar" />
               </div>
 
-              <UnstyledButton className={styles.name}>
-                  {pendingFriend.display_name}
-              </UnstyledButton>
+              <div className={styles.displayname_username}>
+                <UnstyledButton className={styles.displayname}>
+                    {pendingFriend.display_name}
+                </UnstyledButton>
+                <UnstyledButton className={styles.username}>
+                    @{pendingFriend.username}
+                </UnstyledButton>
+          
+              </div>
 
-              {
-                isLoadingFriend ?
-                  <Spinner size={20}/>
-                :
-                renderActions()
-              }
+              {renderActions()}
           </div>
     </>
   )

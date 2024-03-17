@@ -1,17 +1,16 @@
 import styles from './FriendsSection.module.css';
-import Friend from './FriendsListing/Friend/Friend';
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { openAddFriendModal } from '@/redux/features/UiSlice';
 import { useEffect, useState } from 'react';
 import { get_friends, get_pending_friends} from '@/axios/friend';
 import { setFriends , setPendingFriends} from '@/redux/features/FriendSlice';
-import PendingFriend from './PendingFriendsListing/PendingFriend/PendingFriend';
-import BlockedFriend from './BlockedListing/Blocked/Blocked';
 import PendingFriendsListing from './PendingFriendsListing/PendingFriendsListing';
 import FriendsListing from './FriendsListing/FriendsListing';
+import Spinner from '@/components/shared/Spinner/Spinner';
 
 export default function FriendsSection() {
+  const isLoadingFriend = useSelector(state=>state.friend.isLoadingFriend);
   const dispatch = useDispatch();  
   const [selected , setSelected] : [string , Function]= useState('all');
 
@@ -51,6 +50,16 @@ export default function FriendsSection() {
         <div className={styles.friends_list}>
           {renderListings()}
         </div>
+
+        {
+          isLoadingFriend &&        
+          
+          <div className={styles.loading_overlay}>
+            <Spinner size={25}/>
+          </div>
+        }
+
+        
     </div>
   )
 }
