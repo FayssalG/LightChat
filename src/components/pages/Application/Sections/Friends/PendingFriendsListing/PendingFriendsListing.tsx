@@ -10,12 +10,12 @@ import PendingFriend from "./PendingFriend/PendingFriend";
 
 export default function PendingFriendsListing() {
     const dispatch = useDispatch();
-    const pendingFriends : [Friend?] = useSelector(state=>state.friend.pendingFriends);
-
+    const friendRequests : [Friend?] = useSelector(state=>state.friend.requests);
+  console.log(friendRequests)
     
     return (
     <>
-        {pendingFriends.map((pendingFriend , key : number)=><PendingFriend key={key} pendingFriend={pendingFriend}/>)}
+        {friendRequests.map((request , key : number)=><PendingFriend key={key} pendingFriend={request}/>)}
     </>
   )
 }

@@ -8,7 +8,7 @@ import { useRef, useState } from 'react';
 import { send_friend_request } from '@/axios/friend';
 import { AxiosResponse } from 'axios';
 import Spinner from '@/components/shared/Spinner/Spinner';
-import { addPendingFriend } from '@/redux/features/FriendSlice';
+import {  addRequest } from '@/redux/features/FriendSlice';
 
 export default function AddFriendModal() { 
   const showAddFriendModal = useSelector((state)=>state.ui.showAddFriendModal);
@@ -32,7 +32,7 @@ export default function AddFriendModal() {
         send_friend_request(username)
         .then((res : AxiosResponse) => {
           if(res.status == 201){
-              dispatch(addPendingFriend(res.data));
+              dispatch(addRequest(res.data));
               setSuccess("Request sent successfully!");
               setErrors([]);
           }

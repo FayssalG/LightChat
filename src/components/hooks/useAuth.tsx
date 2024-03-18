@@ -57,7 +57,6 @@ export default function useAuth(){
         try{
             dispatch(setIsLoading(true))
             const res = await verify();
-            console.log(res)
             return res
         }catch(err){
             console.log(err)
@@ -90,7 +89,6 @@ export default function useAuth(){
             dispatch(setIsAuth(false))
         }
     }
-    console.log(user)      
       
     const forgotPassword = async  (email : string)=>{
         try{

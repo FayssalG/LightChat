@@ -7,7 +7,7 @@ const FriendSlice = createSlice({
         isLoadingFriend : false,
         selectedFriend : null,
         friends : [],
-        pendingFriends : []
+        requests : []
     },
     reducers: {
         setIsLoadingFriend : (state , action)=>{
@@ -32,19 +32,21 @@ const FriendSlice = createSlice({
         },
 
 
-        setPendingFriends : (state , action)=>{
-            state.pendingFriends = action.payload
+        setRequests : (state , action)=>{
+            if(state.requests.find((request)=>request.request_id == action.payload) ) return
+            state.requests = action.payload
         },
-        addPendingFriend : (state , action)=>{
-            state.pendingFriends.push(action.payload)
+        addRequest : (state , action)=>{
+            state.requests.push(action.payload)
         },
-        removePendingFriend : (state , action)=>{
-            state.pendingFriends = state.pendingFriends.filter((item:Friend)=>{
-                return item.id != action.payload
+        removeRequest : (state , action)=>{
+            state.requests = state.requests.filter((item:Friend)=>{
+                return item.request_id != action.payload
             })
         }
     }
 })
 
+
 export default FriendSlice.reducer;
-export const {setIsLoadingFriend, setSelectedFriend, setFriends  ,addFriend , removeFriend ,setPendingFriends , addPendingFriend, removePendingFriend} = FriendSlice.actions;  
+export const {setIsLoadingFriend, setSelectedFriend, setFriends  ,addFriend , removeFriend ,setRequests , addRequest, removeRequest} = FriendSlice.actions;  

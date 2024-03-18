@@ -9,6 +9,8 @@ import useAuth from './components/hooks/useAuth';
 import Loading from './components/shared/Loading/Loading';
 import ResetPassword from './components/pages/Auth/ResetPassword/ResetPassword';
 
+import SocketProvider from '@/components/context/SocketProvider';
+
 function App() {
   
   return (
@@ -45,6 +47,10 @@ function ProtectedRoute(){
 
   if(!isAuth) return <Navigate replace to='/login' />
 
-  return <Outlet/>
+  return( 
+    <SocketProvider>
+      <Outlet/>
+    </SocketProvider>
+  )
 } 
 export default App

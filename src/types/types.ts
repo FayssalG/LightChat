@@ -9,10 +9,19 @@ interface User  {
 
 interface Friend {
     friendship_id : string,
-    initiator : string,
-    id: string,
+    // initiator : string,
+    user_id: string,
     display_name : string,
     username : string,
     image : string,
 
+}
+
+interface FriendRequest {
+    request_id : string,
+    initiator : string,
+    user_id: string,
+    display_name : string,
+    username : string,
+    image : string,
 }

@@ -7,7 +7,7 @@ const store = configureStore({
     reducer : {
         ui : UiReducer,
         auth : AuthReducer,
-        friend : FriendReducer
+        friend : FriendReducer,
     }
 })
 

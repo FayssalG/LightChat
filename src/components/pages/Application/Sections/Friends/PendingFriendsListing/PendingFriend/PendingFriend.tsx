@@ -6,21 +6,21 @@ import { useDispatch, useSelector } from 'react-redux';
 import { openConfirmRemoveFriendModal, setIsLoading } from '@/redux/features/UiSlice';
 import { IoClose } from 'react-icons/io5';
 import { accept_friend_request, cancel_friend_request, ignore_friend_request } from '@/axios/friend';
-import { addFriend, removePendingFriend, setIsLoadingFriend } from '@/redux/features/FriendSlice';
+import { addFriend, removeRequest, setIsLoadingFriend } from '@/redux/features/FriendSlice';
 import Spinner from '@/components/shared/Spinner/Spinner';
 
 
-export default function PendingFriend({pendingFriend} : {pendingFriend:Friend}) {
+export default function PendingFriend({pendingFriend} : {pendingFriend:FriendRequest}  ) {
   const user = useSelector(state=>state.auth.user);
   const dispatch = useDispatch()
   
   
   const handleAccept = ()=>{
     dispatch(setIsLoadingFriend(true));
-    accept_friend_request(pendingFriend.friendship_id)
+    accept_friend_request(pendingFriend.request_id)
     .then((res)=>{
       if(res.status == 200){
-        dispatch(removePendingFriend(pendingFriend.id))
+        dispatch(removeRequest(pendingFriend.request_id))
         dispatch(addFriend(pendingFriend))
       }
     })
@@ -32,10 +32,10 @@ export default function PendingFriend({pendingFriend} : {pendingFriend:Friend}) 
   const handleIgnore = ()=>{
     dispatch(setIsLoadingFriend(true));
     
-    ignore_friend_request(pendingFriend.friendship_id)
+    ignore_friend_request(pendingFriend.request_id)
     .then((res)=>{
       if(res.status == 200){
-        dispatch(removePendingFriend(pendingFriend.id));
+        dispatch(removePendingFriend(pendingFriend.request_id));
       }
       console.log(res);
     })
@@ -48,10 +48,10 @@ export default function PendingFriend({pendingFriend} : {pendingFriend:Friend}) 
   const handleCancel = ()=>{
     dispatch(setIsLoadingFriend(true));
 
-    cancel_friend_request(pendingFriend.friendship_id)
+    cancel_friend_request(pendingFriend.request_id)
     .then((res)=>{
       if(res.status == 200){
-          dispatch(removePendingFriend(pendingFriend.id));  
+          dispatch(removePendingFriend(pendingFriend.request_id));  
       }
       console.log(res);
     })
@@ -61,8 +61,9 @@ export default function PendingFriend({pendingFriend} : {pendingFriend:Friend}) 
   }
  
   console.log(pendingFriend);
+
   const renderActions = ()=>{
-    if(pendingFriend.initiator == user.id){
+    if(pendingFriend.initiator == user.username){
       return (
         <UnstyledButton title='Cancel' className={styles.cancel_btn} onClick={handleCancel}>
           <IoClose/>
