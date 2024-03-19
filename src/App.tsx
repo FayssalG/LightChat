@@ -10,22 +10,27 @@ import Loading from './components/shared/Loading/Loading';
 import ResetPassword from './components/pages/Auth/ResetPassword/ResetPassword';
 
 import SocketProvider from '@/components/context/SocketProvider';
+import { SkeletonTheme } from 'react-loading-skeleton';
 
 function App() {
   
   return (
     <div className={styles.container}>
-      <BrowserRouter>
-        <Routes>
-          <Route element={<ProtectedRoute/>}>
-            <Route path='/' element={<Application/>} ></Route>
-            <Route path='/profil' element={<ProfileSettings/>}></Route>          
-          </Route>
-          <Route path='/login' element={<Login/>}></Route>          
-          <Route path='/register' element={<Register/>}></Route>          
-          <Route path='/password-reset/:token' element={<ResetPassword/>}></Route>
-        </Routes>
-      </BrowserRouter>
+      <SkeletonTheme baseColor='#313131' highlightColor='#525252'>
+        <BrowserRouter>
+          <Routes>
+            <Route element={<ProtectedRoute/>}>
+              <Route path='/' element={<Application/>} ></Route>
+              <Route path='/profil' element={<ProfileSettings/>}></Route>          
+            </Route>
+            <Route path='/login' element={<Login/>}></Route>          
+            <Route path='/register' element={<Register/>}></Route>          
+            <Route path='/password-reset/:token' element={<ResetPassword/>}></Route>
+          </Routes>
+        </BrowserRouter>
+    
+      </SkeletonTheme>
+      
     </div>
   )
 }

@@ -9,6 +9,7 @@ import PendingFriendsListing from './PendingFriendsListing/PendingFriendsListing
 import FriendsListing from './FriendsListing/FriendsListing';
 import Spinner from '@/components/shared/Spinner/Spinner';
 import BlockedListing from './BlockedListing/BlockedListing';
+import FriendSkeleton from './FriendSkeleton/FriendSkeleton';
 
 export default function FriendsSection() {
   const isLoadingFriend = useSelector(state=>state.friend.isLoadingFriend);
@@ -32,7 +33,7 @@ export default function FriendsSection() {
     <div className={styles.container}>
         <div className={styles.header}>
           <div className={styles.title_addbtn}>
-            <h1 >Friends</h1>
+            <h1>Friends</h1>
             <UnstyledButton onClick={()=>dispatch(openAddFriendModal())}>Add Friend</UnstyledButton>
           </div>
 
@@ -49,17 +50,18 @@ export default function FriendsSection() {
 
 
         <div className={styles.friends_list}>
-          {renderListings()}
+          {isLoadingFriend ? 
+            <>
+              <FriendSkeleton/>  
+              <FriendSkeleton/>  
+              <FriendSkeleton/>  
+            </>
+          : renderListings()
+          }
+            
         </div>
 
-        {
-          isLoadingFriend &&        
-          
-          <div className={styles.loading_overlay}>
-            <Spinner size={25}/>
-          </div>
-        }
-
+        
         
     </div>
   )

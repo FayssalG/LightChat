@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import store from './redux/store.ts';
 
 import './global.css';
-import SocketProvider from './components/context/SocketProvider.tsx';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
