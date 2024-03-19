@@ -6,18 +6,15 @@ import Blocked from "./Blocked/Blocked";
 
 
 
-export default function FriendsListing() {
+export default function BlockedListing() {
+    const blockedUsers = useSelector(state=>state.friend.blockedUsers);
     const dispatch = useDispatch();
-    // const friends : [Friend?] = useSelector(state=>state.friend.friends);
 
-    useEffect(()=>{
-
-
-    },[])
+    console.log({blockedUsers});
     
     return (
     <>
-        {/* {blocked.map((blocked , key : number)=><Blocked key={key} blocked={blocked}/>)} */}
+        {blockedUsers.map((blocked , key : number)=><Blocked key={key} blocked={blocked}/>)}
     </>
   )
 }

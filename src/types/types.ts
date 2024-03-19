@@ -25,3 +25,12 @@ interface FriendRequest {
     username : string,
     image : string,
 }
+
+interface BlockedUser {
+    block_id : string,
+    user_id: string,
+    display_name : string,
+    username : string,
+    image : string,
+}
+

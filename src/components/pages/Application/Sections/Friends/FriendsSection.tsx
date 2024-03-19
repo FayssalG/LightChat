@@ -8,6 +8,7 @@ import { setFriends , setPendingFriends} from '@/redux/features/FriendSlice';
 import PendingFriendsListing from './PendingFriendsListing/PendingFriendsListing';
 import FriendsListing from './FriendsListing/FriendsListing';
 import Spinner from '@/components/shared/Spinner/Spinner';
+import BlockedListing from './BlockedListing/BlockedListing';
 
 export default function FriendsSection() {
   const isLoadingFriend = useSelector(state=>state.friend.isLoadingFriend);
@@ -21,7 +22,7 @@ export default function FriendsSection() {
       case 'pending':
         return <PendingFriendsListing/>
       case 'blocked':
-        return null
+        return <BlockedListing/>
 
     }
   }

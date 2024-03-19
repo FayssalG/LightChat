@@ -14,8 +14,8 @@ import CreateGroupModal from "@/components/modals/CreateGroupModal/CreateGroupMo
 import GroupDetailsModal from "@/components/modals/GroupDetailsModal/GroupDetailsModal";
 import EmailNotVerified from '@/components/pages/Application/EmailNotVerified/EmailNotVerified';
 import { useEffect } from 'react';
-import { get_friend_requests, get_friends } from '@/axios/friend';
-import { addFriend, addRequest , removeFriend, removeRequest, setFriends, setIsLoadingFriend, setRequests } from '@/redux/features/FriendSlice';
+import { block_user, get_blocked_users, get_friend_requests, get_friends, unblock_user } from '@/axios/friend';
+import { addFriend, addRequest , removeFriend, removeRequest, setBlockedUsers, setFriends, setIsLoadingFriend, setRequests } from '@/redux/features/FriendSlice';
 import { useSocket } from '@/components/context/SocketProvider';
 import ConfirmRemoveFriendModal from '@/components/modals/ConfirmRemoveFriendModal/ConfirmRemoveFriendModal';
 
@@ -66,8 +66,13 @@ export default function Application() {
       const res1 = await get_friend_requests()
       if(res1.status == 200) dispatch(setRequests(res1.data));
       const res2 = await  get_friends()
-      if (res2.status === 200) dispatch(setFriends(res2.data));      
+      if (res2.status === 200) dispatch(setFriends(res2.data));
+      
+      const blockedUsersRes = await get_blocked_users();
+      if(blockedUsersRes.status == 200) dispatch(setBlockedUsers(blockedUsersRes.data));
     }
+        
+    
     dispatch(setIsLoadingFriend(true))
     
     fetchFriends()

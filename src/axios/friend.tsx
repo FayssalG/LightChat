@@ -6,6 +6,24 @@ const get_friends = async ()=>{
     return res;
 }
 
+const get_blocked_users = async ()=>{
+    const res = await api.get('/api/friends/blocked');
+    return res;
+}
+
+const block_user = async (username : string)=>{
+    await api.get('/sanctum/csrf-cookie');
+    const res = await api.post('/api/friends/block' , {username});
+    return res;
+}
+
+const unblock_user = async (username : string)=>{
+    await api.get('/sanctum/csrf-cookie');
+    const res = await api.post('/api/friends/unblock' , {username});
+    return res;
+}
+
+
 const get_friend_requests = async ()=>{
     await api.get('/sanctum/csrf-cookie');
     const res = await api.get('/api/friends/requests');
@@ -44,4 +62,4 @@ const remove_friend = async (friendship_id : string)=>{
 }
 
 
-export {get_friends , get_friend_requests , send_friend_request , accept_friend_request , cancel_friend_request , ignore_friend_request , remove_friend}
+export {get_friends, get_blocked_users , block_user , unblock_user , get_friend_requests , send_friend_request , accept_friend_request , cancel_friend_request , ignore_friend_request , remove_friend}

@@ -29,8 +29,14 @@ export default function FriendDetailsModal()   {
     },[])
 
 
-    const handleRemove = ()=>{
+    const handleOpenRemoveModal = ()=>{
         dispatch(openConfirmRemoveFriendModal());
+        dispatch(closeFriendDetailsModal())
+    }
+
+    const handleOpenBlockModal = ()=>{
+        dispatch(openConfirmBlockFriendModal())
+        dispatch(closeFriendDetailsModal())
     }
 
 
@@ -72,9 +78,9 @@ export default function FriendDetailsModal()   {
             </div>
 
             <div className={styles.footer}>
-                <UnstyledButton onClick={handleRemove} className={styles.success_btn}>Send a message</UnstyledButton>
-                <UnstyledButton className={styles.danger_btn} onClick={()=>dispatch(openConfirmRemoveFriendModal())}>Remove Friend</UnstyledButton>
-                <UnstyledButton className={styles.danger_btn} onClick={()=>dispatch(openConfirmBlockFriendModal())}>Block</UnstyledButton>
+                <UnstyledButton onClick={()=>null} className={styles.success_btn}>Send a message</UnstyledButton>
+                <UnstyledButton className={styles.danger_btn} onClick={handleOpenRemoveModal}>Remove Friend</UnstyledButton>
+                <UnstyledButton className={styles.danger_btn} onClick={handleOpenBlockModal}>Block</UnstyledButton>
 
             </div>
         </div>

@@ -7,7 +7,8 @@ const FriendSlice = createSlice({
         isLoadingFriend : false,
         selectedFriend : null,
         friends : [],
-        requests : []
+        requests : [],
+        blockedUsers: [],
     },
     reducers: {
         setIsLoadingFriend : (state , action)=>{
@@ -27,6 +28,7 @@ const FriendSlice = createSlice({
                 return friend.friendship_id != action.payload;
             })           
         },
+ 
 
         setRequests : (state , action)=>{
             if(state.requests.find((request : FriendRequest)=>request.request_id == action.payload) ) return
@@ -36,8 +38,18 @@ const FriendSlice = createSlice({
             state.requests.push(action.payload)
         },
         removeRequest : (state , action)=>{
-            state.requests = state.requests.filter((item:Friend)=>{
+            state.requests = state.requests.filter((item:FriendRequest)=>{
                 return item.request_id != action.payload
+            })
+        },
+
+
+        setBlockedUsers: (state , action)=>{
+            state.blockedUsers = action.payload
+        },
+        removeBlockedUser : (state , action)=>{
+            state.blockedUsers = state.blockedUsers.filter((blocked : BlockedUser)=>{
+                return blocked.block_id != action.payload;
             })
         }
     }
@@ -45,4 +57,4 @@ const FriendSlice = createSlice({
 
 
 export default FriendSlice.reducer;
-export const {setIsLoadingFriend, setSelectedFriend, setFriends  ,addFriend , removeFriend ,setRequests , addRequest, removeRequest} = FriendSlice.actions;  
+export const {setIsLoadingFriend, setSelectedFriend, setFriends  ,addFriend , removeFriend ,setRequests , addRequest, removeRequest , setBlockedUsers,removeBlockedUser} = FriendSlice.actions;  

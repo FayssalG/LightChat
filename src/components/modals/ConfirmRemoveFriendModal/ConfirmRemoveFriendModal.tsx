@@ -13,6 +13,7 @@ export default function ConfirmRemoveFriendModal() {
     const {shouldRender , animation , onAnimationEnd} = useBiAnimation(showConfirmRemoveFriendModal , {enter:'popUp',leave:'popOut'})
 
     console.log({selectedFriend});
+    
     const handleRemove = ()=>{
         dispatch(setIsLoadingFriend(true));
         dispatch(closeConfirmRemoveFriendModal())

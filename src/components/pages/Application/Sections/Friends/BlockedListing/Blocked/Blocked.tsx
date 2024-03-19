@@ -1,27 +1,27 @@
 import styles from './Blocked.module.css';
 
-import { IoMdMore } from "react-icons/io";
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
-import { RefObject, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { openConfirmRemoveFriendModal } from '@/redux/features/UiSlice';
+import { unblock_user } from '@/axios/friend';
+import { removeBlockedUser, setIsLoadingFriend } from '@/redux/features/FriendSlice';
 
 
-export default function Blocked({blocked} : {friend:Friend}) {
+export default function Blocked({blocked}) {
   const dispatch = useDispatch()
-  const optionsRef : RefObject<HTMLElement> = useRef(null)
-  
-  useEffect(()=>{
-    const hideOptionsMenu = (e : MouseEvent)=>{
-      if(optionsRef.current && !optionsRef.current.contains(e.target)){
-        setShowOptionsMenu(false)
-      }
-    }
-    document.addEventListener('click', hideOptionsMenu )
-    return ()=>document.removeEventListener('click' , hideOptionsMenu)
-  },[])
 
-  const [showOptionsMenu , setShowOptionsMenu] : [Boolean , Function] = useState(false)
+  const handleUnblock = ()=>{
+    dispatch(setIsLoadingFriend(true))
+    unblock_user(blocked.username)
+    .then((res)=>{
+      if(res.status == 200){
+        dispatch(removeBlockedUser(blocked.block_id));
+      }
+    })
+    .finally(()=>{
+      dispatch(setIsLoadingFriend(false))
+    })
+  }
 
   return (
     <>
@@ -30,22 +30,14 @@ export default function Blocked({blocked} : {friend:Friend}) {
                 <img src={blocked.image} alt="avatar" />
               </div>
 
-              <UnstyledButton className={styles.name_status}>
-                  <h2 className={styles.name}>{blocked.display_name}</h2>
-                  <p className={styles.status}>online</p>
+              <UnstyledButton className={styles.displayname_username}>
+                  <h2 className={styles.displayname}>{blocked.display_name}</h2>
+                  <p className={styles.username}>online</p>
               </UnstyledButton>
 
-              <div ref={optionsRef} className={styles.options} >
-                 <UnstyledButton onClick={()=>setShowOptionsMenu(!showOptionsMenu)} className={styles.options_btn}>
-                   <IoMdMore/>
-                 </UnstyledButton>
-                 <div data-visible={showOptionsMenu ? 'true' : 'false'}  className={styles.options_menu}>
-                    <ul>
-                      <li className={styles.option}><UnstyledButton> Send a message </UnstyledButton></li>
-                      <li className={styles.option+' '+styles.option_red }><UnstyledButton onClick={()=>dispatch(openConfirmRemoveFriendModal())}> Remove </UnstyledButton></li>
-                    </ul>
-                  </div>
-              </div>
+              <UnstyledButton className={styles.unblock_btn} onClick={handleUnblock}>
+                Unblock
+              </UnstyledButton>
 
 
           </div>

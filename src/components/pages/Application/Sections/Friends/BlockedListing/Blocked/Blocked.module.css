@@ -5,8 +5,8 @@
     gap: .5rem;
     align-items: center;
     .picture{
-        width: 50px;
-        height: 50px;
+        width: 45px;
+        height: 45px;
         border-radius: 50%;
         position: relative;
         img{
@@ -14,91 +14,29 @@
             width: 100%;
             height: 100%;
         }
-        &::after{
-            content: '';
-            position: absolute;
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            background-color: var(--success);
-            right: 0;
-            bottom: 0;
-            border: 2px solid var(--secondary);
-        }
     }
 
-    .name_status{
+    .displayname_username{
         flex-grow: 1;
-        .name{
+        .displayname{
             font-weight: 400;
             font-size: 1.2rem;
         }
-        .status{
+        .username{
             font-weight: 200;
             font-size: .9rem;
         }
     }
 
-    .options{
-        .options_btn{
-            cursor: pointer;
-            height: 35px;
-            width: 35px;
-            border-radius: 50%;
-            background-color: var(--primary);
-            padding: .3em;            
-            svg{
-                opacity: .5;
-                width: 100%;
-                height: 100%;
-            }    
-        }
-
-        .options_menu{
-            position: absolute;
-            background-color: var(--primary);
-            padding: .5em;
-            border-radius: .2rem;
-            right: 0;
-            z-index: 1;
-            display: none;
-
-            ul{
-                list-style: none;
-                display: flex;
-                flex-direction: column;
-                gap: .5rem;
-                
-                .option{
-                    button{
-                        width: 100%;
-                        padding: .4em;
-                        border-radius: .2rem;
-                    }
-                    button:hover{
-                        background-color: var(--accent);
-                    }
-                }
-                .option_red{
-                    button{color: var(--danger);}
-                    button:hover{background-color: var(--danger);color: white;}
-                }
-
-            }
-        }
     
-        .options_menu[data-visible='true']{
-            display: block;
+    .unblock_btn{
+        font-size: .8rem;
+        border: 1px solid var(--accent);
+        border-radius: .2rem;
+        padding: .5em;
+        transition: background 200ms ease;
+        &:hover{
+            background-color: var(--accent);
         }
-
-        
-        .options_menu[data-visible='false']{
-            display: none;
-        }
-     
-    }
-
-    
-    
-    
+    }    
 }

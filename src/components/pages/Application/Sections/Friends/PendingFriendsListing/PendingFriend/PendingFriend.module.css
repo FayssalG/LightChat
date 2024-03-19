@@ -14,17 +14,6 @@
             width: 100%;
             height: 100%;
         }
-        &::after{
-            content: '';
-            position: absolute;
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            background-color: var(--success);
-            right: 0;
-            bottom: 0;
-            border: 2px solid var(--secondary);
-        }
     }
 
     .displayname_username{
