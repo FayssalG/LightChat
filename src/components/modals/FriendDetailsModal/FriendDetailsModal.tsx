@@ -6,14 +6,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { closeFriendDetailsModal, openConfirmBlockFriendModal, openConfirmRemoveFriendModal } from '@/redux/features/UiSlice';
 import { RefObject, useEffect, useRef, useState } from 'react';
 import useBiAnimation from '@/components/hooks/useBiAnimation';
+import { setSelectedFriend } from '@/redux/features/FriendSlice';
 
 export default function FriendDetailsModal()   {
+    const dispatch : Function = useDispatch();
+    const selectedFriend : Friend = useSelector(state=>state.friend.selectedFriend);
     const showFriendDetailsModal : Boolean = useSelector(state=>state.ui.showFriendDetailsModal);
     const {shouldRender , animation ,onAnimationEnd} = useBiAnimation(showFriendDetailsModal , {enter : 'popUp' , leave:'popOut'})
 
     const modalRef : RefObject<HTMLElement> = useRef(null);
     const overlayRef : RefObject<HTMLElement> = useRef(null);
-    const dispatch : Function = useDispatch();
     //handle click outside of the component to close it 
     useEffect(()=>{
         const closeModal = (e : MouseEvent)=>{
@@ -25,6 +27,12 @@ export default function FriendDetailsModal()   {
         
         return ()=>document.removeEventListener('click' , closeModal);
     },[])
+
+
+    const handleRemove = ()=>{
+        dispatch(openConfirmRemoveFriendModal());
+    }
+
 
     if(!shouldRender) return null
 
@@ -41,10 +49,10 @@ export default function FriendDetailsModal()   {
                 </div>         
                 <div className={styles.displayname_username}>
                     <h2 className={styles.displayname}>
-                        Jack Matrins
+                        {selectedFriend.display_name}
                     </h2>
                     <p className={styles.username}>
-                        @jackmartins
+                        @{selectedFriend.username}
                     </p>
                 </div>       
             </div>
@@ -64,7 +72,7 @@ export default function FriendDetailsModal()   {
             </div>
 
             <div className={styles.footer}>
-                <UnstyledButton className={styles.success_btn}>Send a message</UnstyledButton>
+                <UnstyledButton onClick={handleRemove} className={styles.success_btn}>Send a message</UnstyledButton>
                 <UnstyledButton className={styles.danger_btn} onClick={()=>dispatch(openConfirmRemoveFriendModal())}>Remove Friend</UnstyledButton>
                 <UnstyledButton className={styles.danger_btn} onClick={()=>dispatch(openConfirmBlockFriendModal())}>Block</UnstyledButton>
 

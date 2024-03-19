@@ -17,11 +17,12 @@ export default function PendingFriend({pendingFriend} : {pendingFriend:FriendReq
   
   const handleAccept = ()=>{
     dispatch(setIsLoadingFriend(true));
+    // console.log({pendingFriend})
     accept_friend_request(pendingFriend.request_id)
     .then((res)=>{
       if(res.status == 200){
         dispatch(removeRequest(pendingFriend.request_id))
-        dispatch(addFriend(pendingFriend))
+        dispatch(addFriend(res.data))
       }
     })
     .finally(()=>{
@@ -31,11 +32,10 @@ export default function PendingFriend({pendingFriend} : {pendingFriend:FriendReq
 
   const handleIgnore = ()=>{
     dispatch(setIsLoadingFriend(true));
-    
     ignore_friend_request(pendingFriend.request_id)
     .then((res)=>{
       if(res.status == 200){
-        dispatch(removePendingFriend(pendingFriend.request_id));
+        dispatch(removeRequest(pendingFriend.request_id));
       }
       console.log(res);
     })
@@ -47,12 +47,12 @@ export default function PendingFriend({pendingFriend} : {pendingFriend:FriendReq
 
   const handleCancel = ()=>{
     dispatch(setIsLoadingFriend(true));
-
     cancel_friend_request(pendingFriend.request_id)
     .then((res)=>{
       if(res.status == 200){
-          dispatch(removePendingFriend(pendingFriend.request_id));  
-      }
+          dispatch(removeRequest(pendingFriend.request_id));  
+
+        }
       console.log(res);
     })
     .finally(()=>{
@@ -63,7 +63,7 @@ export default function PendingFriend({pendingFriend} : {pendingFriend:FriendReq
   console.log(pendingFriend);
 
   const renderActions = ()=>{
-    if(pendingFriend.initiator == user.username){
+    if(pendingFriend.sender_id == user.id){
       return (
         <UnstyledButton title='Cancel' className={styles.cancel_btn} onClick={handleCancel}>
           <IoClose/>

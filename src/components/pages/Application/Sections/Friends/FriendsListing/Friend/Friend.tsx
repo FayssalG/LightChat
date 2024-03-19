@@ -4,8 +4,8 @@ import avatar from '@/assets/avatar.png';
 import { IoMdMore } from "react-icons/io";
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import { RefObject, useEffect, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { openConfirmRemoveFriendModal } from '@/redux/features/UiSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { openConfirmRemoveFriendModal, openFriendDetailsModal } from '@/redux/features/UiSlice';
 import ConfirmRemoveFriendModal from '@/components/modals/ConfirmRemoveFriendModal/ConfirmRemoveFriendModal';
 import { setSelectedFriend } from '@/redux/features/FriendSlice';
 
@@ -21,6 +21,12 @@ export default function Friend({friend} : {friend:Friend}) {
     dispatch(openConfirmRemoveFriendModal())
   }
 
+  const handleFriendClick = ()=>{
+    dispatch(setSelectedFriend(friend))
+    dispatch(openFriendDetailsModal())
+  }
+
+  
   useEffect(()=>{
     const hideOptionsMenu = (e)=>{
       if(optionsRef.current && !optionsRef.current.contains(e.target)){
@@ -40,7 +46,7 @@ export default function Friend({friend} : {friend:Friend}) {
                 <img src={friend.image} alt="avatar" />
               </div>
 
-              <UnstyledButton className={styles.name_status}>
+              <UnstyledButton onClick={handleFriendClick} className={styles.name_status}>
                   <h2 className={styles.name}>{friend.display_name}</h2>
                   <p className={styles.status}>online</p>
               </UnstyledButton>

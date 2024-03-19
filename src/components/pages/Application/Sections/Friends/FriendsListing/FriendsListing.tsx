@@ -17,8 +17,6 @@ export default function FriendsListing() {
     <>
     
         {friends.map((friend , key : number)=><Friend key={key} friend={friend}/>)}
-        {/* Modals */}
-        {selectedFriend && <ConfirmRemoveFriendModal friend={selectedFriend}/>}
 
     </>
   )

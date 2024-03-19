@@ -23,17 +23,13 @@ const FriendSlice = createSlice({
             state.friends.push(action.payload);
         },
         removeFriend:(state,action) =>{
-          const index = state.friends.findIndex((item:Friend)=> item.id === action.payload);     
-          if(index !== -1){
-              state.friends.splice( index, 1);
-          }else{
-              console.log("The friend is not in your friend list");
-          }           
+            state.friends = state.friends.filter((friend : Friend)=>{
+                return friend.friendship_id != action.payload;
+            })           
         },
 
-
         setRequests : (state , action)=>{
-            if(state.requests.find((request)=>request.request_id == action.payload) ) return
+            if(state.requests.find((request : FriendRequest)=>request.request_id == action.payload) ) return
             state.requests = action.payload
         },
         addRequest : (state , action)=>{

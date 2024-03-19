@@ -8,11 +8,11 @@ import { useRef, useState } from 'react';
 import { send_friend_request } from '@/axios/friend';
 import { AxiosResponse } from 'axios';
 import Spinner from '@/components/shared/Spinner/Spinner';
-import {  addRequest } from '@/redux/features/FriendSlice';
+import {  addRequest, setIsLoadingFriend } from '@/redux/features/FriendSlice';
 
 export default function AddFriendModal() { 
   const showAddFriendModal = useSelector((state)=>state.ui.showAddFriendModal);
-  const isLoading = useSelector((state)=>state.ui.isLoading);
+  const isLoadingFriend = useSelector((state)=>state.friend.isLoadingFriend);
   const dispatch = useDispatch();
   
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -27,11 +27,12 @@ export default function AddFriendModal() {
         const username = inputRef.current.value;
         setErrors([]);
         setSuccess(null);  
-        dispatch(setIsLoading(true))
+        dispatch(setIsLoadingFriend(true))
 
         send_friend_request(username)
         .then((res : AxiosResponse) => {
           if(res.status == 201){
+              // console.log({test:res.data});
               dispatch(addRequest(res.data));
               setSuccess("Request sent successfully!");
               setErrors([]);
@@ -43,7 +44,7 @@ export default function AddFriendModal() {
           setErrors(err.response.data.errors);
         })
         .finally(()=>{
-          dispatch(setIsLoading(false))  
+          dispatch(setIsLoadingFriend(false))  
         })
 
       }
@@ -67,8 +68,8 @@ export default function AddFriendModal() {
                   {success &&  <p className={styles.success}>{success}</p>}
                 </div>
 
-                <UnstyledButton disabled={isLoading}>
-                  {isLoading ? <Spinner size={25}/> : 'Send Friend Request' } 
+                <UnstyledButton disabled={isLoadingFriend}>
+                  {isLoadingFriend ? <Spinner size={25}/> : 'Send Friend Request' } 
                 </UnstyledButton>
             </form>
         </div>

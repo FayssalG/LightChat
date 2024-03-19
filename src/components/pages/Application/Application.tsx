@@ -17,6 +17,7 @@ import { useEffect } from 'react';
 import { get_friend_requests, get_friends } from '@/axios/friend';
 import { addFriend, addRequest , removeFriend, removeRequest, setFriends, setIsLoadingFriend, setRequests } from '@/redux/features/FriendSlice';
 import { useSocket } from '@/components/context/SocketProvider';
+import ConfirmRemoveFriendModal from '@/components/modals/ConfirmRemoveFriendModal/ConfirmRemoveFriendModal';
 
 
 
@@ -104,11 +105,12 @@ export default function Application() {
         
         {/* Modals */}
         <FriendDetailsModal/>
+        <ConfirmRemoveFriendModal/>
         <GroupDetailsModal/>
         <AddFriendModal/>
         <ConfirmBlockFriendModal/>
         <CreateGroupModal/>
-        
+          
     </>
   )
 }
