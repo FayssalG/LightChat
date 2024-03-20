@@ -9,11 +9,12 @@ import { send_friend_request } from '@/axios/friend';
 import { AxiosResponse } from 'axios';
 import Spinner from '@/components/shared/Spinner/Spinner';
 import {  addRequest, setIsLoadingFriend } from '@/redux/features/FriendSlice';
+import { BaseModal } from '../BaseModal';
 
-export default function AddFriendModal() { 
-  const showAddFriendModal = useSelector((state)=>state.ui.showAddFriendModal);
+export default function AddFriendModal(props) { 
   const isLoadingFriend = useSelector((state)=>state.friend.isLoadingFriend);
   const dispatch = useDispatch();
+
   
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [errors , setErrors] : [[string?] , Function] = useState([]);
@@ -50,14 +51,11 @@ export default function AddFriendModal() {
       }
   }
 
-  const {shouldRender , animation , onAnimationEnd} = useBiAnimation(showAddFriendModal,{enter:'popUp' , leave:'popOut'});
- 
-  if(!shouldRender) return null
-
+  
   return (
-    <div className={styles.container}>
-        <div onAnimationEnd={onAnimationEnd} style={{animation:animation}} className={styles.inner_container}>
-            <UnstyledButton onClick={()=>dispatch(closeAddFriendModal())} className={styles.close}>
+    <BaseModal show={props.isOpen} onClose={props.onClose}>
+        <div ref={props.modalRef}  className={styles.inner_container}>
+            <UnstyledButton onClick={props.onClose} className={styles.close}>
                 <IoClose/>
             </UnstyledButton>
             <form onSubmit={handleSend}>
@@ -73,7 +71,7 @@ export default function AddFriendModal() {
                 </UnstyledButton>
             </form>
         </div>
-    </div>
+    </BaseModal>
 
   )
 }

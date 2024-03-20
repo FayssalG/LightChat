@@ -1,23 +1,23 @@
 import styles from './Application.module.css';
-import AddFriendModal from "@/components/modals/AddFriendModal/AddFriendModal";
 import ActiveConversation from "./ActiveConversation/ActiveConversation";
 import Navbar from "./Navbar/Navbar";
 import ConversationsSection from "./Sections/Conversations/ConversationsSection";
 import FriendsSection from "./Sections/Friends/FriendsSection";
 import GroupsSection from "./Sections/Groups/GroupsSection";
 
+// import AddFriendModal from "@/components/modals/AddFriendModal/AddFriendModal";
+// import FriendDetailsModal from "@/components/modals/FriendDetailsModal/FriendDetailsModal";
+// import ConfirmBlockFriendModal from "@/components/modals/ConfirmBlockFriendModal/ConfirmBlockFriendModal";
+// import CreateGroupModal from "@/components/modals/CreateGroupModal/CreateGroupModal";
+// import GroupDetailsModal from "@/components/modals/GroupDetailsModal/GroupDetailsModal";
+// import ConfirmRemoveFriendModal from '@/components/modals/ConfirmRemoveFriendModal/ConfirmRemoveFriendModal';
 
-import FriendDetailsModal from "@/components/modals/FriendDetailsModal/FriendDetailsModal";
-import ConfirmBlockFriendModal from "@/components/modals/ConfirmBlockFriendModal/ConfirmBlockFriendModal";
 import { useDispatch, useSelector } from "react-redux";
-import CreateGroupModal from "@/components/modals/CreateGroupModal/CreateGroupModal";
-import GroupDetailsModal from "@/components/modals/GroupDetailsModal/GroupDetailsModal";
 import EmailNotVerified from '@/components/pages/Application/EmailNotVerified/EmailNotVerified';
 import { useEffect } from 'react';
 import { block_user, get_blocked_users, get_friend_requests, get_friends, unblock_user } from '@/axios/friend';
 import { addFriend, addRequest , removeFriend, removeRequest, setBlockedUsers, setFriends, setIsLoadingFriend, setRequests } from '@/redux/features/FriendSlice';
 import { useSocket } from '@/components/context/SocketProvider';
-import ConfirmRemoveFriendModal from '@/components/modals/ConfirmRemoveFriendModal/ConfirmRemoveFriendModal';
 
 
 
@@ -109,13 +109,15 @@ export default function Application() {
         
         
         {/* Modals */}
-        <FriendDetailsModal/>
+       
+        {/* <FriendDetailsModal/>
         <ConfirmRemoveFriendModal/>
         <GroupDetailsModal/>
         <AddFriendModal/>
         <ConfirmBlockFriendModal/>
         <CreateGroupModal/>
-          
+           */}
+
     </>
   )
 }

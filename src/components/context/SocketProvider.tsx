@@ -15,14 +15,14 @@ export default function SocketProvider({children}) {
   const user : User = useSelector(state=>state.auth.user);
 
   useEffect(()=>{
-    const newSocket = io('http://localhost:5000',{
-      query : {
-        username : user.username
-      }
-    })
-    setSocket(newSocket)
+    // const newSocket = io('http://localhost:5000',{
+    //   query : {
+    //     username : user.username
+    //   }
+    // })
+    // setSocket(newSocket)
     
-    return ()=>newSocket.close()
+    // return ()=>newSocket.close()
   },[])
 
 

@@ -7,58 +7,44 @@ import { closeFriendDetailsModal, openConfirmBlockFriendModal, openConfirmRemove
 import { RefObject, useEffect, useRef, useState } from 'react';
 import useBiAnimation from '@/components/hooks/useBiAnimation';
 import { setSelectedFriend } from '@/redux/features/FriendSlice';
+import useModal from '../useModal';
+import { BaseModal } from '../BaseModal';
 
-export default function FriendDetailsModal()   {
-    const dispatch : Function = useDispatch();
-    const selectedFriend : Friend = useSelector(state=>state.friend.selectedFriend);
-    const showFriendDetailsModal : Boolean = useSelector(state=>state.ui.showFriendDetailsModal);
-    const {shouldRender , animation ,onAnimationEnd} = useBiAnimation(showFriendDetailsModal , {enter : 'popUp' , leave:'popOut'})
-
-    const modalRef : RefObject<HTMLElement> = useRef(null);
-    const overlayRef : RefObject<HTMLElement> = useRef(null);
-    //handle click outside of the component to close it 
-    useEffect(()=>{
-        const closeModal = (e : MouseEvent)=>{
-            if(e.target == overlayRef.current) {
-                dispatch(closeFriendDetailsModal());
-            }
-        }; 
-        document.addEventListener('click' , closeModal)
-        
-        return ()=>document.removeEventListener('click' , closeModal);
-    },[])
-
-
+export default function FriendDetailsModal(props)   {
+    const {friend , onClose , isOpen} = props    
+    
+    const {onOpen: onOpenConfirmRemoveFriendModal} = useModal('ConfirmRemoveFriendModal')
+    const {onOpen: onOpenConfirmBlockFriendModal} = useModal('ConfirmRemoveBlockModal')
+    
     const handleOpenRemoveModal = ()=>{
-        dispatch(openConfirmRemoveFriendModal());
-        dispatch(closeFriendDetailsModal())
+        onClose()
+        onOpenConfirmRemoveFriendModal({friend});
     }
 
     const handleOpenBlockModal = ()=>{
-        dispatch(openConfirmBlockFriendModal())
-        dispatch(closeFriendDetailsModal())
+        onClose()
+        onOpenConfirmBlockFriendModal({friend})
     }
 
 
-    if(!shouldRender) return null
-
+    
     return (
-    <div ref={overlayRef}  className={styles.container}>
-        <div ref={modalRef} onAnimationEnd={onAnimationEnd} style={{animation : animation }}    className={styles.inner_container}>
-            <UnstyledButton className={styles.close} onClick={()=>dispatch(closeFriendDetailsModal())}>
+    <BaseModal show={isOpen} onClose={onClose}>
+        <div className={styles.inner_container}>
+            <UnstyledButton className={styles.close} onClick={onClose}>
                 <IoClose/>
             </UnstyledButton>
       
             <div className={styles.header}>
                 <div className={styles.picture}>
-                    <img src={avatar} alt="" />
+                    <img src={friend.image} alt="" />
                 </div>         
                 <div className={styles.displayname_username}>
                     <h2 className={styles.displayname}>
-                        {selectedFriend.display_name}
+                        {friend.display_name}
                     </h2>
                     <p className={styles.username}>
-                        @{selectedFriend.username}
+                        @{friend.username}
                     </p>
                 </div>       
             </div>
@@ -84,6 +70,6 @@ export default function FriendDetailsModal()   {
 
             </div>
         </div>
-    </div>
+    </BaseModal>
   )
 }

@@ -10,11 +10,14 @@ import FriendsListing from './FriendsListing/FriendsListing';
 import Spinner from '@/components/shared/Spinner/Spinner';
 import BlockedListing from './BlockedListing/BlockedListing';
 import FriendSkeleton from './FriendSkeleton/FriendSkeleton';
+import useModal from '@/components/modal/useModal';
 
 export default function FriendsSection() {
   const isLoadingFriend = useSelector(state=>state.friend.isLoadingFriend);
   const dispatch = useDispatch();  
   const [selected , setSelected] : [string , Function]= useState('all');
+
+  const {onOpen : onOpenAddFriendModal } = useModal('AddFriendModal');
 
   const renderListings = ()=>{
     switch(selected){
@@ -34,7 +37,7 @@ export default function FriendsSection() {
         <div className={styles.header}>
           <div className={styles.title_addbtn}>
             <h1>Friends</h1>
-            <UnstyledButton onClick={()=>dispatch(openAddFriendModal())}>Add Friend</UnstyledButton>
+            <UnstyledButton onClick={onOpenAddFriendModal}>Add Friend</UnstyledButton>
           </div>
 
           <div className={styles.search}>

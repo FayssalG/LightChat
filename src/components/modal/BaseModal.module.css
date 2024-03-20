@@ -1,0 +1,18 @@
+.container{
+    color: white;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    @media (max-width:700px) {
+        div{
+            width: 100%;
+        }    
+    }
+    
+}

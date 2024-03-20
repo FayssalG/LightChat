@@ -2,16 +2,15 @@ import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import styles from './ResetPassword.module.css';
 import { useRef, useState } from 'react';
 import useAuth from '@/components/hooks/useAuth';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import Spinner from '@/components/shared/Spinner/Spinner';
 import { useDispatch } from 'react-redux';
 import {openPasswordResetSuccessAlert} from '@/redux/features/UiSlice';
-import PasswordResetSuccessAlert from '@/components/modals/PasswordResetSuccessAlert/PasswordResetSuccessAlert';
+import PasswordResetSuccessAlert from '@/components/alerts/PasswordResetSuccessAlert/PasswordResetSuccessAlert';
 
 export default function ResetPassword() {
     const dispatch = useDispatch()
 
-    const navigate = useNavigate();
     const {token } = useParams()
     const [query , setQuery] = useSearchParams()
 

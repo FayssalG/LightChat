@@ -8,22 +8,25 @@ import { useDispatch, useSelector } from 'react-redux';
 import { openConfirmRemoveFriendModal, openFriendDetailsModal } from '@/redux/features/UiSlice';
 import ConfirmRemoveFriendModal from '@/components/modals/ConfirmRemoveFriendModal/ConfirmRemoveFriendModal';
 import { setSelectedFriend } from '@/redux/features/FriendSlice';
+import useModal from '@/components/modal/useModal';
 
 
 export default function Friend({friend} : {friend:Friend}) {
   const dispatch = useDispatch()
   const optionsRef = useRef<HTMLDivElement | null>(null)
-  
+
+  const {onOpen : onOpenConfirmRemoveFriendModal} = useModal('ConfirmRemoveFriendModal');
+  const {onOpen : onOpenFriendDetailsModal} = useModal('FriendDetailsModal');
+
   const handleRemoveClick = ()=>{
     setShowOptionsMenu(false)
-    //set the selected friend for the operation
-    dispatch(setSelectedFriend(friend))
-    dispatch(openConfirmRemoveFriendModal())
+    onOpenConfirmRemoveFriendModal({friend});
+    
   }
 
   const handleFriendClick = ()=>{
     dispatch(setSelectedFriend(friend))
-    dispatch(openFriendDetailsModal())
+    onOpenFriendDetailsModal({friend})
   }
 
   

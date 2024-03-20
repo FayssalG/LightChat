@@ -5,23 +5,22 @@ import useBiAnimation from '@/components/hooks/useBiAnimation';
 import { closeConfirmRemoveFriendModal, closeFriendDetailsModal } from '@/redux/features/UiSlice';
 import { remove_friend } from '@/axios/friend';
 import { removeFriend, setIsLoadingFriend } from '@/redux/features/FriendSlice';
+import { BaseModal } from '../BaseModal';
 
-export default function ConfirmRemoveFriendModal() {
-    const selectedFriend : Friend = useSelector(state=>state.friend.selectedFriend);
-    const showConfirmRemoveFriendModal = useSelector(state=>state.ui.showConfirmRemoveFriendModal);
+export default function ConfirmRemoveFriendModal(props) {
+
+    const {friend , onClose , isOpen} = props
     const dispatch = useDispatch();
-    const {shouldRender , animation , onAnimationEnd} = useBiAnimation(showConfirmRemoveFriendModal , {enter:'popUp',leave:'popOut'})
 
-    console.log({selectedFriend});
     
     const handleRemove = ()=>{
         dispatch(setIsLoadingFriend(true));
-        dispatch(closeConfirmRemoveFriendModal())
-        remove_friend(selectedFriend.friendship_id)
+        onClose();
+        remove_friend(friend.friendship_id)
         .then((res)=>{
           if (res.status === 200){
             dispatch(closeFriendDetailsModal());
-            dispatch(removeFriend(selectedFriend.friendship_id))
+            dispatch(removeFriend(friend.friendship_id))
           }
         })        
         .catch((err)=>{
@@ -34,26 +33,25 @@ export default function ConfirmRemoveFriendModal() {
     
     // if(!selectedFriend) return null
 
-    if(!shouldRender) return null
-  
+      
     return (
-    <div className={styles.container}>
-        <div onAnimationEnd={onAnimationEnd} style={{animation}} className={styles.inner_container}>
+    <BaseModal show={isOpen} onClose={onClose}>
+        <div className={styles.inner_container}>
             <div className={styles.header}>
-                <h3>Remove {selectedFriend.display_name}</h3>
+                <h3>Remove {friend.display_name}</h3>
             </div>
 
             <div className={styles.body}>
                 <p>
-                    Do you really want to remove <span>{selectedFriend.display_name}</span> from  your friends list ?
+                    Do you really want to remove <span>{friend.display_name}</span> from  your friends list ?
                 </p>
             </div>
 
             <div className={styles.footer}>
                 <UnstyledButton className={styles.remove_btn} onClick={handleRemove}>Remove</UnstyledButton>
-                <UnstyledButton className={styles.cancel_btn} onClick={()=>dispatch(closeConfirmRemoveFriendModal())}>Cancel</UnstyledButton>            
+                <UnstyledButton className={styles.cancel_btn} onClick={onClose}>Cancel</UnstyledButton>            
             </div>
         </div>
-    </div>
+    </BaseModal>
   )
 }

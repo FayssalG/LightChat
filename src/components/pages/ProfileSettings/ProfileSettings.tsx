@@ -1,39 +1,33 @@
 import {update_display_name, update_email, update_image, update_username} from '@/axios/user';
-
-import avatar from '@/assets/avatar.png';
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import styles from './ProfileSettings.module.css';
 import { IoArrowBack } from 'react-icons/io5';
-import EditModal from '@/components/modals/EditModal/EditModal';
+// import EditModal from '@/components/modals/EditModal/EditModal';
 
 //redux
 import { useDispatch } from 'react-redux';
-import { toggleShowEditModal } from '@/redux/features/UiSlice';
 import { Link } from 'react-router-dom';
 import useAuth from '@/components/hooks/useAuth';
-import { useRef, useState } from 'react';
+import useModal from '@/components/modal/useModal';
+import { updateUser } from '@/redux/features/AuthSlice';
 
 export default function ProfileSettings() {
 
-  const [update , setUpdate] : [{updateTarget:string , updateFn:Function} | null , Function] = useState(null);
   const { user} = useAuth()
   const dispatch = useDispatch()
+  const {onOpen : onOpenEditModal} = useModal('EditModal');
 
-  const [image , setImage] = useState(user.image || avatar);
-  const [displayName , setDisplayName] = useState(user.display_name);
-  const [username , setUsername] = useState(user.username);
-  const [email , setEmail ] = useState(user.email);
+   const {image ,display_name:displayName  , username , email } = user
 
-  const handleClick = (newUpdate : {updateTarget:string,updateFn:Function})=>{
-    setUpdate(newUpdate)
-    dispatch(toggleShowEditModal());
+  const handleClick = (whatToUpdate : string , updateFn:Function)=>{
+    onOpenEditModal({user , whatToUpdate , updateFn})
   }
 
   const updateImage = async (image : File | undefined , password : string)=>{
     if(image){
         const res = await update_image(user.id , image , password)
         console.log(res.data)
-        if([200,201,202,204].includes(res.status)) setImage(res.data);
+        if([200,201,202,204].includes(res.status)) dispatch(updateUser({image:res.data}));
         return  res;
     }
   }
@@ -41,19 +35,19 @@ export default function ProfileSettings() {
   const updateDisplayName = async (newDisplayName : string , password : string)=>{    
     const res = await update_display_name(user.id , newDisplayName , password)
     console.log(res)
-    if([200,201,202,204].includes(res.status)) setDisplayName(res.data);
+    if([200,201,202,204].includes(res.status)) dispatch(updateUser({display_name:res.data}));
     return  res;
   }
 
   const updateUsername = async (newUsername : string , password:string)=>{
     const res = await update_username(user.id , newUsername , password)
-    if([200,201,202,204].includes(res.status)) setUsername(res.data);
+    if([200,201,202,204].includes(res.status)) dispatch(updateUser({username:res.data}));
     return  res;  
 }
 
   const updateEmail = async (newEmail : string , password:string)=>{
     const res = await update_email(user.id , newEmail , password);
-    if([200,201,202,204].includes(res.status)) setEmail(res.data);
+    if([200,201,202,204].includes(res.status)) dispatch(updateUser({email:res.data}));
     return  res;
   }
 
@@ -65,7 +59,7 @@ export default function ProfileSettings() {
         </Link>
         <div className={styles.inner_container}>
             <div className={styles.header}>
-                <UnstyledButton onClick={()=>handleClick({updateTarget:'picture',updateFn:updateImage})}  className={styles.picture}>
+                <UnstyledButton onClick={()=>handleClick('picture',updateImage)}  className={styles.picture}>
                     <img src={image} alt="" />
                 </UnstyledButton>
 
@@ -86,7 +80,7 @@ export default function ProfileSettings() {
                         <h2>Display name</h2>
                         <p>{displayName}</p>
                     </div>
-                    <UnstyledButton onClick={()=>handleClick({updateTarget:'displayname',updateFn:updateDisplayName})}>Edit</UnstyledButton>
+                    <UnstyledButton onClick={()=>handleClick('displayname',updateDisplayName)}>Edit</UnstyledButton>
                 
                 </div>
 
@@ -95,7 +89,7 @@ export default function ProfileSettings() {
                         <h2>username</h2>
                         <p>{username}</p>
                     </div>
-                    <UnstyledButton onClick={()=>handleClick({updateTarget:'username',updateFn:updateUsername})}>Edit</UnstyledButton>
+                    <UnstyledButton onClick={()=>handleClick('username',updateUsername)}>Edit</UnstyledButton>
                 </div>
 
 
@@ -104,14 +98,16 @@ export default function ProfileSettings() {
                         <h2>Email</h2>
                         <p>{email}</p>
                     </div>
-                    <UnstyledButton onClick={()=>handleClick({updateTarget:'email',updateFn:updateEmail})}>Edit</UnstyledButton>
+                    <UnstyledButton onClick={()=>handleClick('email',updateEmail)}>Edit</UnstyledButton>
                 </div>
 
             </div>
         </div>
         
         {/* Modals */}
-        {update &&  <EditModal update={update} infos={{email,displayName,username,image}} />}  
+
+        {/* {update &&  <EditModal update={update} infos={{email,displayName,username,image}} />}   */}
+
     </div>
     
   )

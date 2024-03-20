@@ -6,18 +6,18 @@ import Member from './Member/Member';
 import { useDispatch, useSelector } from 'react-redux';
 import useBiAnimation from '@/components/hooks/useBiAnimation';
 import { closeGroupDetailsModal } from '@/redux/features/UiSlice';
+import { BaseModal } from '../BaseModal';
 
-export default function GroupDetailsModal() {
-    const showGroupDetailsModal : Boolean = useSelector(state=>state.ui.showGroupDetailsModal);
+export default function GroupDetailsModal(props) {
+    const {isOpen , onClose} = props;
+
     const dispatch : Function = useDispatch();
-    const {shouldRender , onAnimationEnd , animation} = useBiAnimation(showGroupDetailsModal , {enter:'popUp',leave:'popOut'})
 
-    if(!shouldRender) return null
 
     return (
-    <div className={styles.container}>
-        <div onAnimationEnd={onAnimationEnd} style={{animation}} className={styles.inner_container}>
-            <UnstyledButton className={styles.close} onClick={()=>dispatch(closeGroupDetailsModal())} >
+    <BaseModal show={isOpen} onClose={onClose}>
+        <div  className={styles.inner_container}>
+            <UnstyledButton className={styles.close} onClick={onClose} >
                 <IoClose/>
             </UnstyledButton>
       
@@ -49,7 +49,7 @@ export default function GroupDetailsModal() {
                 <UnstyledButton className={styles.danger_btn} >Quit the group</UnstyledButton>
             </div>
         </div>
-    </div>
+    </BaseModal>
 
 
   )

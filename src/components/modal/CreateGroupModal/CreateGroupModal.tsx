@@ -5,19 +5,14 @@ import FriendToAdd from './FriendToAdd/FriendToAdd';
 import { useDispatch, useSelector } from 'react-redux';
 import { closeCreateGroupModal } from '@/redux/features/UiSlice';
 import useBiAnimation from '@/components/hooks/useBiAnimation';
+import { BaseModal } from '../BaseModal';
 
-export default function CreateGroupModal() {
-    const showCreateGroupModal : Boolean= useSelector(state=>state.ui.showCreateGroupModal);
-    const dispatch = useDispatch();
-    const {shouldRender ,animation,onAnimationEnd} = useBiAnimation(showCreateGroupModal , {enter:'popUp' , leave:'popOut'});
-
-    if(!shouldRender) return null;
-
+export default function CreateGroupModal(props) {
+    
     return (
-    <div className={styles.container}>
-        <div onAnimationEnd={onAnimationEnd} style={{animation}} className={styles.inner_container}>
+    <BaseModal show={props.isOpen} onClose={props.onClose}>
+        <div className={styles.inner_container}>
             <div className={styles.header}>
-
             </div>
 
             <div className={styles.body}>
@@ -44,9 +39,9 @@ export default function CreateGroupModal() {
 
             <div className={styles.footer}>
                 <UnstyledButton className={styles.confirm_btn}>Create</UnstyledButton>
-                <UnstyledButton onClick={()=>dispatch(closeCreateGroupModal())} className={styles.cancel_btn}>Cancel</UnstyledButton>
+                <UnstyledButton onClick={props.onClose} className={styles.cancel_btn}>Cancel</UnstyledButton>
             </div>
         </div>
-    </div>
+    </BaseModal>
   )
 }

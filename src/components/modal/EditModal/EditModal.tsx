@@ -12,6 +12,7 @@ import EditEmail from './EditEmail/EditEmail';
 import EditUsername from './EditUsername/EditUsername';
 import { setIsLoading } from '@/redux/features/UiSlice';
 import Spinner from '@/components/shared/Spinner/Spinner';
+import { BaseModal } from '../BaseModal';
 
 interface Update{
     updateTarget:string,
@@ -19,24 +20,17 @@ interface Update{
 }
 
 
-export default function EditModal(props : {update:Update , infos: User }) {
-    const {update , infos} = props;
-    const dispatch = useDispatch()
-    const showEditModal = useSelector(state=>state.ui.showEditModal);
-    const isLoading = useSelector(state=>state.ui.isLoading);
-    const {shouldRender , onAnimationEnd , animation} = useBiAnimation(showEditModal , {enter : 'popUp' , leave:'popOut'})
+export default function EditModal(props) {
+    const {user , whatToUpdate , updateFn , onClose , isOpen} = props;
 
+    const dispatch = useDispatch()
+    const isLoading = useSelector(state=>state.ui.isLoading);
+    
     const [errors , setErrors] : [ [string?] ,Function ] = useState([]);
     const infoRef = useRef<HTMLInputElement>(null)
     const passwordRef = useRef<HTMLInputElement>(null)
     
     //empty errors when modal closes
-    useEffect(()=>{
-        if(shouldRender == false){
-            setErrors([]);
-        }
-    },[shouldRender])
-
     const handleUpdate = (e:React.FormEvent)=>{
         e.preventDefault();
         const info = infoRef.current?.files?.[0] || infoRef.current?.value;
@@ -48,11 +42,11 @@ export default function EditModal(props : {update:Update , infos: User }) {
         }
         
         dispatch(setIsLoading(true))
-        update.updateFn(info , password)
+        updateFn(info , password)
         .then((res)=>{
             if([204,200,201].includes(res.status)){
                 setErrors([]);
-                dispatch(toggleShowEditModal());
+                onClose();
             }
         })
         .catch((err)=>{
@@ -70,25 +64,24 @@ export default function EditModal(props : {update:Update , infos: User }) {
         {
             passwordRef:passwordRef,
             infoRef:infoRef ,
-            onClose:()=>dispatch(toggleShowEditModal()) ,
+            onClose,
             onSubmit : handleUpdate
         }   
          
-        switch(update?.updateTarget){
-            case "displayname": return <EditDisplayName {...editProps} old={infos.displayName}  />;
-            case "username"   : return <EditUsername {...editProps}  old={infos.username}/> ;
-            case "picture"   : return <EditPicture {...editProps}  old={infos.image}/> ;
-            case "email"     : return <EditEmail {...editProps} old={infos.email}/> ;
+        switch(whatToUpdate){
+            case "displayname": return <EditDisplayName {...editProps} old={user.display_name}  />;
+            case "username"   : return <EditUsername {...editProps}  old={user.username}/> ;
+            case "picture"   : return <EditPicture {...editProps}  old={user.image}/> ;
+            case "email"     : return <EditEmail {...editProps} old={user.email}/> ;
         }
         
     }
 
 
-    if(!shouldRender) return null
-
+    
     return (
-    <div className={styles.container}>
-        <div style={{animation:animation}} onAnimationEnd={onAnimationEnd} className={styles.inner_container}>
+    <BaseModal onClose={onClose} show={isOpen} >
+        <div className={styles.inner_container}>
 
                 {renderEdit() }
 
@@ -101,12 +94,12 @@ export default function EditModal(props : {update:Update , infos: User }) {
 
             {
                 <div className={styles.footer}>
-                    <UnstyledButton  disabled={isLoading} onClick={()=>dispatch(toggleShowEditModal())} className={styles.cancel}>Cancel</UnstyledButton>
+                    <UnstyledButton  disabled={isLoading} onClick={onClose} className={styles.cancel}>Cancel</UnstyledButton>
                     <UnstyledButton type='submit' form='form' disabled={isLoading} className={styles.confirm}>{isLoading ? <Spinner size={25}/> : 'Done'}</UnstyledButton>
                 </div>
             }
 
         </div>
-    </div>
+    </BaseModal>
   )
 }
