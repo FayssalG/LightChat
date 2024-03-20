@@ -47,6 +47,9 @@ const FriendSlice = createSlice({
         setBlockedUsers: (state , action)=>{
             state.blockedUsers = action.payload
         },
+        addBlockedUser : (state , action)=>{
+            state.blockedUsers.push(action.payload);
+        },
         removeBlockedUser : (state , action)=>{
             state.blockedUsers = state.blockedUsers.filter((blocked : BlockedUser)=>{
                 return blocked.block_id != action.payload;
@@ -57,4 +60,4 @@ const FriendSlice = createSlice({
 
 
 export default FriendSlice.reducer;
-export const {setIsLoadingFriend, setSelectedFriend, setFriends  ,addFriend , removeFriend ,setRequests , addRequest, removeRequest , setBlockedUsers,removeBlockedUser} = FriendSlice.actions;  
+export const {setIsLoadingFriend, setSelectedFriend, setFriends  ,addFriend , removeFriend ,setRequests , addRequest, removeRequest , setBlockedUsers,removeBlockedUser,addBlockedUser} = FriendSlice.actions;  

@@ -3,7 +3,7 @@ import styles from './ConfirmBlockFriend.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import useBiAnimation from '@/components/hooks/useBiAnimation';
 import { closeConfirmBlockFriendModal, closeConfirmRemoveFriendModal } from '@/redux/features/UiSlice';
-import { removeFriend, setIsLoadingFriend } from '@/redux/features/FriendSlice';
+import { addBlockedUser, removeFriend, setIsLoadingFriend } from '@/redux/features/FriendSlice';
 import { block_user } from '@/axios/friend';
 
 export default function ConfirmBlockFriendModal() {
@@ -20,6 +20,7 @@ export default function ConfirmBlockFriendModal() {
         block_user(selectedFriend.username)
         .then((res)=>{
           if (res.status === 200){
+            dispatch(addBlockedUser(res.data));
             dispatch(removeFriend(selectedFriend.friendship_id))
           }
         })        
