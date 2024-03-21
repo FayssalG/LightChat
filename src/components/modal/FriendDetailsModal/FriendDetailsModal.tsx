@@ -14,7 +14,7 @@ export default function FriendDetailsModal(props)   {
     const {friend , onClose , isOpen} = props    
     
     const {onOpen: onOpenConfirmRemoveFriendModal} = useModal('ConfirmRemoveFriendModal')
-    const {onOpen: onOpenConfirmBlockFriendModal} = useModal('ConfirmRemoveBlockModal')
+    const {onOpen: onOpenConfirmBlockFriendModal} = useModal('ConfirmBlockFriendModal')
     
     const handleOpenRemoveModal = ()=>{
         onClose()
