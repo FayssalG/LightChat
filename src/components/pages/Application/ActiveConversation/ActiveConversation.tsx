@@ -5,15 +5,26 @@ import Message from './Message/Message';
 import MessageInput from './MessageInput/MessageInput';
 import UnstyledButton from '../../../shared/UnstyledButton/UnstyledButton';
 import { useSelector } from 'react-redux';
+import { useCallback, useEffect, useRef } from 'react';
 
 
 export default function ActiveConversation() {
   const conversationVisibility = useSelector((state)=>state.ui.conversationVisibility);
+  const user : User= useSelector(state=>state.auth.user)
+  const activeConversation : Conversation | null = useSelector(state=>state.conversation.activeConversation)
+  
+  //scroll down when a message is added
+  const setRef = useCallback((element)=>{
+    if(element) element.scrollIntoView({smooth:true});
+  },[]);
 
-  return (
+    
+  if(!activeConversation) return null
+  
+    return (
     <div data-visible={conversationVisibility ? 'true' : 'false'} className={styles.container}>
         
-        <Topbar/>
+        <Topbar conversationWith={activeConversation.conversationWith} />
         
         <div className={styles.inner_container}>
             <div className={styles.infos}> 
@@ -32,15 +43,22 @@ export default function ActiveConversation() {
             
             
             <div className={styles.messages}>
-                <Message type='self' />
-                <Message />
-                <Message type='self' />
-                <Message />
-        
+                {
+                    activeConversation.messages.map((message , index)=>{
+                        const isLast = activeConversation.messages.length -1 === index;
+                        
+                        return <Message messageRef={isLast ? setRef : null} 
+                                        key={message?.id || index} 
+                                        conversationWith={activeConversation.conversationWith} 
+                                        text={message?.text} 
+                                        type={message?.sender_id == user.id ? 'self' : null}
+                                />
+                    })
+                }        
             </div>
         </div>
 
-        <MessageInput/>
+        <MessageInput conversationWith={activeConversation.conversationWith}/>
 
     </div>
   )

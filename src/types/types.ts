@@ -34,3 +34,17 @@ interface BlockedUser {
     image : string,
 }
 
+
+interface FriendMessage{
+    created_at : string,
+    id:string,
+    sender_id : string,
+    receiver_id : string,
+    text : string,
+}
+
+interface Conversation {
+    conversation_id? :string,
+    conversationWith : Friend,
+    messages : [FriendMessage?]
+}

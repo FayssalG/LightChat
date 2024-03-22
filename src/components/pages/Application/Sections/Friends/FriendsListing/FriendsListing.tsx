@@ -10,8 +10,7 @@ import ConfirmRemoveFriendModal from "@/components/modals/ConfirmRemoveFriendMod
 export default function FriendsListing() {
     const dispatch = useDispatch();
     const friends : [Friend?] = useSelector(state=>state.friend.friends);
-    const selectedFriend  : Friend | null = useSelector(state=>state.friend.selectedFriend);
-
+ 
     
     return (
     <>

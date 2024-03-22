@@ -9,6 +9,7 @@ import { openConfirmRemoveFriendModal, openFriendDetailsModal } from '@/redux/fe
 import ConfirmRemoveFriendModal from '@/components/modals/ConfirmRemoveFriendModal/ConfirmRemoveFriendModal';
 import { setSelectedFriend } from '@/redux/features/FriendSlice';
 import useModal from '@/components/modal/useModal';
+import { addConversation, setActiveConversation } from '@/redux/features/ConversationSlice';
 
 
 export default function Friend({friend} : {friend:Friend}) {
@@ -21,8 +22,21 @@ export default function Friend({friend} : {friend:Friend}) {
   const handleRemoveClick = ()=>{
     setShowOptionsMenu(false)
     onOpenConfirmRemoveFriendModal({friend});
-    
   }
+
+  const handleSendMessageClick= ()=>{
+    const newConversation : Conversation = {
+      conversationWith : {
+        user_id:friend.user_id,
+        display_name : friend.display_name,
+        username : friend.username,
+        friendship_id : friend.friendship_id,  
+        image : friend.image
+      } ,
+      messages : [],
+    }
+    dispatch(setActiveConversation(newConversation));
+  } 
 
   const handleFriendClick = ()=>{
     dispatch(setSelectedFriend(friend))
@@ -60,7 +74,7 @@ export default function Friend({friend} : {friend:Friend}) {
                  </UnstyledButton>
                  <div data-visible={showOptionsMenu ? 'true' : 'false'}  className={styles.options_menu}>
                     <ul>
-                      <li className={styles.option}><UnstyledButton> Send a message </UnstyledButton></li>
+                      <li className={styles.option}><UnstyledButton onClick={handleSendMessageClick}> Send a message </UnstyledButton></li>
                       <li className={styles.option+' '+styles.option_red }><UnstyledButton onClick={handleRemoveClick}> Remove </UnstyledButton></li>
                     </ul>
                   </div>

@@ -18,6 +18,8 @@ import { useEffect } from 'react';
 import { block_user, get_blocked_users, get_friend_requests, get_friends, unblock_user } from '@/axios/friend';
 import { addFriend, addRequest , removeFriend, removeRequest, setBlockedUsers, setFriends, setIsLoadingFriend, setRequests } from '@/redux/features/FriendSlice';
 import { useSocket } from '@/components/context/SocketProvider';
+import { get_conversations } from '@/axios/conversation';
+import {  addReceivedMessage, setConversations } from '@/redux/features/ConversationSlice';
 
 
 
@@ -51,12 +53,18 @@ export default function Application() {
         }
       })
 
-      socket.on('friend-removed' , (data)=>{
-        if(data){
-          dispatch(removeFriend(data));
+      socket.on('friend-removed' , (frinedshipId : string)=>{
+        if(frinedshipId){
+          dispatch(removeFriend(frinedshipId));
         }
       })
 
+      socket.on('message-received' , ({message , sender} : {message:FriendMessage , sender:Friend})=>{
+        if(message){
+          dispatch(addReceivedMessage({newMessage:message , senderInfos:sender}));
+        }
+      })
+      
     }
   },[socket])
 
@@ -80,6 +88,15 @@ export default function Application() {
     .finally(()=>dispatch(setIsLoadingFriend(false)))
   },[])
 
+  useEffect(()=>{
+    get_conversations()
+    .then((res)=>{
+      dispatch(setConversations(res.data))
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+  })
  
 
   const selectedSection  = ()=>{

@@ -1,6 +1,8 @@
 .sections_activeconversation{
     display: grid;
+    height: 100svh;
     grid-template-columns: 1fr 4fr;
+    grid-template-rows: 1fr 11fr ;
     @media (max-width:700px) {
         grid-template-columns: 1fr;
     }

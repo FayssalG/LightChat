@@ -5,7 +5,7 @@
     color: white;
     background-color: var(--secondary);
     width: 299px;
-    height: 100svh;
+    height: 100%;
     
     @media (max-width:700px) {
         width: auto;

@@ -1,8 +1,14 @@
+.conversation[data-selected=true]{
+    background-color: var(--primary-dark);        
+}
 
 .conversation{
+    border-radius: .4rem;
     display: flex;
     gap: .5rem;
+    padding: .4rem;
     align-items: center;
+
     .picture{
         width: 50px;
         height: 50px;
@@ -48,6 +54,10 @@
         font-size: .5rem;
         color: var(--primary);
         background-color: var(--success);
+    }
+
+    .notread_marker[data-visible=false]{
+        display: none;
     }
 
     .close{
