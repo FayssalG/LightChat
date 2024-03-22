@@ -9,7 +9,7 @@ import { openConfirmRemoveFriendModal, openFriendDetailsModal } from '@/redux/fe
 import ConfirmRemoveFriendModal from '@/components/modals/ConfirmRemoveFriendModal/ConfirmRemoveFriendModal';
 import { setSelectedFriend } from '@/redux/features/FriendSlice';
 import useModal from '@/components/modal/useModal';
-import { addConversation, setActiveConversation } from '@/redux/features/ConversationSlice';
+import { addConversation, openConversation, setActiveConversation } from '@/redux/features/ConversationSlice';
 
 
 export default function Friend({friend} : {friend:Friend}) {
@@ -25,17 +25,7 @@ export default function Friend({friend} : {friend:Friend}) {
   }
 
   const handleSendMessageClick= ()=>{
-    const newConversation : Conversation = {
-      conversationWith : {
-        user_id:friend.user_id,
-        display_name : friend.display_name,
-        username : friend.username,
-        friendship_id : friend.friendship_id,  
-        image : friend.image
-      } ,
-      messages : [],
-    }
-    dispatch(setActiveConversation(newConversation));
+    dispatch(openConversation(friend));
   } 
 
   const handleFriendClick = ()=>{

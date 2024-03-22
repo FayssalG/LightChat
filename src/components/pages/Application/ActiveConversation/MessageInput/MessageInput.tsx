@@ -4,7 +4,7 @@ import { CiCirclePlus } from "react-icons/ci";
 import UnstyledButton from '../../../../shared/UnstyledButton/UnstyledButton';
 import { send_message } from '@/axios/conversation';
 import { useDispatch } from 'react-redux';
-import { addMessage, addSentMessage } from '@/redux/features/ConversationSlice';
+import { addSentMessage } from '@/redux/features/ConversationSlice';
 import { useRef } from 'react';
 
 export default function MessageInput({conversationWith}) {

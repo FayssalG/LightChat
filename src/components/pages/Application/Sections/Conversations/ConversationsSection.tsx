@@ -1,15 +1,12 @@
 import { useSelector } from 'react-redux';
 import Conversation from './Conversation/Conversation';
 import styles from './ConversationsSection.module.css';
+import { selectOpenConversations } from '@/redux/features/ConversationSlice';
 
 export default function ConversationsSection() {
-  const conversations : Conversation = useSelector(state => state.conversation.conversations);
-  const openConversationsIds : [string?] = useSelector(state=>state.conversation.openConversations);
-  
-  const openConversations = conversations.filter((conversation)=>{
-    return openConversationsIds.includes(conversation.conversation_id)
-  })
+  const openConversations = useSelector(selectOpenConversations);  
 
+  console.log(openConversations)
   return (
     <div className={styles.container}>
         <div className={styles.header}>

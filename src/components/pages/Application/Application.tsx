@@ -19,7 +19,7 @@ import { block_user, get_blocked_users, get_friend_requests, get_friends, unbloc
 import { addFriend, addRequest , removeFriend, removeRequest, setBlockedUsers, setFriends, setIsLoadingFriend, setRequests } from '@/redux/features/FriendSlice';
 import { useSocket } from '@/components/context/SocketProvider';
 import { get_conversations } from '@/axios/conversation';
-import {  addReceivedMessage, setConversations } from '@/redux/features/ConversationSlice';
+import {  addReceivedMessage, fetchConversations, setConversations } from '@/redux/features/ConversationSlice';
 
 
 
@@ -89,14 +89,8 @@ export default function Application() {
   },[])
 
   useEffect(()=>{
-    get_conversations()
-    .then((res)=>{
-      dispatch(setConversations(res.data))
-    })
-    .catch((err)=>{
-      console.log(err)
-    })
-  })
+    dispatch(fetchConversations());
+  },[])
  
 
   const selectedSection  = ()=>{

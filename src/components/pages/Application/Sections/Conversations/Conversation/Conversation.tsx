@@ -1,6 +1,6 @@
 import styles from './Conversation.module.css';
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
-import { closeConversation, setActiveConversation } from '@/redux/features/ConversationSlice';
+import { closeConversation, openConversation, selectConversation } from '@/redux/features/ConversationSlice';
 import { IoClose } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -10,7 +10,7 @@ export default function Conversation({conversation} : {conversation : Conversati
   const isSelected = activeConversation?.conversation_id === conversation.conversation_id 
 
   const handleSelectConversation = ()=>{
-    dispatch(setActiveConversation(conversation))
+    dispatch(selectConversation(conversation))
   }
 
   const handleCloseConversation = ()=>{

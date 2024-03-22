@@ -4,8 +4,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const AuthSlice = createSlice({
     name:'auth',
     initialState : {
-        isAuth : JSON.parse(localStorage.getItem('newchat-isAuth')) || false,
-        isVerified : JSON.parse(localStorage.getItem("newchat-isVerified")) || false,
+        isAuth :  false,
+        isVerified : false,
         user  : {},
     },
     reducers:{
