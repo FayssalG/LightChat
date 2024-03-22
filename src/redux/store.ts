@@ -10,7 +10,7 @@ import ConversationReducer from "./features/ConversationSlice";
 const conversationPersistConfig = {
     key:'conversation',
     storage,
-    whitelist : ['openConversations'] 
+    whitelist : ['openConversationsByFriendId'] 
 }
 const authPersistConfig = {
     key:'auth',

@@ -1,11 +1,11 @@
 import { get_conversations } from "@/axios/conversation";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 
 interface IConversationState{
     error : string | null,
     status : 'idle' | 'loading' | 'succeeded'  | 'failed',
     conversations : [Conversation?],
-    openConversations : [Conversation?], 
+    openConversationsByFriendId : [string?], 
     activeConversation : Conversation | null
 }  
 
@@ -19,7 +19,14 @@ export const fetchConversations = createAsyncThunk('conversation/fetchConversati
     }
 })
 
-export const  selectOpenConversations = (state)=> state.conversation.openConversations
+const selecConversations = state=>state.conversation.conversations;
+const selectOpenIds = state=>state.conversation.openConversationsByFriendId;
+
+export const  selectOpenConversations = createSelector([selecConversations , selectOpenIds],(conversations ,openConversations)=>{
+    return conversations.filter((conv)=>{
+        return openConversations.includes(conv.conversationWith.user_id) 
+    })
+})
 
 
 const initialState : IConversationState = {
@@ -27,7 +34,7 @@ const initialState : IConversationState = {
     status : 'idle' ,
     conversations : [],
     activeConversation : null,
-    openConversations : []
+    openConversationsByFriendId : []
 }
 
 const ConversationSlice = createSlice({
@@ -52,15 +59,17 @@ const ConversationSlice = createSlice({
           
             const existingConversation = state.conversations.find((conversation)=>conversation?.conversationWith.user_id == newConversation.conversationWith.user_id);
             if(existingConversation){
+                const withFriend = existingConversation.conversationWith;
                 state.activeConversation = existingConversation
-                if(!state.openConversations.find((conv)=>conv?.conversation_id == existingConversation.conversation_id)){
-                    state.openConversations.push(existingConversation)
+                if(!state.openConversationsByFriendId.includes(withFriend.user_id)){
+                    state.openConversationsByFriendId.push(withFriend.user_id);
                 }
     
             }else{
                 state.activeConversation = newConversation
+                const withFriend = newConversation.conversationWith;
                 state.conversations.push(newConversation)
-                state.openConversations.push(newConversation)
+                state.openConversationsByFriendId.push(withFriend.user_id)
             }
             
         },
@@ -68,10 +77,10 @@ const ConversationSlice = createSlice({
             state.activeConversation = action.payload
         },
         closeConversation : (state ,action)=>{
-            const conversationId = action.payload;
+            const friendId = action.payload;
             state.activeConversation = null;
-            state.openConversations = state.openConversations.filter((conv)=>{
-                return conv?.conversation_id != conversationId
+            state.openConversationsByFriendId = state.openConversationsByFriendId.filter((id)=>{
+                return id != friendId
             });
         },
 
@@ -96,7 +105,15 @@ const ConversationSlice = createSlice({
             console.log({conversations:state.conversations})
             console.log({newMessage})
             if(existingConversation){
-                if(existingConversation?.conversationWith.user_id == state.activeConversation?.conversationWith.user_id){
+                const withFriend = existingConversation.conversationWith
+                
+                const isOpen = state.openConversationsByFriendId.includes(withFriend.user_id) 
+                if(!isOpen){
+                    state.openConversationsByFriendId.push(withFriend.user_id)
+                }
+
+                const isActive = withFriend.user_id == state.activeConversation?.conversationWith.user_id;
+                if(isActive){
                     state.activeConversation?.messages.push(newMessage);
                 }
     
@@ -105,8 +122,7 @@ const ConversationSlice = createSlice({
                         conversation.messages.push(newMessage)
                     }
                 });
-                state.openConversations.push(existingConversation)
-
+               
             }
             else{
                 const newConversation : Conversation = {
@@ -121,7 +137,7 @@ const ConversationSlice = createSlice({
                     messages : [newMessage]
                 }
                 state.conversations.push(newConversation)
-                state.openConversations.push(newConversation)
+                state.openConversationsByFriendId.push(senderInfos.user_id)
             }
         }
     },
