@@ -1,28 +1,22 @@
 import styles from './Blocked.module.css';
 
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
-import { useDispatch } from 'react-redux';
-import { openConfirmRemoveFriendModal } from '@/redux/features/UiSlice';
-import { unblock_user } from '@/axios/friend';
-import { removeBlockedUser, setIsLoadingFriend } from '@/redux/features/FriendSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { unBlockUser } from '@/redux/features/Block/BlockSlice';
+import FriendSkeleton from '../../FriendSkeleton/FriendSkeleton';
 
 
 export default function Blocked({blocked}) {
-  const dispatch = useDispatch()
+  const status : string = useSelector(state=>state.block.status);
+  const isLoading = status == 'loading' ; 
+  const dispatch = useDispatch();
 
   const handleUnblock = ()=>{
-    dispatch(setIsLoadingFriend(true))
-    unblock_user(blocked.username)
-    .then((res)=>{
-      if(res.status == 200){
-        dispatch(removeBlockedUser(blocked.block_id));
-      }
-    })
-    .finally(()=>{
-      dispatch(setIsLoadingFriend(false))
-    })
+    dispatch(unBlockUser(blocked.username))
   }
 
+  if(isLoading) return <FriendSkeleton/>
+  
   return (
     <>
          <div className={styles.friend}>
@@ -34,7 +28,7 @@ export default function Blocked({blocked}) {
                   <h2 className={styles.displayname}>{blocked.display_name}</h2>
                   <p className={styles.username}>online</p>
               </UnstyledButton>
-
+    
               <UnstyledButton className={styles.unblock_btn} onClick={handleUnblock}>
                 Unblock
               </UnstyledButton>

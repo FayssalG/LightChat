@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { openAddFriendModal } from '@/redux/features/UiSlice';
 import { useEffect, useState } from 'react';
 import { get_friends, get_pending_friends} from '@/axios/friend';
-import { setFriends , setPendingFriends} from '@/redux/features/FriendSlice';
+import { setFriends , setPendingFriends} from '@/redux/features/Friend/FriendSlice';
 import PendingFriendsListing from './PendingFriendsListing/PendingFriendsListing';
 import FriendsListing from './FriendsListing/FriendsListing';
 import Spinner from '@/components/shared/Spinner/Spinner';
@@ -13,10 +13,14 @@ import FriendSkeleton from './FriendSkeleton/FriendSkeleton';
 import useModal from '@/components/modal/useModal';
 
 export default function FriendsSection() {
-  const isLoadingFriend = useSelector(state=>state.friend.isLoadingFriend);
+  const friendStatus = useSelector(state=>state.friend.status);
+  const blockStatus = useSelector(state=>state.block.status);
+  const friendRequestStatus = useSelector(state=>state.friendRequest.status);
+  const isLoading = (friendStatus == 'loading' &&  friendRequestStatus == 'loading' && blockStatus == 'loading');
+  
   const dispatch = useDispatch();  
-  const [selected , setSelected] : [string , Function]= useState('all');
 
+  const [selected , setSelected] : [string , Function]= useState('all');
   const {onOpen : onOpenAddFriendModal } = useModal('AddFriendModal');
 
   const renderListings = ()=>{
@@ -53,7 +57,7 @@ export default function FriendsSection() {
 
 
         <div className={styles.friends_list}>
-          {isLoadingFriend ? 
+          {isLoading ? 
             <>
               <FriendSkeleton/>  
               <FriendSkeleton/>  

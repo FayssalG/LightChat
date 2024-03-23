@@ -8,26 +8,18 @@ import { IoClose } from 'react-icons/io5';
 import { accept_friend_request, cancel_friend_request, ignore_friend_request } from '@/axios/friend';
 import Spinner from '@/components/shared/Spinner/Spinner';
 import { acceptRequest, cancelRequest, ignoreRequest, removeRequest } from '@/redux/features/FriendRequest/FriendRequestSlice';
-import { addFriend } from '@/redux/features/FriendSlice';
+import { addFriend } from '@/redux/features/Friend/FriendSlice';
+import FriendSkeleton from '../../FriendSkeleton/FriendSkeleton';
 
 
 export default function PendingFriend({pendingFriend} : {pendingFriend:FriendRequest}  ) {
   const user = useSelector(state=>state.auth.user);
+  const status : string= useSelector(state=>state.friendRequest.status);
+  const isLoading : boolean= status == 'loading';
   const dispatch = useDispatch()
   
   
-  const handleAccept = ()=>{
-    // accept_friend_request(pendingFriend.request_id)
-    // .then((res)=>{
-    //   if(res.status == 200){
-    //     dispatch(removeRequest(pendingFriend.request_id))
-    //     dispatch(addFriend(res.data))
-    //   }
-    // })
-    // .finally(()=>{
-
-    // })
-    
+  const handleAccept = ()=>{  
     dispatch(acceptRequest(pendingFriend.request_id));
   }
 
@@ -62,6 +54,8 @@ export default function PendingFriend({pendingFriend} : {pendingFriend:FriendReq
       )
     }
   }
+
+  if(isLoading) return <FriendSkeleton/>
   return (
     <>
          <div className={styles.friend}>

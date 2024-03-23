@@ -1,5 +1,5 @@
 import { get_friends } from "@/axios/friend";
-import { setFriends } from "@/redux/features/FriendSlice";
+import { setFriends } from "@/redux/features/Friend/FriendSlice";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Friend from "./Friend/Friend";

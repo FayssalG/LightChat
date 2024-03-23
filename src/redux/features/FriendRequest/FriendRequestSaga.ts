@@ -1,7 +1,7 @@
 import { call, takeEvery , put} from "redux-saga/effects";
 import { accept_friend_request, cancel_friend_request, get_friend_requests,  ignore_friend_request,  send_friend_request } from "@/axios/friend";
 import { fetchRequestsSuccess , fetchRequestsFailure , sendRequestFailure , sendRequestSuccess  , cancelIgnoreRequestFailure ,cancelIgnoreRequestSuccess, acceptRequestSuccess, acceptRequestFailure} from './FriendRequestSlice';
-import { addFriend } from "../FriendSlice";
+import { addFriend } from "../Friend/FriendSlice";
 
 function* workGetRequests(){
     try{

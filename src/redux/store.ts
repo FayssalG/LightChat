@@ -4,11 +4,11 @@ import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import UiReducer from './features/UiSlice';
 import AuthReducer from './features/AuthSlice';
-import FriendReducer from './features/FriendSlice';
+import FriendReducer from './features/Friend/FriendSlice';
 import ModalReducer from "./features/ModalSlice";
 import ConversationReducer from "./features/ConversationSlice";
 import FriendRequestReducer from "./features/FriendRequest/FriendRequestSlice";
-import BlockReducer from './features/BlockSlice';
+import BlockReducer from './features/Block/BlockSlice';
 
 import rootSaga from './sagas';
 

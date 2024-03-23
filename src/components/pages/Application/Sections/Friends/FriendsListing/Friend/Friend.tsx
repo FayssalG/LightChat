@@ -7,12 +7,16 @@ import { RefObject, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { openConfirmRemoveFriendModal, openFriendDetailsModal } from '@/redux/features/UiSlice';
 import ConfirmRemoveFriendModal from '@/components/modals/ConfirmRemoveFriendModal/ConfirmRemoveFriendModal';
-import { setSelectedFriend } from '@/redux/features/FriendSlice';
 import useModal from '@/components/modal/useModal';
 import { addConversation, openConversation, setActiveConversation } from '@/redux/features/ConversationSlice';
+import FriendSkeleton from '../../FriendSkeleton/FriendSkeleton';
 
 
 export default function Friend({friend} : {friend:Friend}) {
+  const blockStatus = useSelector(state=>state.block.status);
+  const friendStatus = useSelector(state=>state.friend.status);
+  const isLoading = (blockStatus=='loading' || friendStatus=='loading')
+
   const dispatch = useDispatch()
   const optionsRef = useRef<HTMLDivElement | null>(null)
 
@@ -29,7 +33,6 @@ export default function Friend({friend} : {friend:Friend}) {
   } 
 
   const handleFriendClick = ()=>{
-    dispatch(setSelectedFriend(friend))
     onOpenFriendDetailsModal({friend})
   }
 
@@ -46,6 +49,8 @@ export default function Friend({friend} : {friend:Friend}) {
 
   const [showOptionsMenu , setShowOptionsMenu] : [Boolean , Function] = useState(false)
 
+  if(isLoading) return <FriendSkeleton/>
+  
   return (
     <>
          <div className={styles.friend}>

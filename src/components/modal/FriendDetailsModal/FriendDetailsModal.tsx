@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { closeFriendDetailsModal, openConfirmBlockFriendModal, openConfirmRemoveFriendModal } from '@/redux/features/UiSlice';
 import { RefObject, useEffect, useRef, useState } from 'react';
 import useBiAnimation from '@/components/hooks/useBiAnimation';
-import { setSelectedFriend } from '@/redux/features/FriendSlice';
+import { setSelectedFriend } from '@/redux/features/Friend/FriendSlice';
 import useModal from '../useModal';
 import { BaseModal } from '../BaseModal';
 

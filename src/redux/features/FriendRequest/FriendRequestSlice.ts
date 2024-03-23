@@ -141,7 +141,7 @@ const FriendRequestSlice = createSlice({
     },
     reducers: {
  
-        fetchRequests : (state , action)=>{
+        fetchRequests : (state)=>{
             state.status = 'loading'
         },
         fetchRequestsSuccess : (state , action)=>{

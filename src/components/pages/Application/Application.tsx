@@ -20,8 +20,8 @@ import { useSocket } from '@/components/context/SocketProvider';
 import { get_conversations } from '@/axios/conversation';
 import {  addReceivedMessage, fetchConversations, setConversations } from '@/redux/features/ConversationSlice';
 import { addRequest, fetchRequests, getRequests, removeRequest, setRequests } from '@/redux/features/FriendRequest/FriendRequestSlice';
-import { addFriend, fetchFriends, removeFriend } from '@/redux/features/FriendSlice';
-import { setBlockedUsers } from '@/redux/features/BlockSlice';
+import { addFriend, fetchFriends, removeFriend } from '@/redux/features/Friend/FriendSlice';
+import { fetchBlockedUsers, setBlockedUsers } from '@/redux/features/Block/BlockSlice';
 
 
 
@@ -72,28 +72,12 @@ export default function Application() {
 
 
   useEffect(()=>{
-    const fetchFriends = async ()=>{
-      // const res1 = await get_friend_requests()
-      // if(res1.status == 200) dispatch(setRequests(res1.data));      
-      const blockedUsersRes = await get_blocked_users();
-      if(blockedUsersRes.status == 200) dispatch(setBlockedUsers(blockedUsersRes.data));
-    }
-        
-        
-    fetchFriends()
-    .catch((err)=>console.log(err))
-    .finally(()=>{
-
-    })
-  },[])
-
-  useEffect(()=>{
     dispatch(fetchFriends());
     dispatch(fetchConversations());
-
+    dispatch(fetchBlockedUsers());
     dispatch(fetchRequests())
 
-  },[])
+  },[dispatch])
  
 
   const selectedSection  = ()=>{
@@ -119,18 +103,6 @@ export default function Application() {
           {selectedSection()}
           <ActiveConversation/>
         </div>        
-        
-        
-        
-        {/* Modals */}
-       
-        {/* <FriendDetailsModal/>
-        <ConfirmRemoveFriendModal/>
-        <GroupDetailsModal/>
-        <AddFriendModal/>
-        <ConfirmBlockFriendModal/>
-        <CreateGroupModal/>
-           */}
 
     </>
   )
