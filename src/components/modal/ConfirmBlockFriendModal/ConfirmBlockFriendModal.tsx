@@ -1,18 +1,17 @@
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import styles from './ConfirmBlockFriend.module.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { addBlockedUser, removeFriend, setIsLoadingFriend } from '@/redux/features/FriendSlice';
+import { useDispatch} from 'react-redux';
+import { removeFriend } from '@/redux/features/FriendSlice';
+import { addBlockedUser } from '@/redux/features/FriendSlice';
 import { block_user } from '@/axios/friend';
 import { BaseModal } from '../BaseModal';
 
 export default function ConfirmBlockFriendModal(props) {
   const {friend , onClose , isOpen} = props  
 
-    const isLoadingFriend : Boolean = useSelector(state=>state.friend.isLoadingFriend);
     const dispatch = useDispatch();
 
     const handleBlock = ()=>{
-        dispatch(setIsLoadingFriend(true));
         onClose();
         block_user(friend.username)
         .then((res)=>{
@@ -26,7 +25,7 @@ export default function ConfirmBlockFriendModal(props) {
           console.log(err)
         })
         .finally(()=>{
-          dispatch(setIsLoadingFriend(false));
+        
         })
 
       }    

@@ -1,8 +1,6 @@
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import styles from './ConfirmRemoveFriend.module.css';
 import { useDispatch, useSelector } from 'react-redux';
-import useBiAnimation from '@/components/hooks/useBiAnimation';
-import { closeConfirmRemoveFriendModal, closeFriendDetailsModal } from '@/redux/features/UiSlice';
 import { remove_friend } from '@/axios/friend';
 import { removeFriend, setIsLoadingFriend } from '@/redux/features/FriendSlice';
 import { BaseModal } from '../BaseModal';
@@ -14,12 +12,10 @@ export default function ConfirmRemoveFriendModal(props) {
 
     
     const handleRemove = ()=>{
-        dispatch(setIsLoadingFriend(true));
         onClose();
         remove_friend(friend.friendship_id)
         .then((res)=>{
           if (res.status === 200){
-            dispatch(closeFriendDetailsModal());
             dispatch(removeFriend(friend.friendship_id))
           }
         })        
@@ -27,7 +23,6 @@ export default function ConfirmRemoveFriendModal(props) {
           console.log(err)
         })
         .finally(()=>{
-          dispatch(setIsLoadingFriend(false));
         })
       }    
     

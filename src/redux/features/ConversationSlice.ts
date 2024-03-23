@@ -19,6 +19,8 @@ export const fetchConversations = createAsyncThunk('conversation/fetchConversati
     }
 })
 
+
+
 const selecConversations = state=>state.conversation.conversations;
 const selectOpenIds = state=>state.conversation.openConversationsByFriendId;
 
@@ -146,6 +148,7 @@ const ConversationSlice = createSlice({
         state.status = "loading";
       })
       builder.addCase(fetchConversations.fulfilled , (state , action)=>{
+        state.status = 'succeeded';
         state.conversations = action.payload;
       })
       builder.addCase(fetchConversations.rejected , (state , action)=>{

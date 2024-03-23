@@ -6,8 +6,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { openConfirmRemoveFriendModal, setIsLoading } from '@/redux/features/UiSlice';
 import { IoClose } from 'react-icons/io5';
 import { accept_friend_request, cancel_friend_request, ignore_friend_request } from '@/axios/friend';
-import { addFriend, removeRequest, setIsLoadingFriend } from '@/redux/features/FriendSlice';
 import Spinner from '@/components/shared/Spinner/Spinner';
+import { acceptRequest, cancelRequest, ignoreRequest, removeRequest } from '@/redux/features/FriendRequest/FriendRequestSlice';
+import { addFriend } from '@/redux/features/FriendSlice';
 
 
 export default function PendingFriend({pendingFriend} : {pendingFriend:FriendRequest}  ) {
@@ -16,48 +17,26 @@ export default function PendingFriend({pendingFriend} : {pendingFriend:FriendReq
   
   
   const handleAccept = ()=>{
-    dispatch(setIsLoadingFriend(true));
-    // console.log({pendingFriend})
-    accept_friend_request(pendingFriend.request_id)
-    .then((res)=>{
-      if(res.status == 200){
-        dispatch(removeRequest(pendingFriend.request_id))
-        dispatch(addFriend(res.data))
-      }
-    })
-    .finally(()=>{
-      dispatch(setIsLoadingFriend(false));
-    })
+    // accept_friend_request(pendingFriend.request_id)
+    // .then((res)=>{
+    //   if(res.status == 200){
+    //     dispatch(removeRequest(pendingFriend.request_id))
+    //     dispatch(addFriend(res.data))
+    //   }
+    // })
+    // .finally(()=>{
+
+    // })
+    
+    dispatch(acceptRequest(pendingFriend.request_id));
   }
 
   const handleIgnore = ()=>{
-    dispatch(setIsLoadingFriend(true));
-    ignore_friend_request(pendingFriend.request_id)
-    .then((res)=>{
-      if(res.status == 200){
-        dispatch(removeRequest(pendingFriend.request_id));
-      }
-      console.log(res);
-    })
-    .finally(()=>{
-      dispatch(setIsLoadingFriend(false));
-   
-    })
+    dispatch(ignoreRequest(pendingFriend.request_id))
   }
 
   const handleCancel = ()=>{
-    dispatch(setIsLoadingFriend(true));
-    cancel_friend_request(pendingFriend.request_id)
-    .then((res)=>{
-      if(res.status == 200){
-          dispatch(removeRequest(pendingFriend.request_id));  
-
-        }
-      console.log(res);
-    })
-    .finally(()=>{
-      dispatch(setIsLoadingFriend(false));   
-    })
+    dispatch(cancelRequest(pendingFriend.request_id))
   }
  
   console.log(pendingFriend);

@@ -1,9 +1,31 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { get_friend_requests, get_friends } from "@/axios/friend";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
+
+export const fetchFriends = createAsyncThunk('friend/fetchFriends', async () =>{
+    try{
+        const response = await get_friends();
+        return [...response.data];
+    }catch(err){
+        return err.message;
+    }
+})
+
+
+const fetchRequests = createAsyncThunk('friend/fetchRequests', async () =>{
+    try{
+        const response = await get_friend_requests();
+        return [...response.data];
+    }catch(err){
+        return err.message;
+    }
+})
 
 const FriendSlice = createSlice({
     name : 'friend',
     initialState : {
+        status : 'idle',
+        error : null,
         isLoadingFriend : false,
         selectedFriend : null,
         friends : [],
@@ -21,7 +43,10 @@ const FriendSlice = createSlice({
             state.friends = action.payload;
         },
         addFriend : (state , action)=>{
-            state.friends.push(action.payload);
+            const existingFriend = state.friends.find((friend)=>friend.friendship_id == action.payload.friendship_id);
+            if(!existingFriend){
+                state.friends.push(action.payload);
+            }
         },
         removeFriend:(state,action) =>{
             state.friends = state.friends.filter((friend : Friend)=>{
@@ -55,7 +80,22 @@ const FriendSlice = createSlice({
                 return blocked.block_id != action.payload;
             })
         }
+    },
+
+    extraReducers(builder) {
+        builder.addCase(fetchFriends.fulfilled , (state ,action)=>{
+            state.status = 'succeeded';
+            state.friends = action.payload;
+        })
+        builder.addCase(fetchFriends.pending , (state ,action)=>{
+            state.status = 'loading'
+        })
+        builder.addCase(fetchFriends.rejected , (state ,action)=>{
+            state.status = 'failed';
+            state.error = action.payload;
+        })
     }
+
 })
 
 

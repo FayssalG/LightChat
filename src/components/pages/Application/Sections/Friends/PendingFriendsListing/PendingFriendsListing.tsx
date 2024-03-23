@@ -10,7 +10,7 @@ import PendingFriend from "./PendingFriend/PendingFriend";
 
 export default function PendingFriendsListing() {
     const dispatch = useDispatch();
-    const friendRequests : [Friend?] = useSelector(state=>state.friend.requests);
+    const friendRequests : [Friend?] = useSelector(state=>state.friendRequest.requests);
 
     console.log({friendRequests})
     

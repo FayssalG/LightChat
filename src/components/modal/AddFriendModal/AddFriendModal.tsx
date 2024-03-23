@@ -2,17 +2,17 @@ import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import styles from './AddFriendModal.module.css';
 import { IoClose } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
-import useBiAnimation from '@/components/hooks/useBiAnimation';
-import { closeAddFriendModal, setIsLoading } from '@/redux/features/UiSlice';
 import { useRef, useState } from 'react';
 import { send_friend_request } from '@/axios/friend';
 import { AxiosResponse } from 'axios';
 import Spinner from '@/components/shared/Spinner/Spinner';
-import {  addRequest, setIsLoadingFriend } from '@/redux/features/FriendSlice';
+import { addRequest, sendRequest } from '@/redux/features/FriendRequest/FriendRequestSlice';
 import { BaseModal } from '../BaseModal';
 
 export default function AddFriendModal(props) { 
-  const isLoadingFriend = useSelector((state)=>state.friend.isLoadingFriend);
+  const status = useSelector((state)=>state.friendRequest.status);
+  const error = useSelector((state)=>state.friendRequest.error);
+  const isLoading = status === 'loading';
   const dispatch = useDispatch();
 
   
@@ -26,28 +26,25 @@ export default function AddFriendModal(props) {
 
       if(inputRef.current) {
         const username = inputRef.current.value;
-        setErrors([]);
-        setSuccess(null);  
-        dispatch(setIsLoadingFriend(true))
+        // setErrors([]);
+        // setSuccess(null);  
 
-        send_friend_request(username)
-        .then((res : AxiosResponse) => {
-          if(res.status == 201){
-              // console.log({test:res.data});
-              dispatch(addRequest(res.data));
-              setSuccess("Request sent successfully!");
-              setErrors([]);
-          }
-        })
-        .catch((err)=>{
+        // send_friend_request(username)
+        // .then((res : AxiosResponse) => {
+        //   if(res.status == 201){
+        //       // console.log({test:res.data});
+        //       dispatch(addRequest(res.data));
+        //       setSuccess("Request sent successfully!");
+        //       setErrors([]);
+        //   }
+        // })
+        // .catch((err)=>{
          
-          setSuccess(null);
-          setErrors(err.response.data.errors);
-        })
-        .finally(()=>{
-          dispatch(setIsLoadingFriend(false))  
-        })
+        //   setSuccess(null);
+        //   setErrors(err.response.data.errors);
+        // })
 
+        dispatch(sendRequest(username))
       }
   }
 
@@ -62,12 +59,12 @@ export default function AddFriendModal(props) {
                 <input ref={inputRef} placeholder='Type a username...' />
 
                 <div className={styles.message}>
-                  {errors.length > 0 && errors.map((error)=><p className={styles.error}>{error}</p>)}
+                  {error && <p className={styles.error}>{error}</p>}
                   {success &&  <p className={styles.success}>{success}</p>}
                 </div>
 
-                <UnstyledButton disabled={isLoadingFriend}>
-                  {isLoadingFriend ? <Spinner size={25}/> : 'Send Friend Request' } 
+                <UnstyledButton disabled={isLoading}>
+                  {isLoading ? <Spinner size={25}/> : 'Send Friend Request' } 
                 </UnstyledButton>
             </form>
         </div>

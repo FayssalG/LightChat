@@ -1,6 +1,6 @@
 import styles from './Conversation.module.css';
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
-import { closeConversation, openConversation, selectConversation } from '@/redux/features/ConversationSlice';
+import { closeConversation, selectConversation } from '@/redux/features/ConversationSlice';
 import { IoClose } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
 

@@ -16,10 +16,12 @@ import { useDispatch, useSelector } from "react-redux";
 import EmailNotVerified from '@/components/pages/Application/EmailNotVerified/EmailNotVerified';
 import { useEffect } from 'react';
 import { block_user, get_blocked_users, get_friend_requests, get_friends, unblock_user } from '@/axios/friend';
-import { addFriend, addRequest , removeFriend, removeRequest, setBlockedUsers, setFriends, setIsLoadingFriend, setRequests } from '@/redux/features/FriendSlice';
 import { useSocket } from '@/components/context/SocketProvider';
 import { get_conversations } from '@/axios/conversation';
 import {  addReceivedMessage, fetchConversations, setConversations } from '@/redux/features/ConversationSlice';
+import { addRequest, fetchRequests, getRequests, removeRequest, setRequests } from '@/redux/features/FriendRequest/FriendRequestSlice';
+import { addFriend, fetchFriends, removeFriend } from '@/redux/features/FriendSlice';
+import { setBlockedUsers } from '@/redux/features/BlockSlice';
 
 
 
@@ -71,25 +73,26 @@ export default function Application() {
 
   useEffect(()=>{
     const fetchFriends = async ()=>{
-      const res1 = await get_friend_requests()
-      if(res1.status == 200) dispatch(setRequests(res1.data));
-      const res2 = await  get_friends()
-      if (res2.status === 200) dispatch(setFriends(res2.data));
-      
+      // const res1 = await get_friend_requests()
+      // if(res1.status == 200) dispatch(setRequests(res1.data));      
       const blockedUsersRes = await get_blocked_users();
       if(blockedUsersRes.status == 200) dispatch(setBlockedUsers(blockedUsersRes.data));
     }
         
-    
-    dispatch(setIsLoadingFriend(true))
-    
+        
     fetchFriends()
     .catch((err)=>console.log(err))
-    .finally(()=>dispatch(setIsLoadingFriend(false)))
+    .finally(()=>{
+
+    })
   },[])
 
   useEffect(()=>{
+    dispatch(fetchFriends());
     dispatch(fetchConversations());
+
+    dispatch(fetchRequests())
+
   },[])
  
 
