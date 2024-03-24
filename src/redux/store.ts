@@ -11,6 +11,7 @@ import FriendRequestReducer from "./features/FriendRequest/FriendRequestSlice";
 import BlockReducer from './features/Block/BlockSlice';
 
 import rootSaga from './sagas';
+import FriendConversationReducer from './features/FriendConversation/FriendConversationSlice';
 
 const conversationPersistConfig = {
     key:'conversation',
@@ -32,7 +33,8 @@ const store = configureStore({
         friendRequest : FriendRequestReducer,
         block : BlockReducer,
         conversation : persistReducer(conversationPersistConfig,ConversationReducer),
-        modal : ModalReducer
+        modal : ModalReducer,
+        friendConversation : FriendConversationReducer,
     },
 
     middleware : (getDefaultMiddleware)=>getDefaultMiddleware().concat(saga)
