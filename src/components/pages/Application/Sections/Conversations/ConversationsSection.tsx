@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import Conversation from './Conversation/Conversation';
 import styles from './ConversationsSection.module.css';
-import { selectOpenConversations } from '@/redux/features/ConversationSlice';
+import { selectOpenConversations } from '@/redux/features/Conversation/ConversationSlice';
 
 export default function ConversationsSection() {
   const openConversations = useSelector(selectOpenConversations);  

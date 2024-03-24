@@ -6,12 +6,13 @@ import MessageInput from './MessageInput/MessageInput';
 import UnstyledButton from '../../../shared/UnstyledButton/UnstyledButton';
 import { useSelector } from 'react-redux';
 import { useCallback, useEffect, useRef } from 'react';
+import { selectActiveConversation } from '@/redux/features/Conversation/ConversationSlice';
 
 
 export default function ActiveConversation() {
   const conversationVisibility = useSelector((state)=>state.ui.conversationVisibility);
   const user : User= useSelector(state=>state.auth.user)
-  const activeConversation : Conversation | null = useSelector(state=>state.conversation.activeConversation)
+  const activeConversation : Conversation | null = useSelector(selectActiveConversation)
   
   //scroll down when a message is added
   const setRef = useCallback((element)=>{
@@ -48,9 +49,9 @@ export default function ActiveConversation() {
                         const isLast = activeConversation.messages.length -1 === index;
                         
                         return <Message messageRef={isLast ? setRef : null} 
-                                        key={message?.id || index} 
+                                        key={index}
+                                        message = {message} 
                                         conversationWith={activeConversation.conversationWith} 
-                                        text={message?.text} 
                                         type={message?.sender_id == user.id ? 'self' : null}
                                 />
                     })
@@ -58,7 +59,7 @@ export default function ActiveConversation() {
             </div>
         </div>
 
-        <MessageInput conversationWith={activeConversation.conversationWith}/>
+        <MessageInput conversation={activeConversation}/>
 
     </div>
   )

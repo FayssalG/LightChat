@@ -6,7 +6,7 @@ import UiReducer from './features/UiSlice';
 import AuthReducer from './features/AuthSlice';
 import FriendReducer from './features/Friend/FriendSlice';
 import ModalReducer from "./features/ModalSlice";
-import ConversationReducer from "./features/ConversationSlice";
+import ConversationReducer from "./features/Conversation/ConversationSlice";
 import FriendRequestReducer from "./features/FriendRequest/FriendRequestSlice";
 import BlockReducer from './features/Block/BlockSlice';
 
@@ -15,7 +15,7 @@ import rootSaga from './sagas';
 const conversationPersistConfig = {
     key:'conversation',
     storage,
-    whitelist : ['openConversationsByFriendId'] 
+    whitelist : ['openConversationsIds'] 
 }
 const authPersistConfig = {
     key:'auth',

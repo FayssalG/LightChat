@@ -18,7 +18,7 @@ import { useEffect } from 'react';
 import { block_user, get_blocked_users, get_friend_requests, get_friends, unblock_user } from '@/axios/friend';
 import { useSocket } from '@/components/context/SocketProvider';
 import { get_conversations } from '@/axios/conversation';
-import {  addReceivedMessage, fetchConversations, setConversations } from '@/redux/features/ConversationSlice';
+import {  addReceivedMessage, fetchConversations, setConversations } from '@/redux/features/Conversation/ConversationSlice';
 import { addRequest, fetchRequests, getRequests, removeRequest, setRequests } from '@/redux/features/FriendRequest/FriendRequestSlice';
 import { addFriend, fetchFriends, removeFriend } from '@/redux/features/Friend/FriendSlice';
 import { fetchBlockedUsers, setBlockedUsers } from '@/redux/features/Block/BlockSlice';

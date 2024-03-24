@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { openConfirmRemoveFriendModal, openFriendDetailsModal } from '@/redux/features/UiSlice';
 import ConfirmRemoveFriendModal from '@/components/modals/ConfirmRemoveFriendModal/ConfirmRemoveFriendModal';
 import useModal from '@/components/modal/useModal';
-import { addConversation, openConversation, setActiveConversation } from '@/redux/features/ConversationSlice';
+import { addConversation, openConversation, setActiveConversation } from '@/redux/features/Conversation/ConversationSlice';
 import FriendSkeleton from '../../FriendSkeleton/FriendSkeleton';
 
 

@@ -36,7 +36,10 @@ interface BlockedUser {
 
 
 interface FriendMessage{
-    created_at : string,
+    isSent? : boolean,
+    isReceived? : boolean,
+    created_at? : string,
+    conversation_id : string,
     id:string,
     sender_id : string,
     receiver_id : string,
@@ -44,7 +47,8 @@ interface FriendMessage{
 }
 
 interface Conversation {
-    conversation_id? :string,
+    isActive? : boolean,
+    conversation_id :string,
     conversationWith : Friend,
     messages : [FriendMessage?]
 }
