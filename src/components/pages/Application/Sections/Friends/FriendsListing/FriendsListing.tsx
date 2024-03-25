@@ -1,10 +1,6 @@
-import { get_friends } from "@/axios/friend";
-import { setFriends } from "@/redux/features/Friend/FriendSlice";
-import { useEffect } from "react";
+import { seletctAllFriends, setFriends } from "@/redux/features/Friend/FriendSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Friend from "./Friend/Friend";
-import ConfirmRemoveFriendModal from "@/components/modals/ConfirmRemoveFriendModal/ConfirmRemoveFriendModal";
-import { seletctAllFriends } from "@/redux/features/FriendConversation/FriendConversationSlice";
 
 
 

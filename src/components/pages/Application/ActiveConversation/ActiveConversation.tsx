@@ -5,10 +5,9 @@ import Message from './Message/Message';
 import MessageInput from './MessageInput/MessageInput';
 import UnstyledButton from '../../../shared/UnstyledButton/UnstyledButton';
 import { useSelector } from 'react-redux';
-import { useCallback, useEffect, useRef } from 'react';
-import { selectActiveConversation, selectFriendById, seletctAllMessages} from '@/redux/features/FriendConversation/FriendConversationSlice';
-
-
+import { useCallback} from 'react';
+import { selectFriendById  } from '@/redux/features/Friend/FriendSlice';
+import { selectActiveConversation } from '@/redux/features/Conversation/ConversationSlice';
 export default function ActiveConversation() {
   const conversationVisibility = useSelector((state)=>state.ui.conversationVisibility);
   const activeConversation  = useSelector(selectActiveConversation)
@@ -21,6 +20,7 @@ export default function ActiveConversation() {
     if(element) element.scrollIntoView({smooth:true});
   },[]);
 
+  console.log({FRIEND:friend})
     
   if(!activeConversation) return null
   

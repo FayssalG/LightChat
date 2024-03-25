@@ -11,13 +11,12 @@ import FriendRequestReducer from "./features/FriendRequest/FriendRequestSlice";
 import BlockReducer from './features/Block/BlockSlice';
 
 import rootSaga from './sagas';
-import FriendConversationReducer from './features/FriendConversation/FriendConversationSlice';
 
-const conversationPersistConfig = {
-    key:'conversation',
-    storage,
-    whitelist : ['openConversationsIds'] 
-}
+// const conversationPersistConfig = {
+//     key:'conversation',
+//     storage,
+//     whitelist : ['openConversationsIds'] 
+// }
 const authPersistConfig = {
     key:'auth',
     storage,
@@ -32,9 +31,8 @@ const store = configureStore({
         friend : FriendReducer,
         friendRequest : FriendRequestReducer,
         block : BlockReducer,
-        conversation : persistReducer(conversationPersistConfig,ConversationReducer),
+        conversation : ConversationReducer,
         modal : ModalReducer,
-        friendConversation : FriendConversationReducer,
     },
 
     middleware : (getDefaultMiddleware)=>getDefaultMiddleware().concat(saga)

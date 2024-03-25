@@ -16,11 +16,10 @@ import { useDispatch, useSelector } from "react-redux";
 import EmailNotVerified from '@/components/pages/Application/EmailNotVerified/EmailNotVerified';
 import { useEffect } from 'react';
 import { useSocket } from '@/components/context/SocketProvider';
-import {  addReceivedMessage, fetchConversations } from '@/redux/features/Conversation/ConversationSlice';
+import {  addRealtimeMessage, createRealtimeConversation, deleteRealtimeConversation, fetchConversations } from '@/redux/features/Conversation/ConversationSlice';
 import { addRequest, fetchRequests, removeRequest } from '@/redux/features/FriendRequest/FriendRequestSlice';
 import { addFriend, fetchFriends, removeFriend } from '@/redux/features/Friend/FriendSlice';
 import { fetchBlockedUsers} from '@/redux/features/Block/BlockSlice';
-import { fetchFriendConversations, selectActiveConversation, selectAllConversations, selectConversation, selectConversationById, seletAllConversations, seletctAllFriends, seletctAllMessages, sendMessage, setActiveConversation } from '@/redux/features/FriendConversation/FriendConversationSlice';
 
 
 
@@ -49,6 +48,7 @@ export default function Application() {
       
       socket.on('request-accepted' , (data)=>{
         if(data){
+          dispatch(fetchConversations());
           dispatch(removeRequest(data.request_id));
           dispatch(addFriend(data.friend));
         }
@@ -56,13 +56,14 @@ export default function Application() {
 
       socket.on('friend-removed' , (frinedshipId : string)=>{
         if(frinedshipId){
+          dispatch(deleteRealtimeConversation(data.friend))
           dispatch(removeFriend(frinedshipId));
         }
       })
 
       socket.on('message-received' , ({message , sender} : {message:FriendMessage , sender:Friend})=>{
         if(message){
-          dispatch(addReceivedMessage({newMessage:message , senderInfos:sender}));
+          dispatch(addRealtimeMessage({newMessage:message , senderInfos:sender}));
         }
       })
       
@@ -76,7 +77,6 @@ export default function Application() {
     dispatch(fetchBlockedUsers());
     dispatch(fetchRequests())
 
-    dispatch(fetchFriendConversations());
   },[dispatch])
  
 

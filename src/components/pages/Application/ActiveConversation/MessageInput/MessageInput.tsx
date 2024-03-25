@@ -2,10 +2,9 @@ import styles from './MessageInput.module.css';
 import { IoSend } from "react-icons/io5";
 import { CiCirclePlus } from "react-icons/ci";
 import UnstyledButton from '../../../../shared/UnstyledButton/UnstyledButton';
-import { send_message } from '@/axios/conversation';
 import { useDispatch, useSelector } from 'react-redux';
-import { addSentMessage} from '@/redux/features/Conversation/ConversationSlice';
-import { sendMessage } from '@/redux/features/FriendConversation/FriendConversationSlice';
+import { sendMessage } from '@/redux/features/Conversation/ConversationSlice';
+
 import { useRef } from 'react';
 
 export default function MessageInput({friend}) {
@@ -18,6 +17,7 @@ export default function MessageInput({friend}) {
   const handleSendMessage= (e : React.FormEvent)=>{
     e.preventDefault();
     if(inputRef.current?.value){
+    
       const newMessage = {
         id: Math.floor(Math.random()*2000), //set a random id for now  
         conversation_id : friend.conversation_id,
@@ -28,7 +28,8 @@ export default function MessageInput({friend}) {
         isReceived:false
       }
       
-      console.log({newMessage})
+    
+    
       dispatch(sendMessage(newMessage))
       inputRef.current.value = '';
     }

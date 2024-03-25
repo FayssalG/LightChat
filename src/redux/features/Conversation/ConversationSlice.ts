@@ -1,39 +1,67 @@
-import { get_conversations } from "@/axios/conversation";
-import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
-import { randomUUID } from "crypto";
+import { createEntityAdapter, createSelector, createSlice } from "@reduxjs/toolkit";
 
 interface IConversationState{
     error : string | null,
     status : 'idle' | 'loading' | 'succeeded'  | 'failed',
     conversations : [Conversation?],
-    openConversationsIds : [string?], 
     activeConversationId : string | null
 }  
 
 
-const selectConversations = state=>state.conversation.conversations;
-const selectOpenIds = state=>state.conversation.openConversationsIds;
-const selectActiveConversationId = state=>state.conversation.activeConversationId;
+export const removeOneMessageById = (state , messageId)=>{
+    const {conversation_id} = messagesAdapter
+    .getSelectors()
+    .selectById(state.messages,messageId);
 
-export const  selectOpenConversations = createSelector([selectConversations , selectOpenIds],(conversations ,openIds)=>{
-    return conversations.filter((conv)=>{
-        return openIds.includes(conv.conversation_id) 
-    })
+    //getting the conversation where the message belongs
+    const conversation = conversationsAdapter.getSelectors()
+    .selectById(state ,  conversation_id);
+
+    //removing the message by its id from the messages state
+    messagesAdapter.removeOne(state.messages , messageId);
+    
+    //removing the messagei id from messages.ids in the conversation
+    conversationsAdapter.updateOne( state , {
+        id : conversation_id ,
+        changes : { messagesIds : conversation.messagesIds.filter((id)=>id !== messageId)}
+    });
+}
+
+
+export const addOneMessage = (state , message)=>{
+    const {conversation_id} = message
+    //getting the conversation where the message belongs
+    const conversation = conversationsAdapter.getSelectors()
+    .selectById(state,  conversation_id);
+    console.log({conversation , message})
+
+    //updating the messages state
+    messagesAdapter.addOne(state.messages , {
+        id:message.id,
+        ...message
+    });
+    
+    //pushing the message id to messagesIds in the conversation
+    conversationsAdapter.updateOne( state, {
+        id : conversation_id ,
+        changes : { messagesIds : [...conversation.messagesIds,message.id]}
+    });
+    
+}
+
+const conversationsAdapter  = createEntityAdapter({
+    selectId : (conversation)=>conversation.conversation_id
 })
 
-export const selectActiveConversation = createSelector([selectConversations,selectActiveConversationId] , (conversations,activeId)=>{
-    return conversations.find((conv)=>{
-        return conv.conversation_id == activeId
-    })
-})
+const messagesAdapter = createEntityAdapter()
 
-const initialState : IConversationState = {
+
+const initialState = conversationsAdapter.getInitialState({
     error : null,
     status : 'idle' ,
-    conversations : [],
+    messages : messagesAdapter.getInitialState(),
     activeConversationId : null,
-    openConversationsIds : []
-}
+})
 
 const ConversationSlice = createSlice({
     name : 'conversation',
@@ -46,7 +74,9 @@ const ConversationSlice = createSlice({
         },
         fetchConversationsSuccess : (state  , action)=>{
             state.status = 'succeeded';
-            state.conversations = action.payload
+            const {messages , conversations} = action.payload
+            conversationsAdapter.setAll(state, conversations) ;
+            messagesAdapter.setAll(state.messages ,messages);
             state.error = null;
         },
         fetchConversationsFailure : (state , action)=>{
@@ -60,19 +90,9 @@ const ConversationSlice = createSlice({
         
         sendMessageSuccess:(state , action)=>{
             state.status = 'succeeded';
-            const newMessage  = action.payload;
-            const conversations = state.conversations
-            conversations.forEach((conversation)=>{
-                if(conversation?.conversation_id == newMessage.conversation_id){
-                    conversation?.messages.forEach((msg)=>{            
-                        if(!msg.id){
-                            console.log({conv:conversation?.conversation_id},{newMsg:newMessage.conversation_id})
-                            msg.id = newMessage.id ;
-                            msg.isSent = true; 
-                        } 
-                    })
-                }                    
-            })
+            const {newMessage , oldMessageId}  = action.payload;
+            removeOneMessageById(state,oldMessageId);
+            addOneMessage(state,newMessage)
         },
         
         sendMessageFailure:(state , action)=>{
@@ -80,79 +100,87 @@ const ConversationSlice = createSlice({
             state.error = action.payload; 
         },
           
-        addMessage:(state,action)=>{
+        addMessageOptimistic:(state,action)=>{
             const message = action.payload;
-            state.conversations.forEach((conv)=>{
-                if(conv?.conversation_id == message.conversation_id) {
-                    conv?.messages.push({...message , isSent:false})
-                }
-            })
+            addOneMessage(state,message)
+
         },
-        removeMessage:(state,action)=>{
-            const message = action.payload;
-            state.conversations.forEach((conv)=>{
-                if(conv?.conversation_id == message.conversation_id) {
-                    conv?.messages.pop();
-                }
-            })
+        addMessageRevert:(state,action)=>{
+            const messageId = action.payload;
+            removeOneMessageById(state,messageId);
         },
 
 
 
 
         openConversation : (state , action)=>{
-            const friend = action.payload          
-            state.conversations.forEach((conversation)=>{
-                if(conversation?.conversationWith.user_id == friend.user_id){
-                    state.activeConversationId = conversation?.conversation_id || null;            
-                    if(!state.openConversationsIds.includes(conversation?.conversation_id)){
-                        state.openConversationsIds.push(conversation?.conversation_id);
-                    }
+            conversationsAdapter.updateOne(state,  {
+                id: action.payload,
+                changes : {
+                    isOpen : true
                 }
             });
-            
+            state.activeConversationId = action.payload        
+
         },
-      
-        selectConversation : (state , action)=>{
-            state.conversations.forEach((conv)=>{
-                if(conv?.conversation_id == action.payload.conversation_id){
-                    state.activeConversationId = conv?.conversation_id || null;
-                }
-            })
+
+        setActiveConversation : (state , action)=>{
+            state.activeConversationId = action.payload        
         },
-      
+
         closeConversation : (state ,action)=>{
             const conversationId = action.payload;
             state.activeConversationId = null;
-            state.openConversationsIds = state.openConversationsIds.filter((id)=>{
-                return id != conversationId
-            }) ;
+            conversationsAdapter.updateOne(state, {
+                id: conversationId,
+                changes : {
+                    isOpen : false
+                }
+            });
+        },
+
+        deleteRealtimeConversation : (state,action)=>{
+            const conversationId = action.payload
+            conversationsAdapter.removeOne(state , conversationId)
         },
 
 
-
-        addReceivedMessage : (state , action)=>{
-            const {newMessage , senderInfos}  = action.payload
-            const conversation = state.conversations.find((conversation)=>{
-                return newMessage?.conversation_id == conversation?.conversation_id
-            })             
-            
-            const isOpen = state.openConversationsIds.includes(conversation?.conversation_id) 
-            if(!isOpen){
-                state.openConversationsIds.push(conversation?.conversation_id)
-            }            
-            state.conversations.forEach(conversation => {
-                if(conversation && conversation.conversationWith.user_id == senderInfos.user_id){
-                    conversation.messages.push(newMessage)
+        addRealtimeMessage : (state , action)=>{
+            const {newMessage}  = action.payload
+            conversationsAdapter.updateOne(state, {
+                id:newMessage.conversation_id,
+                changes :{
+                    isOpen : true,
                 }
-            });  
+            })
+            addOneMessage(state,newMessage)
         }
 
     },
 })
 
 
+export const {
+    selectAll : selectAllConversations,
+    selectById : selectConversationById,
+} = conversationsAdapter.getSelectors(state=>state.conversation);
+
+export const selectOpenConversations = createSelector([selectAllConversations] , (Allconversations)=>{
+    return Allconversations.filter((conversation)=>conversation.isOpen);
+})
+
+export const selectActiveConversation = (state)=>{
+    return selectConversationById(state , state.conversation.activeConversationId)     
+}
+
+export const {
+    selectAll : seletctAllMessages,
+    selectById : selectMessageById    
+} = messagesAdapter.getSelectors(state=>state.conversation.messages);
+
+
 export default ConversationSlice.reducer;
+
 export const {
     fetchConversations,
     fetchConversationsSuccess,
@@ -161,11 +189,12 @@ export const {
     sendMessage,
     sendMessageSuccess,
     sendMessageFailure,
-    addMessage,
-    removeMessage,
+    addMessageOptimistic,
+    addMessageRevert,
+    addRealtimeMessage,
 
-    selectConversation,
+    setActiveConversation,
     closeConversation , 
-    openConversation , 
-    addReceivedMessage
+    openConversation ,
+    deleteRealtimeConversation,
 } = ConversationSlice.actions;  

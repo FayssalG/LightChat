@@ -1,5 +1,5 @@
 import { get_friend_requests, get_friends } from "@/axios/friend";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 
 
 // export const fetchFriends = createAsyncThunk('friend/fetchFriends', async () =>{
@@ -12,22 +12,27 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 // })
 
 
+const friendsAdapter = createEntityAdapter({
+    selectId:(friend)=>friend.user_id
+})
+
+const initialState = friendsAdapter.getInitialState({
+    error : null,
+    status : 'idle' ,
+})
+
 const FriendSlice = createSlice({
     name : 'friend',
-    initialState : {
-        status : 'idle',
-        error : null,
-        friends : [],
-    },
+    initialState,
     reducers: {
+
         fetchFriends : (state)=>{
             state.status = 'loading';
             state.error = null
         },
-
         fetchFriendsSuccess : (state,action)=>{
             state.status = 'succeeded';
-            state.friends = action.payload
+            friendsAdapter.setAll(state  ,action.payload);
             state.error = null
         },
 
@@ -42,10 +47,9 @@ const FriendSlice = createSlice({
         },
 
         unFriendSuccess : (state,action)=>{
+            const friendId = action.payload
             state.status = 'succeeded';
-            state.friends = state.friends.filter((friend : Friend)=>{
-                return friend.friendship_id != action.payload;
-            })           
+            friendsAdapter.removeOne(state , friendId);
             state.error = null
         },
 
@@ -57,20 +61,20 @@ const FriendSlice = createSlice({
         
         
         addFriend : (state , action)=>{
-            const existingFriend = state.friends.find((friend)=>friend.friendship_id == action.payload.friendship_id);
-            if(!existingFriend){
-                state.friends.push(action.payload);
-            }
+            friendsAdapter.upsertOne(state , action.payload);
         },
         removeFriend:(state,action) =>{
-            state.friends = state.friends.filter((friend : Friend)=>{
-                return friend.friendship_id != action.payload;
-            })           
+            friendsAdapter.removeOne(state , action.payload)
         },
- 
 
     },
 })
+
+
+export const {
+    selectAll : seletctAllFriends,
+    selectById:selectFriendById,
+} = friendsAdapter.getSelectors(state=>state.friend);
 
 
 export default FriendSlice.reducer;

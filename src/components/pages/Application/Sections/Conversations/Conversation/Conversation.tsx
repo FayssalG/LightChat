@@ -1,6 +1,8 @@
 import styles from './Conversation.module.css';
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
-import { selectActiveConversation, setActiveConversation , closeConversation, selectFriendById, selectMessageById} from '@/redux/features/FriendConversation/FriendConversationSlice';
+import { closeConversation, selectActiveConversation, selectMessageById, setActiveConversation } from '@/redux/features/Conversation/ConversationSlice';
+import { selectFriendById } from '@/redux/features/Friend/FriendSlice';
+
 import { IoClose } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
 

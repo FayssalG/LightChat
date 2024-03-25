@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux';
 import styles from './Message.module.css';
-import { selectMessageById } from '@/redux/features/FriendConversation/FriendConversationSlice';
+import { selectMessageById } from '@/redux/features/Conversation/ConversationSlice';
+// import { selectMessageById } from '@/redux/features/FriendConversation/FriendConversationSlice';
 
 
 export default function Message({messageRef ,   messageId , friend} : any) {

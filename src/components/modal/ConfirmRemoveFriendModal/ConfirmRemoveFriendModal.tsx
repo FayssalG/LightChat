@@ -1,8 +1,8 @@
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import styles from './ConfirmRemoveFriend.module.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { remove_friend } from '@/axios/friend';
-import { removeFriend, setIsLoadingFriend, unFriend } from '@/redux/features/Friend/FriendSlice';
+import { useDispatch} from 'react-redux';
+import { unFriend } from '@/redux/features/Friend/FriendSlice';
+
 import { BaseModal } from '../BaseModal';
 
 export default function ConfirmRemoveFriendModal(props) {
@@ -10,10 +10,9 @@ export default function ConfirmRemoveFriendModal(props) {
     const {friend , onClose , isOpen} = props
     const dispatch = useDispatch();
 
-    
     const handleRemove = ()=>{
         onClose();  
-        dispatch(unFriend(friend.friendship_id))
+        dispatch(unFriend(friend))
     }    
     
     

@@ -2,11 +2,11 @@ import styles from './Friend.module.css';
 
 import { IoMdMore } from "react-icons/io";
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
-import { RefObject, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useModal from '@/components/modal/useModal';
+import { openConversation } from '@/redux/features/Conversation/ConversationSlice';
 
-import { openConversation } from '@/redux/features/FriendConversation/FriendConversationSlice';
 import FriendSkeleton from '../../FriendSkeleton/FriendSkeleton';
 
 

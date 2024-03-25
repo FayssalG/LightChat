@@ -1,19 +1,15 @@
 import styles from './FriendsSection.module.css';
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import { useDispatch, useSelector } from 'react-redux';
-import { openAddFriendModal } from '@/redux/features/UiSlice';
-import { useEffect, useState } from 'react';
-import { get_friends, get_pending_friends} from '@/axios/friend';
-import { setFriends , setPendingFriends} from '@/redux/features/Friend/FriendSlice';
+import { useState } from 'react';
 import PendingFriendsListing from './PendingFriendsListing/PendingFriendsListing';
 import FriendsListing from './FriendsListing/FriendsListing';
-import Spinner from '@/components/shared/Spinner/Spinner';
 import BlockedListing from './BlockedListing/BlockedListing';
 import FriendSkeleton from './FriendSkeleton/FriendSkeleton';
 import useModal from '@/components/modal/useModal';
 
 export default function FriendsSection() {
-  const friendStatus = useSelector(state=>state.friendConversation.status);
+  const friendStatus = useSelector(state=>state.friend.status);
   const blockStatus = useSelector(state=>state.block.status);
   const friendRequestStatus = useSelector(state=>state.friendRequest.status);  
   const isLoading = (friendStatus == 'loading' ||  friendRequestStatus == 'loading' || blockStatus == 'loading');
