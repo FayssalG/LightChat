@@ -1,18 +1,16 @@
 import styles from './Friend.module.css';
-import avatar from '@/assets/avatar.png';
 
 import { IoMdMore } from "react-icons/io";
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import { RefObject, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { openConfirmRemoveFriendModal, openFriendDetailsModal } from '@/redux/features/UiSlice';
-import ConfirmRemoveFriendModal from '@/components/modals/ConfirmRemoveFriendModal/ConfirmRemoveFriendModal';
 import useModal from '@/components/modal/useModal';
-import { addConversation, openConversation, setActiveConversation } from '@/redux/features/Conversation/ConversationSlice';
+
+import { openConversation } from '@/redux/features/FriendConversation/FriendConversationSlice';
 import FriendSkeleton from '../../FriendSkeleton/FriendSkeleton';
 
 
-export default function Friend({friend} : {friend:Friend}) {
+export default function Friend({friend}) {
   const blockStatus = useSelector(state=>state.block.status);
   const friendStatus = useSelector(state=>state.friend.status);
   const isLoading = (blockStatus=='loading' || friendStatus=='loading')
@@ -29,7 +27,8 @@ export default function Friend({friend} : {friend:Friend}) {
   }
 
   const handleSendMessageClick= ()=>{
-    dispatch(openConversation(friend));
+    console.log({friend})
+    dispatch(openConversation(friend.conversation_id));
   } 
 
   const handleFriendClick = ()=>{

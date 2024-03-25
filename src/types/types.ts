@@ -8,14 +8,34 @@ interface User  {
 }
 
 interface Friend {
+    conversation_id : string,
     friendship_id : string,
-    // initiator : string,
     user_id: string,
     display_name : string,
     username : string,
     image : string,
 
 }
+interface Conversation {
+    isOpen? : boolean,
+    friend_id: string,
+    conversation_id :string,
+    messagesIds : [number?]
+}
+
+
+interface FriendMessage{
+    isSent? : boolean,
+    isReceived? : boolean,
+    created_at? : string,
+    conversation_id : string,
+    id:string,
+    sender_id : string,
+    receiver_id : string,
+    text : string,
+}
+
+
 
 interface FriendRequest {
     request_id : string,
@@ -35,20 +55,3 @@ interface BlockedUser {
 }
 
 
-interface FriendMessage{
-    isSent? : boolean,
-    isReceived? : boolean,
-    created_at? : string,
-    conversation_id : string,
-    id:string,
-    sender_id : string,
-    receiver_id : string,
-    text : string,
-}
-
-interface Conversation {
-    isActive? : boolean,
-    conversation_id :string,
-    conversationWith : Friend,
-    messages : [FriendMessage?]
-}

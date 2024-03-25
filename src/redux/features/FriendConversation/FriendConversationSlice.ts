@@ -1,6 +1,6 @@
 import { get_conversations } from "@/axios/conversation";
 import { createAsyncThunk, createEntityAdapter, createSelector, createSlice } from "@reduxjs/toolkit";
-import { randomUUID } from "crypto";
+import { friendsAdapter , messagesAdapter , conversationsAdapter , removeOneMessageById , addOneMessage } from "./FriendConversationsAdapters";
 
 // interface IConversationState{
 //     error : string | null,
@@ -11,43 +11,15 @@ import { randomUUID } from "crypto";
 // }  
 
 
-// const selectConversations = state=>state.conversation.conversations;
-// const selectOpenIds = state=>state.conversation.openConversationsIds;
-// const selectActiveConversationId = state=>state.conversation.activeConversationId;
-
-// export const  selectOpenConversations = createSelector([selectConversations , selectOpenIds],(conversations ,openIds)=>{
-//     return conversations.filter((conv)=>{
-//         return openIds.includes(conv.conversation_id) 
-//     })
-// })
-
-// export const selectActiveConversation = createSelector([selectConversations,selectActiveConversationId] , (conversations,activeId)=>{
-//     return conversations.find((conv)=>{
-//         return conv.conversation_id == activeId
-//     })
-// })
-
-
-const friendsAdapter = createEntityAdapter({
-    selectId : (friend)=>friend.user_id
-})
-
-const conversationsAdapter = createEntityAdapter({
-    selectId : (conversation)=>conversation.conversation_id
-})
-
-const messagesAdapter = createEntityAdapter({
-    selectId : (message )=>message.id
-})
-
-
 
 
 const initialState = friendsAdapter.getInitialState({
     error : null,
     status : 'idle' ,
+
     conversations : conversationsAdapter.getInitialState(),
     messages : messagesAdapter.getInitialState(),
+
     activeConversationId : null,
     openConversationsIds : []
 })
@@ -75,54 +47,65 @@ const FriendConversation = createSlice({
             state.error = action.payload;
         },
 
+        unFriend : (state,action)=>{
+            state.status = 'loading';
+            state.error = null
+        },
+
+        unFriendSuccess : (state,action)=>{
+            state.status = 'succeeded';
+            friendsAdapter.removeOne(state , action.payload);
+            state.error = null
+        },
+
+        unFriendFailure : (state,action)=>{
+            state.status = 'failed';
+            state.error = action.payload
+        },
+        
+        addFriend : (state , action)=>{
+            friendsAdapter.upsertOne(state , action.payload)
+        },
+        removeFriend:(state,action) =>{
+            friendsAdapter.removeOne(state , action.payload)
+        },
+
+
         sendMessage:(state , action)=>{
             state.status = 'loading';
         },
         
         sendMessageSuccess:(state , action)=>{
             state.status = 'succeeded';
-            const {newMessageId , oldMessageId}  = action.payload;
-            messagesAdapter.updateOne(state.messages , {
-                id : oldMessageId,
-                changes : {
-                    id : newMessageId
-                }
-            } )
+            const {newMessage , oldMessageId}  = action.payload;
 
+            removeOneMessageById(state,oldMessageId);
+            addOneMessage(state,newMessage)
         },
         
         sendMessageFailure:(state , action)=>{
             state.status = 'failed';
             state.error = action.payload; 
         },
-          
-        addMessage:(state,action)=>{
-            const message = action.payload;
-            messagesAdapter.addOne(state.messages , {
-                id : message.id,
-                ...message,
-            })            
+        addMessageOptimistic:(state,action)=>{
+            const message = action.payload 
+            addOneMessage(state,message)
         },
-        removeMessage:(state,action)=>{
-            const message = action.payload;
-            messagesAdapter.removeOne(state.messages ,  message.id);
+        addMessageRevert:(state,action)=>{
+            removeOneMessageById(state,action);
         },
 
-
-
-
-        openConversation : (state , action)=>{
-            const conversationId = action.payload          
+        openConversation : (state , action)=>{       
+            state.activeConversationId = action.payload
             conversationsAdapter.updateOne(state.conversations,  {
-                id: conversationId,
+                id: action.payload,
                 changes : {
                     isOpen : true
                 }
             });
-            
         },
       
-        selectConversation : (state , action)=>{
+        setActiveConversation : (state , action)=>{
             state.activeConversationId = action.payload        
         },
       
@@ -138,7 +121,7 @@ const FriendConversation = createSlice({
         },
 
         addReceivedMessage : (state , action)=>{
-            const {newMessage , senderInfos}  = action.payload
+            const {newMessage }  = action.payload
             conversationsAdapter.updateOne(state.conversations , {
                 id:newMessage.conversation_id,
                 changes :{
@@ -160,18 +143,27 @@ export default FriendConversation.reducer;
 
 export const {
     selectAll : selectAllConversations,
+    selectById : selectConversationById,
 } = conversationsAdapter.getSelectors(state=>state.friendConversation.conversations);
 
-const selectOpenConversations = createSelector([selectAllConversations] , (Allconversations)=>{
-    return Allconversations.map((conversation)=>conversation.isOpen);
+export const selectOpenConversations = createSelector([selectAllConversations] , (Allconversations)=>{
+    return Allconversations.filter((conversation)=>conversation.isOpen);
 })
+
+export const selectActiveConversation = (state)=>{
+    return selectConversationById(state , state.friendConversation.activeConversationId)     
+}
 
 export const {
     selectAll : seletctAllFriends,
+    selectById:selectFriendById,
 } = friendsAdapter.getSelectors(state=>state.friendConversation);
+
+
 
 export const {
     selectAll : seletctAllMessages,
+    selectById : selectMessageById    
 } = messagesAdapter.getSelectors(state=>state.friendConversation.messages);
 
 
@@ -183,10 +175,10 @@ export const {
     sendMessage,
     sendMessageSuccess,
     sendMessageFailure,
-    addMessage,
-    removeMessage,
+    addMessageOptimistic,
+    addMessageRevert,
 
-    selectConversation,
+    setActiveConversation,
     closeConversation , 
     openConversation , 
     addReceivedMessage

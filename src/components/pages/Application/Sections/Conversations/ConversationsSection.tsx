@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import Conversation from './Conversation/Conversation';
 import styles from './ConversationsSection.module.css';
-import { selectOpenConversations } from '@/redux/features/Conversation/ConversationSlice';
+import { selectOpenConversations } from '@/redux/features/FriendConversation/FriendConversationSlice';
 
 export default function ConversationsSection() {
   const openConversations = useSelector(selectOpenConversations);  
@@ -18,7 +18,7 @@ export default function ConversationsSection() {
 
         <div className={styles.conversations_list}>
             {
-              openConversations.map((conversation : Conversation)=>{
+              openConversations.map((conversation)=>{
                 return <Conversation conversation={conversation}/>
               })
           }         

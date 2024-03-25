@@ -5,6 +5,16 @@ import { get_conversations, send_message } from "@/axios/conversation";
 function* workFetchConversations(){
     try{
         const response = yield call(get_conversations);
+        // const conversations = response.data.reduce((prev , friend)=>{
+        //     return [...prev,{conversation_id:friend.conversation.conversation_id, friend_id:friend.user_id, isOpen:false  , messagesIds :friend.conversation.messages.reduce((prev,{id})=>[...prev,id] ,[]) }]
+        // } , []);
+
+        // const messages = response.data.map((friend)=>{
+        //     return friend.conversation.messages.map((message)=>{
+        //          return message; 
+        //     })
+        // }).flat();
+
         yield put(fetchConversationsSuccess([...response.data]))
     }catch(err){
         yield put(fetchConversationsFailure(err.message))

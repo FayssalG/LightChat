@@ -20,7 +20,7 @@ import {  addReceivedMessage, fetchConversations } from '@/redux/features/Conver
 import { addRequest, fetchRequests, removeRequest } from '@/redux/features/FriendRequest/FriendRequestSlice';
 import { addFriend, fetchFriends, removeFriend } from '@/redux/features/Friend/FriendSlice';
 import { fetchBlockedUsers} from '@/redux/features/Block/BlockSlice';
-import { fetchFriendConversations, selectAllConversations, seletAllConversations, seletctAllFriends, seletctAllMessages, sendMessage } from '@/redux/features/FriendConversation/FriendConversationSlice';
+import { fetchFriendConversations, selectActiveConversation, selectAllConversations, selectConversation, selectConversationById, seletAllConversations, seletctAllFriends, seletctAllMessages, sendMessage, setActiveConversation } from '@/redux/features/FriendConversation/FriendConversationSlice';
 
 
 
@@ -77,24 +77,9 @@ export default function Application() {
     dispatch(fetchRequests())
 
     dispatch(fetchFriendConversations());
-    setTimeout(()=>{
-      const newMessage = {
-        id : 'ozdz',
-        receiver_id:1,
-        sender_id:2,
-        text:'NKZIES',
-        createdAt:new Date().toISOString(), 
-      }
-      dispatch(sendMessage(newMessage));
-    },5000)
   },[dispatch])
  
 
-  const messages = useSelector(seletctAllMessages);
-  const conversations = useSelector(selectAllConversations);
-  const friends = useSelector(seletctAllFriends);
-
-  console.log({messages,conversations,friends});
 
   const selectedSection  = ()=>{
     switch(visibleSection){

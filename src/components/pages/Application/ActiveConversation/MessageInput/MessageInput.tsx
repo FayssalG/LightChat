@@ -4,11 +4,11 @@ import { CiCirclePlus } from "react-icons/ci";
 import UnstyledButton from '../../../../shared/UnstyledButton/UnstyledButton';
 import { send_message } from '@/axios/conversation';
 import { useDispatch, useSelector } from 'react-redux';
-import { addSentMessage, sendMessage } from '@/redux/features/Conversation/ConversationSlice';
+import { addSentMessage} from '@/redux/features/Conversation/ConversationSlice';
+import { sendMessage } from '@/redux/features/FriendConversation/FriendConversationSlice';
 import { useRef } from 'react';
 
-export default function MessageInput({conversation}) {
-  const {conversationWith} = conversation;
+export default function MessageInput({friend}) {
 
   const user : User = useSelector(state=>state.auth.user);
   const inputRef = useRef<HTMLInputElement | null>(null)
@@ -19,15 +19,16 @@ export default function MessageInput({conversation}) {
     e.preventDefault();
     if(inputRef.current?.value){
       const newMessage = {
-        id: null, //set a random id for now  
-        conversation_id : conversation.conversation_id,
+        id: Math.floor(Math.random()*2000), //set a random id for now  
+        conversation_id : friend.conversation_id,
         sender_id :  user.id ,
-        receiver_id:conversationWith.user_id , 
+        receiver_id:friend.user_id , 
         text:inputRef.current.value,
         isSent:false,
         isReceived:false
       }
       
+      console.log({newMessage})
       dispatch(sendMessage(newMessage))
       inputRef.current.value = '';
     }

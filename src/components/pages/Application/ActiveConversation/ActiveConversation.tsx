@@ -6,13 +6,15 @@ import MessageInput from './MessageInput/MessageInput';
 import UnstyledButton from '../../../shared/UnstyledButton/UnstyledButton';
 import { useSelector } from 'react-redux';
 import { useCallback, useEffect, useRef } from 'react';
-import { selectActiveConversation } from '@/redux/features/Conversation/ConversationSlice';
+import { selectActiveConversation, selectFriendById, seletctAllMessages} from '@/redux/features/FriendConversation/FriendConversationSlice';
 
 
 export default function ActiveConversation() {
   const conversationVisibility = useSelector((state)=>state.ui.conversationVisibility);
-  const user : User= useSelector(state=>state.auth.user)
-  const activeConversation : Conversation | null = useSelector(selectActiveConversation)
+  const activeConversation  = useSelector(selectActiveConversation)
+  console.log({activeConversation});
+
+  const friend = useSelector((state)=>selectFriendById(state,activeConversation?.friend_id));
   
   //scroll down when a message is added
   const setRef = useCallback((element)=>{
@@ -25,7 +27,7 @@ export default function ActiveConversation() {
     return (
     <div data-visible={conversationVisibility ? 'true' : 'false'} className={styles.container}>
         
-        <Topbar conversationWith={activeConversation.conversationWith} />
+        <Topbar friend={friend} />
         
         <div className={styles.inner_container}>
             <div className={styles.infos}> 
@@ -45,21 +47,21 @@ export default function ActiveConversation() {
             
             <div className={styles.messages}>
                 {
-                    activeConversation.messages.map((message , index)=>{
-                        const isLast = activeConversation.messages.length -1 === index;
+                    activeConversation.messagesIds.map((messageId , index)=>{
+                        const isLast = activeConversation.messagesIds.length -1 === index;
                         
                         return <Message messageRef={isLast ? setRef : null} 
-                                        key={index}
-                                        message = {message} 
-                                        conversationWith={activeConversation.conversationWith} 
-                                        type={message?.sender_id == user.id ? 'self' : null}
-                                />
+                                        key={messageId}
+                                        messageId = {messageId} 
+                                        friend={friend} 
+                      
+                                    />
                     })
                 }        
             </div>
         </div>
 
-        <MessageInput conversation={activeConversation}/>
+        <MessageInput friend={friend}/>
 
     </div>
   )

@@ -13,10 +13,10 @@ import FriendSkeleton from './FriendSkeleton/FriendSkeleton';
 import useModal from '@/components/modal/useModal';
 
 export default function FriendsSection() {
-  const friendStatus = useSelector(state=>state.friend.status);
+  const friendStatus = useSelector(state=>state.friendConversation.status);
   const blockStatus = useSelector(state=>state.block.status);
-  const friendRequestStatus = useSelector(state=>state.friendRequest.status);
-  const isLoading = (friendStatus == 'loading' &&  friendRequestStatus == 'loading' && blockStatus == 'loading');
+  const friendRequestStatus = useSelector(state=>state.friendRequest.status);  
+  const isLoading = (friendStatus == 'loading' ||  friendRequestStatus == 'loading' || blockStatus == 'loading');
   
   const dispatch = useDispatch();  
 
