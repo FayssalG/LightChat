@@ -1,15 +1,6 @@
-import { get_friend_requests, get_friends } from "@/axios/friend";
-import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createEntityAdapter, createSelector, createSlice } from "@reduxjs/toolkit";
 
 
-// export const fetchFriends = createAsyncThunk('friend/fetchFriends', async () =>{
-//     try{
-//         const response = await get_friends();
-//         return [...response.data];
-//     }catch(err){
-//         return err.message;
-//     }
-// })
 
 
 const friendsAdapter = createEntityAdapter({
@@ -49,7 +40,12 @@ const FriendSlice = createSlice({
         unFriendSuccess : (state,action)=>{
             const friendId = action.payload
             state.status = 'succeeded';
-            friendsAdapter.removeOne(state , friendId);
+            friendsAdapter.updateOne(state , {
+                id:friendId,
+                changes : {
+                    isFriend : false
+                }
+            });
             state.error = null
         },
 
@@ -57,14 +53,40 @@ const FriendSlice = createSlice({
             state.status = 'failed';
             state.error = action.payload
         },
-        
-        
-        
-        addFriend : (state , action)=>{
-            friendsAdapter.upsertOne(state , action.payload);
+
+        setFriendAsBlocked : (state, action)=>{
+            const friendId = action.payload;
+            console.log({action})    
+            friendsAdapter.updateOne(state,{
+                id : friendId,
+                changes : { isBlocked : true}
+            });
         },
-        removeFriend:(state,action) =>{
-            friendsAdapter.removeOne(state , action.payload)
+        
+        setFriendAsUnblocked : (state, action)=>{
+            const friendId = action.payload;
+            console.log({action})    
+            friendsAdapter.updateOne(state,{
+                id : friendId,
+                changes : {isBlocked : false}
+            });
+        },
+
+        RealtimeAddFriend : (state , action)=>{
+            friendsAdapter.upsertOne(state , {...action.payload,  isBlocked:false, isFriend:true });
+        },
+        
+        RealtimeRemoveFriend:(state,action) =>{
+            const friendshipId = action.payload;
+            const friends = friendsAdapter.getSelectors().selectAll(state);
+            const friendToRestrict : Friend = friends.find((friend)=>friend.friendship_id==friendshipId);
+
+            friendsAdapter.updateOne(state , {
+                id:friendToRestrict.user_id,
+                changes : {
+                    isFriend : false,
+                }
+            });
         },
 
     },
@@ -76,6 +98,10 @@ export const {
     selectById:selectFriendById,
 } = friendsAdapter.getSelectors(state=>state.friend);
 
+export const selectAccessibleFriends =  createSelector([seletctAllFriends],(AllFriends)=>{
+    return AllFriends.filter((friend)=>friend.isFriend);
+})
+
 
 export default FriendSlice.reducer;
-export const { addFriend , removeFriend , fetchFriends , fetchFriendsFailure , fetchFriendsSuccess , unFriend , unFriendFailure , unFriendSuccess} = FriendSlice.actions;  
+export const { RealtimeAddFriend , RealtimeRemoveFriend , setFriendAsBlocked,setFriendAsUnblocked , fetchFriends , fetchFriendsFailure , fetchFriendsSuccess , unFriend , unFriendFailure , unFriendSuccess} = FriendSlice.actions;  

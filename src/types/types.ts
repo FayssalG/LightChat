@@ -14,8 +14,10 @@ interface Friend {
     display_name : string,
     username : string,
     image : string,
-
+    isFriend : boolean,
+    isBlocked : boolean,
 }
+
 interface Conversation {
     isOpen? : boolean,
     friend_id: string,

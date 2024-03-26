@@ -28,6 +28,8 @@
             font-size: 1.2rem;
         }
         .lastmsg{
+            max-width: 90px;
+            overflow: hidden;
             margin-top: .2rem;
             font-weight: 200;
             font-size: .9rem;

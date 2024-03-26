@@ -4,13 +4,15 @@ import Topbar from './Topbar/Topbar';
 import Message from './Message/Message';
 import MessageInput from './MessageInput/MessageInput';
 import UnstyledButton from '../../../shared/UnstyledButton/UnstyledButton';
-import { useSelector } from 'react-redux';
-import { useCallback} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useCallback, useEffect} from 'react';
 import { selectFriendById  } from '@/redux/features/Friend/FriendSlice';
-import { selectActiveConversation } from '@/redux/features/Conversation/ConversationSlice';
+import { selectActiveConversation, sendMessagesSeen } from '@/redux/features/Conversation/ConversationSlice';
 export default function ActiveConversation() {
-  const conversationVisibility = useSelector((state)=>state.ui.conversationVisibility);
+    const dispatch = useDispatch();
+    const conversationVisibility = useSelector((state)=>state.ui.conversationVisibility);
   const activeConversation  = useSelector(selectActiveConversation)
+
   console.log({activeConversation});
 
   const friend = useSelector((state)=>selectFriendById(state,activeConversation?.friend_id));
@@ -20,10 +22,28 @@ export default function ActiveConversation() {
     if(element) element.scrollIntoView({smooth:true});
   },[]);
 
-  console.log({FRIEND:friend})
-    
+  useEffect(()=>{
+    if(activeConversation){
+        dispatch(sendMessagesSeen(activeConversation.conversation_id));
+    }
+  },[activeConversation])
+  
   if(!activeConversation) return null
   
+
+  const renderMessages = ()=>{    
+     return   activeConversation.messagesIds.map((messageId , index)=>{
+                    const isLast = activeConversation.messagesIds.length -1 === index;        
+                    return <Message  messageRef={isLast ? setRef : null} 
+                            key={messageId}
+                            messageId = {messageId} 
+                            friend={friend}  
+                        />
+                })
+  }
+
+  
+
     return (
     <div data-visible={conversationVisibility ? 'true' : 'false'} className={styles.container}>
         
@@ -38,30 +58,31 @@ export default function ActiveConversation() {
                     <h3 className={styles.name}>Jack Martins</h3>
                     <p className={styles.username}>@jackmartins</p>
                 </div>
-                <div className={styles.btns}>
+                {/* <div className={styles.btns}>
                     <UnstyledButton className={styles.remove}>Remove Friend</UnstyledButton>
                     <UnstyledButton className={styles.block}>Block</UnstyledButton>
+                </div> */}
+            </div>
+            
+            {   friend.isFriend  &&
+                
+                <div className={styles.messages}>
+                    {renderMessages()}
                 </div>
-            </div>
-            
-            
-            <div className={styles.messages}>
-                {
-                    activeConversation.messagesIds.map((messageId , index)=>{
-                        const isLast = activeConversation.messagesIds.length -1 === index;
-                        
-                        return <Message messageRef={isLast ? setRef : null} 
-                                        key={messageId}
-                                        messageId = {messageId} 
-                                        friend={friend} 
-                      
-                                    />
-                    })
-                }        
-            </div>
+            }
+    
         </div>
+        
+        {
+            friend.isFriend ?
+                <MessageInput friend={friend}/>
+            :
 
-        <MessageInput friend={friend}/>
+            <div className={styles.restrict_message}>
+                <p>Conversation restricted, you can't contact <span>{friend.display_name}</span> for now</p>
+            </div>
+
+        }
 
     </div>
   )

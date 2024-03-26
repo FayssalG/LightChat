@@ -1,7 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import {  fetchConversationsSuccess , fetchConversationsFailure, sendMessageSuccess, sendMessageFailure, addMessage, removeMessage, addMessageOptimistic, addMessageRevert } from "./ConversationSlice";
-import { get_conversations, send_message } from "@/axios/conversation";
-import { get_friends } from "@/axios/friend";
+import { get_conversations, messages_seen, send_message } from "@/axios/conversation";
 
 function* workFetchConversations(){
     try{
@@ -13,7 +12,7 @@ function* workFetchConversations(){
 
         const messages = response.data.map((conversation)=>{
             return conversation.messages.map((message)=>{
-                 return message; 
+                 return {...message }; 
             })
         }).flat();
     
@@ -40,7 +39,19 @@ function* workSendMessage(action){
     }
 }
 
+function* workSendMessagesSeen(action){
+    const conveersation_id  = action.payload
+    try{
+        yield call(messages_seen,conveersation_id);
+    }catch(err){
+        console.log(err)
+    }
+}
+
+
 export default function* conversationSaga(){
     yield takeEvery('conversation/fetchConversations' , workFetchConversations);
     yield takeEvery('conversation/sendMessage' , workSendMessage);
+    yield takeEvery('conversation/sendMessagesSeen' , workSendMessagesSeen);
+
 }

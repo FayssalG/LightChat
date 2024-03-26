@@ -16,14 +16,16 @@ import { useDispatch, useSelector } from "react-redux";
 import EmailNotVerified from '@/components/pages/Application/EmailNotVerified/EmailNotVerified';
 import { useEffect } from 'react';
 import { useSocket } from '@/components/context/SocketProvider';
-import {  addRealtimeMessage, createRealtimeConversation, deleteRealtimeConversation, fetchConversations } from '@/redux/features/Conversation/ConversationSlice';
+import {  addRealtimeMessage, createRealtimeConversation, deleteRealtimeConversation, fetchConversations, setRealtimeMessagesSeen } from '@/redux/features/Conversation/ConversationSlice';
 import { addRequest, fetchRequests, removeRequest } from '@/redux/features/FriendRequest/FriendRequestSlice';
-import { addFriend, fetchFriends, removeFriend } from '@/redux/features/Friend/FriendSlice';
+import { RealtimeAddFriend, RealtimeRemoveFriend, fetchFriends } from '@/redux/features/Friend/FriendSlice';
 import { fetchBlockedUsers} from '@/redux/features/Block/BlockSlice';
+import useAuth from '@/components/hooks/useAuth';
 
 
 
 export default function Application() {
+  const {user} = useAuth();
   const visibleSection : string = useSelector(state=>state.ui.visibleSection)
   const isVerified : Boolean = useSelector(state => state.auth.isVerified);
   const socket = useSocket()
@@ -50,14 +52,14 @@ export default function Application() {
         if(data){
           dispatch(fetchConversations());
           dispatch(removeRequest(data.request_id));
-          dispatch(addFriend(data.friend));
+          dispatch(RealtimeAddFriend(data.friend));
         }
       })
 
       socket.on('friend-removed' , (frinedshipId : string)=>{
+        console.log({frinedshipId})
         if(frinedshipId){
-          dispatch(deleteRealtimeConversation(data.friend))
-          dispatch(removeFriend(frinedshipId));
+          dispatch(RealtimeRemoveFriend(frinedshipId));
         }
       })
 
@@ -66,7 +68,15 @@ export default function Application() {
           dispatch(addRealtimeMessage({newMessage:message , senderInfos:sender}));
         }
       })
+
       
+      socket.on('messages-seen' , (conversationId : string)=>{
+        console.log({conversationId})
+        if(conversationId){
+          dispatch(setRealtimeMessagesSeen({conversationId , myUserId:user.id}));
+        }
+      })
+
     }
   },[socket])
 

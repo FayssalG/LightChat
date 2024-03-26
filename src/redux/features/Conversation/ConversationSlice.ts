@@ -99,11 +99,21 @@ const ConversationSlice = createSlice({
             state.status = 'failed';
             state.error = action.payload; 
         },
-          
+        
+        sendMessagesSeen : (state,action)=>{
+ 
+        },
+        sendMessagesSeenSuccess : (state,action)=>{
+
+        },
+        sendMessagesSeenFailure : (state,action)=>{
+
+        },
+    
+
         addMessageOptimistic:(state,action)=>{
             const message = action.payload;
             addOneMessage(state,message)
-
         },
         addMessageRevert:(state,action)=>{
             const messageId = action.payload;
@@ -111,7 +121,7 @@ const ConversationSlice = createSlice({
         },
 
 
-
+        
 
         openConversation : (state , action)=>{
             conversationsAdapter.updateOne(state,  {
@@ -154,6 +164,19 @@ const ConversationSlice = createSlice({
                 }
             })
             addOneMessage(state,newMessage)
+        },
+
+        setRealtimeMessagesSeen : (state , action)=>{
+            const {conversationId , myUserId} = action.payload ; 
+            console.log({conversationId , myUserId})
+
+            const allMessages = messagesAdapter.getSelectors().selectAll(state.messages);
+            messagesAdapter.setAll(state.messages, allMessages.map((msg)=>{
+                if(conversationId == msg.conversation_id && msg.sender_id == myUserId){
+                    return {...msg , isSeen:true}
+                }
+                return msg
+            }))
         }
 
     },
@@ -189,9 +212,13 @@ export const {
     sendMessage,
     sendMessageSuccess,
     sendMessageFailure,
+    sendMessagesSeen,
+    sendMessagesSeenSuccess,
+    sendMessagesSeenFailure,
     addMessageOptimistic,
     addMessageRevert,
     addRealtimeMessage,
+    setRealtimeMessagesSeen,
 
     setActiveConversation,
     closeConversation , 

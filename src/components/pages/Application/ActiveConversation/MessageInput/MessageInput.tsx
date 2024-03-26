@@ -25,7 +25,7 @@ export default function MessageInput({friend}) {
         receiver_id:friend.user_id , 
         text:inputRef.current.value,
         isSent:false,
-        isReceived:false
+        isSeen:false
       }
       
     

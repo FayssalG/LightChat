@@ -1,18 +1,19 @@
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import styles from './FriendDetailsModal.module.css';
-import avatar from '@/assets/avatar.png';
 import { IoClose } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
-import { closeFriendDetailsModal, openConfirmBlockFriendModal, openConfirmRemoveFriendModal } from '@/redux/features/UiSlice';
-import { RefObject, useEffect, useRef, useState } from 'react';
-import useBiAnimation from '@/components/hooks/useBiAnimation';
-import { setSelectedFriend } from '@/redux/features/Friend/FriendSlice';
+import { selectFriendById, setFriendAsUnblocked, setSelectedFriend } from '@/redux/features/Friend/FriendSlice';
 import useModal from '../useModal';
 import { BaseModal } from '../BaseModal';
+import { unBlockUser } from '@/redux/features/Block/BlockSlice';
 
 export default function FriendDetailsModal(props)   {
-    const {friend , onClose , isOpen} = props    
-    
+    const {friend , onClose , isOpen} = props
+    const {isBlocked} = useSelector((state)=>selectFriendById(state,friend.user_id));    
+    const dispatch = useDispatch();
+
+    console.log({friend})
+
     const {onOpen: onOpenConfirmRemoveFriendModal} = useModal('ConfirmRemoveFriendModal')
     const {onOpen: onOpenConfirmBlockFriendModal} = useModal('ConfirmBlockFriendModal')
     
@@ -24,6 +25,10 @@ export default function FriendDetailsModal(props)   {
     const handleOpenBlockModal = ()=>{
         onClose()
         onOpenConfirmBlockFriendModal({friend})
+    }
+
+    const handleUnblock = ()=>{
+        dispatch(unBlockUser(friend))    
     }
 
 
@@ -66,7 +71,13 @@ export default function FriendDetailsModal(props)   {
             <div className={styles.footer}>
                 <UnstyledButton onClick={()=>null} className={styles.success_btn}>Send a message</UnstyledButton>
                 <UnstyledButton className={styles.danger_btn} onClick={handleOpenRemoveModal}>Remove Friend</UnstyledButton>
-                <UnstyledButton className={styles.danger_btn} onClick={handleOpenBlockModal}>Block</UnstyledButton>
+
+                {
+                    !isBlocked ?
+                    <UnstyledButton className={styles.danger_btn} onClick={handleOpenBlockModal}>Block</UnstyledButton>
+                    :
+                    <UnstyledButton className={styles.success_btn} onClick={handleUnblock}>Unblock</UnstyledButton>
+                }
 
             </div>
         </div>

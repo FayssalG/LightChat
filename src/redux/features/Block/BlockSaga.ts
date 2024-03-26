@@ -2,6 +2,7 @@ import { fetchBlockedUsersSuccess , fetchBlockedUsersFailure , blockUserSuccess,
 
 import { block_user, get_blocked_users, unblock_user } from "@/axios/friend";
 import { call, put, takeEvery } from "redux-saga/effects";
+import { setFriendAsBlocked, setFriendAsUnblocked } from "../Friend/FriendSlice";
 
 function* workFetchBlockedUsers(){
     try{
@@ -14,9 +15,11 @@ function* workFetchBlockedUsers(){
 }
 
 function* workBlockUser(action){
+    const {username , user_id} = action.payload
     try{
-        const response = yield call(block_user , action.payload);
+        const response = yield call(block_user , username);
         yield put(blockUserSuccess(response.data));
+        yield put(setFriendAsBlocked(user_id))
     }catch(err){
         yield put(blockUserFailure(err.message));
         
@@ -25,9 +28,11 @@ function* workBlockUser(action){
 
 
 function* workUnBlockUser(action){
+    const { username , user_id } = action.payload
     try{
-        const response = yield call(unblock_user , action.payload);
-        yield put(unBlockUserSuccess(action.payload));
+        const response = yield call(unblock_user , username);
+        yield put(unBlockUserSuccess(username));
+        yield put(setFriendAsUnblocked(user_id));
     }catch(err){
         yield put(unBlockUserFailure(err.message));
         

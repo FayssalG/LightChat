@@ -1,7 +1,7 @@
 import { call, takeEvery , put} from "redux-saga/effects";
 import { accept_friend_request, cancel_friend_request, get_friend_requests,  ignore_friend_request,  send_friend_request } from "@/axios/friend";
 import { fetchRequestsSuccess , fetchRequestsFailure , sendRequestFailure , sendRequestSuccess  , cancelIgnoreRequestFailure ,cancelIgnoreRequestSuccess, acceptRequestSuccess, acceptRequestFailure} from './FriendRequestSlice';
-import { addFriend } from "../Friend/FriendSlice";
+import { RealtimeAddFriend } from "../Friend/FriendSlice";
 import { fetchConversations } from "../Conversation/ConversationSlice";
 
 function* workGetRequests(){
@@ -46,9 +46,9 @@ function* workAcceptRequest(action){
     try{
         const requestId = action.payload;
         const response = yield call(accept_friend_request , action.payload);
-        yield put(fetchConversations());
-        yield put(addFriend(response.data));
         yield put(acceptRequestSuccess(requestId))
+        yield put(RealtimeAddFriend(response.data));
+        yield put(fetchConversations());
     }catch(err){
         yield put(acceptRequestFailure(err.response.data.errors[0]));
     }

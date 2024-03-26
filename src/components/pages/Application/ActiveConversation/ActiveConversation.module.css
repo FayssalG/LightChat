@@ -80,6 +80,21 @@
     }
 }
 
+
+.restrict_message{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    p{
+        border-radius: .4rem;
+        padding: 1em 2em;
+        background-color: var(--secondary);
+        span{
+            color: var(--accent);
+        }
+    }
+}
 .messages{
     margin-top: 1rem;
     font-weight: 300;

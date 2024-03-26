@@ -33,8 +33,8 @@ export default function Conversation({conversation} : {conversation : Conversati
         <UnstyledButton className={styles.name_lastmsg} onClick={handleSelectConversation}>
             <h2 className={styles.name}>{friend.display_name}</h2>
             <div className={styles.lastmsg}>
-              <p className={styles.text}>{lastMessage?.text || null}</p>
-              <p className={styles.time}>{lastMessage?.created_at || null}</p>
+              <p className={styles.text}> {lastMessage?.text || null} </p>
+              <p className={styles.time}> {lastMessage?.created_at || null} </p>
             </div>
         </UnstyledButton>
 

@@ -12,7 +12,7 @@ export default function Blocked({blocked}) {
   const dispatch = useDispatch();
 
   const handleUnblock = ()=>{
-    dispatch(unBlockUser(blocked.username))
+    dispatch(unBlockUser(blocked))
   }
 
   if(isLoading) return <FriendSkeleton/>
