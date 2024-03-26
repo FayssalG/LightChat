@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import styles from './Message.module.css';
-import { selectMessageById } from '@/redux/features/Conversation/ConversationSlice';
 import { VscEye } from 'react-icons/vsc';
+import { selectMessageById } from '@/redux/features/Conversation/ConversationSelectors';
 // import { selectMessageById } from '@/redux/features/FriendConversation/FriendConversationSlice';
 
 

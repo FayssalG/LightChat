@@ -3,6 +3,7 @@ import {login, register , logout, getUser, forgot, reset , verify} from '@/axios
 import { useDispatch, useSelector } from "react-redux";
 import { setUser, setIsAuth, setIsVerified } from "@/redux/features/AuthSlice";
 import { setIsLoading } from "@/redux/features/UiSlice";
+import { mark_user_connected, mark_user_disconnected } from "@/axios/user";
 
 export default function useAuth(){
     const isLoading = useSelector(state => state.ui.isLoading);
@@ -71,14 +72,16 @@ export default function useAuth(){
         if(response.status == 204){
             dispatch(setUser(null))
             dispatch(setIsAuth(false))
+            
         } 
     }
     
     const getAuthenticatedUser = async ()=>{
         try{
-            const response = await getUser()
+            const response = await getUser()        
             const user = response.data 
             dispatch(setUser(user))
+
             if(user.email_verified_at){
                 dispatch(setIsVerified(true));
             }else{

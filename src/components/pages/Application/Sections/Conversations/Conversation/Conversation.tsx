@@ -1,6 +1,7 @@
+import { selectActiveConversation, selectMessageById } from '@/redux/features/Conversation/ConversationSelectors';
 import styles from './Conversation.module.css';
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
-import { closeConversation, selectActiveConversation, selectMessageById, setActiveConversation } from '@/redux/features/Conversation/ConversationSlice';
+import { closeConversation, setActiveConversation } from '@/redux/features/Conversation/ConversationSlice';
 import { selectFriendById } from '@/redux/features/Friend/FriendSlice';
 
 import { IoClose } from 'react-icons/io5';
@@ -22,7 +23,7 @@ export default function Conversation({conversation} : {conversation : Conversati
   }
 
   const lastMessageId : number | undefined = conversation.messagesIds[conversation.messagesIds.length-1];
-  const lastMessage  : FriendMessage | {}= useSelector(state=>selectMessageById(state,lastMessageId));
+  const lastMessage  : FriendMessage | {} = useSelector(state=>selectMessageById(state,lastMessageId));
 
   return (
     <div data-selected={isSelected} className={styles.conversation}>

@@ -49,11 +49,11 @@ export const addOneMessage = (state , message)=>{
     
 }
 
-const conversationsAdapter  = createEntityAdapter({
+export const conversationsAdapter  = createEntityAdapter({
     selectId : (conversation)=>conversation.conversation_id
 })
 
-const messagesAdapter = createEntityAdapter()
+export const messagesAdapter = createEntityAdapter()
 
 
 const initialState = conversationsAdapter.getInitialState({
@@ -92,7 +92,7 @@ const ConversationSlice = createSlice({
             state.status = 'succeeded';
             const {newMessage , oldMessageId}  = action.payload;
             removeOneMessageById(state,oldMessageId);
-            addOneMessage(state,newMessage)
+            addOneMessage(state,{...newMessage , isSent:true})
         },
         
         sendMessageFailure:(state , action)=>{
@@ -100,13 +100,21 @@ const ConversationSlice = createSlice({
             state.error = action.payload; 
         },
         
-        sendMessagesSeen : (state,action)=>{
+        markMessagesSeen : (state,action)=>{
  
         },
-        sendMessagesSeenSuccess : (state,action)=>{
+        markMessagesSeenSuccess : (state,action)=>{
+            const conversationId  = action.payload ; 
+            const allMessages = messagesAdapter.getSelectors().selectAll(state.messages);
+            messagesAdapter.setAll(state.messages, allMessages.map((msg)=>{
+                if(conversationId == msg.conversation_id){
+                    return {...msg , isSeen:true}
+                }
+                return msg
+            }))
 
         },
-        sendMessagesSeenFailure : (state,action)=>{
+        markMessagesSeenFailure : (state,action)=>{
 
         },
     
@@ -168,7 +176,6 @@ const ConversationSlice = createSlice({
 
         setRealtimeMessagesSeen : (state , action)=>{
             const {conversationId , myUserId} = action.payload ; 
-            console.log({conversationId , myUserId})
 
             const allMessages = messagesAdapter.getSelectors().selectAll(state.messages);
             messagesAdapter.setAll(state.messages, allMessages.map((msg)=>{
@@ -183,23 +190,6 @@ const ConversationSlice = createSlice({
 })
 
 
-export const {
-    selectAll : selectAllConversations,
-    selectById : selectConversationById,
-} = conversationsAdapter.getSelectors(state=>state.conversation);
-
-export const selectOpenConversations = createSelector([selectAllConversations] , (Allconversations)=>{
-    return Allconversations.filter((conversation)=>conversation.isOpen);
-})
-
-export const selectActiveConversation = (state)=>{
-    return selectConversationById(state , state.conversation.activeConversationId)     
-}
-
-export const {
-    selectAll : seletctAllMessages,
-    selectById : selectMessageById    
-} = messagesAdapter.getSelectors(state=>state.conversation.messages);
 
 
 export default ConversationSlice.reducer;
@@ -212,9 +202,9 @@ export const {
     sendMessage,
     sendMessageSuccess,
     sendMessageFailure,
-    sendMessagesSeen,
-    sendMessagesSeenSuccess,
-    sendMessagesSeenFailure,
+    markMessagesSeen,
+    markMessagesSeenSuccess,
+    markMessagesSeenFailure,
     addMessageOptimistic,
     addMessageRevert,
     addRealtimeMessage,

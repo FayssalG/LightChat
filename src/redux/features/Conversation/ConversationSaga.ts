@@ -1,5 +1,5 @@
-import { call, put, takeEvery } from "redux-saga/effects";
-import {  fetchConversationsSuccess , fetchConversationsFailure, sendMessageSuccess, sendMessageFailure, addMessage, removeMessage, addMessageOptimistic, addMessageRevert } from "./ConversationSlice";
+import { call, put, takeEvery, takeLatest, takeLeading } from "redux-saga/effects";
+import {  fetchConversationsSuccess , fetchConversationsFailure, sendMessageSuccess, sendMessageFailure, addMessage, removeMessage, addMessageOptimistic, addMessageRevert, markMessagesSeenSuccess } from "./ConversationSlice";
 import { get_conversations, messages_seen, send_message } from "@/axios/conversation";
 
 function* workFetchConversations(){
@@ -39,10 +39,11 @@ function* workSendMessage(action){
     }
 }
 
-function* workSendMessagesSeen(action){
-    const conveersation_id  = action.payload
+function* workMarkMessagesSeen(action){
+    const conveersationId  = action.payload
     try{
-        yield call(messages_seen,conveersation_id);
+        yield call(messages_seen,conveersationId);
+        yield put(markMessagesSeenSuccess(conveersationId));
     }catch(err){
         console.log(err)
     }
@@ -52,6 +53,6 @@ function* workSendMessagesSeen(action){
 export default function* conversationSaga(){
     yield takeEvery('conversation/fetchConversations' , workFetchConversations);
     yield takeEvery('conversation/sendMessage' , workSendMessage);
-    yield takeEvery('conversation/sendMessagesSeen' , workSendMessagesSeen);
+    yield takeEvery('conversation/markMessagesSeen' , workMarkMessagesSeen);
 
 }

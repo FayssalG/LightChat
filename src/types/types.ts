@@ -16,6 +16,7 @@ interface Friend {
     image : string,
     isFriend : boolean,
     isBlocked : boolean,
+    online_status: string | Date,
 }
 
 interface Conversation {

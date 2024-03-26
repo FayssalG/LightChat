@@ -8,7 +8,7 @@ function* workFetchFriends(){
     try{
         const response	= yield call(get_friends);
         const friends = response.data.reduce((prev , friend)=>{
-            return [...prev , { isBlocked:false, isFriend:true ,friendship_id:friend.friendship_id, display_name:friend.display_name,username:friend.username,image:friend.image,user_id:friend.user_id,conversation_id:friend.conversation_id}]
+            return [...prev , { isBlocked:false, isFriend:true ,friendship_id:friend.friendship_id, display_name:friend.display_name,username:friend.username,image:friend.image,user_id:friend.user_id,conversation_id:friend.conversation_id , online_status:friend.online_status}]
         } , [])
 
         yield put(fetchFriendsSuccess(friends))

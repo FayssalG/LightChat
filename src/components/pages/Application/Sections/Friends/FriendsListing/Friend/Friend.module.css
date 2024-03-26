@@ -1,4 +1,18 @@
 
+.picture[data-online='true'] {
+    &::after{
+        content: '';
+        position: absolute;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background-color: var(--success);
+        right: 0;
+        bottom: 0;
+        border: 2px solid var(--secondary);
+    }
+}
+
 .friend{
     position: relative;
     display: flex;
@@ -14,17 +28,6 @@
             width: 100%;
             height: 100%;
         }
-        &::after{
-            content: '';
-            position: absolute;
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            background-color: var(--success);
-            right: 0;
-            bottom: 0;
-            border: 2px solid var(--secondary);
-        }
     }
 
     .name_status{
@@ -34,8 +37,9 @@
             font-size: 1.2rem;
         }
         .status{
+            margin-top: .2rem;
             font-weight: 200;
-            font-size: .9rem;
+            font-size: .8rem;
         }
     }
 

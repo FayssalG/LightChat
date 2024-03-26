@@ -18,7 +18,7 @@ import { useEffect } from 'react';
 import { useSocket } from '@/components/context/SocketProvider';
 import {  addRealtimeMessage, createRealtimeConversation, deleteRealtimeConversation, fetchConversations, setRealtimeMessagesSeen } from '@/redux/features/Conversation/ConversationSlice';
 import { addRequest, fetchRequests, removeRequest } from '@/redux/features/FriendRequest/FriendRequestSlice';
-import { RealtimeAddFriend, RealtimeRemoveFriend, fetchFriends } from '@/redux/features/Friend/FriendSlice';
+import { RealtimeAddFriend, RealtimeChangeFriendStatus, RealtimeRemoveFriend, fetchFriends } from '@/redux/features/Friend/FriendSlice';
 import { fetchBlockedUsers} from '@/redux/features/Block/BlockSlice';
 import useAuth from '@/components/hooks/useAuth';
 
@@ -75,6 +75,12 @@ export default function Application() {
         if(conversationId){
           dispatch(setRealtimeMessagesSeen({conversationId , myUserId:user.id}));
         }
+      })
+
+
+      
+      socket.on('online-status-change' , ({userId , onlineStatus})=>{
+          dispatch(RealtimeChangeFriendStatus({friendId:userId , onlineStatus}));
       })
 
     }

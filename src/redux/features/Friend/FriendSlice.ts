@@ -89,6 +89,17 @@ const FriendSlice = createSlice({
             });
         },
 
+        RealtimeChangeFriendStatus : (state , action)=>{
+            const {friendId , onlineStatus} = action.payload;        
+            console.log({friendId , onlineStatus})
+            friendsAdapter.updateOne(state , {
+                id:friendId,
+                changes : {
+                    online_status : onlineStatus,
+                }
+            })
+        }
+
     },
 })
 
@@ -104,4 +115,4 @@ export const selectAccessibleFriends =  createSelector([seletctAllFriends],(AllF
 
 
 export default FriendSlice.reducer;
-export const { RealtimeAddFriend , RealtimeRemoveFriend , setFriendAsBlocked,setFriendAsUnblocked , fetchFriends , fetchFriendsFailure , fetchFriendsSuccess , unFriend , unFriendFailure , unFriendSuccess} = FriendSlice.actions;  
+export const {RealtimeChangeFriendStatus, RealtimeAddFriend , RealtimeRemoveFriend , setFriendAsBlocked,setFriendAsUnblocked , fetchFriends , fetchFriendsFailure , fetchFriendsSuccess , unFriend , unFriendFailure , unFriendSuccess} = FriendSlice.actions;  

@@ -27,7 +27,7 @@ export default function Friend({friend}) {
   }
 
   const handleSendMessageClick= ()=>{
-    console.log({friend})
+    setShowOptionsMenu(false)
     dispatch(openConversation(friend.conversation_id));
   } 
 
@@ -53,13 +53,13 @@ export default function Friend({friend}) {
   return (
     <>
          <div className={styles.friend}>
-              <div className={styles.picture}>
+              <div data-online={friend.online_status=='online'} className={styles.picture}>
                 <img src={friend.image} alt="avatar" />
               </div>
 
               <UnstyledButton onClick={handleFriendClick} className={styles.name_status}>
                   <h2 className={styles.name}>{friend.display_name}</h2>
-                  <p className={styles.status}>online</p>
+                  <p className={styles.status}>{friend.online_status}</p>
               </UnstyledButton>
 
               <div ref={optionsRef} className={styles.options} >
