@@ -21,6 +21,8 @@ import { addRequest, fetchRequests, removeRequest } from '@/redux/features/Frien
 import { RealtimeAddFriend, RealtimeChangeFriendStatus, RealtimeRemoveFriend, fetchFriends } from '@/redux/features/Friend/FriendSlice';
 import { fetchBlockedUsers} from '@/redux/features/Block/BlockSlice';
 import useAuth from '@/components/hooks/useAuth';
+import { selectActiveConversation } from '@/redux/features/Conversation/ConversationSelectors';
+import NoActiveConversation from './NoActiveConverastion/NoActiveConversation';
 
 
 
@@ -29,6 +31,8 @@ export default function Application() {
   const visibleSection : string = useSelector(state=>state.ui.visibleSection)
   const isVerified : Boolean = useSelector(state => state.auth.isVerified);
   const socket = useSocket()
+  const activeConversation  = useSelector(selectActiveConversation)
+
   const dispatch = useDispatch();
 
 
@@ -107,6 +111,14 @@ export default function Application() {
         return <GroupsSection/>
     }
   }
+
+  const renderActiveConversation = ()=>{
+      if(!activeConversation){
+        return <NoActiveConversation/>
+      }
+
+      return <ActiveConversation activeConversation={activeConversation}/>
+  }
   
   return (
     <>
@@ -118,7 +130,8 @@ export default function Application() {
           }
           
           {selectedSection()}
-          <ActiveConversation/>
+
+          {renderActiveConversation()}
         </div>        
 
     </>

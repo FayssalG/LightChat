@@ -6,6 +6,7 @@ import { selectFriendById } from '@/redux/features/Friend/FriendSlice';
 
 import { IoClose } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
+import { toggleConversationVisibility } from '@/redux/features/UiSlice';
 
 export default function Conversation({conversation} : {conversation : Conversation}) {
   const friend : Friend = useSelector((state)=>selectFriendById(state , conversation.friend_id));
@@ -15,6 +16,7 @@ export default function Conversation({conversation} : {conversation : Conversati
   const dispatch = useDispatch()
   
   const handleSelectConversation = ()=>{
+    dispatch(toggleConversationVisibility());
     dispatch(setActiveConversation(conversation.conversation_id))
   }
 

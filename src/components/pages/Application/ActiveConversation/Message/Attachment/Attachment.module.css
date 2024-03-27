@@ -1,0 +1,25 @@
+    
+    .image_attachment{
+        width: 100%;
+        height: 100%;
+        object-fit:cover;
+    }
+
+    .file_attachment{
+        height: 100px;
+        width: 100px;
+    }
+
+    .attachment_name{
+        color: var(--accent);
+        font-size: .9rem;
+        border-radius: .2rem;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        padding: .4em;
+        a{
+            color: inherit;
+            text-decoration: none;
+        }
+    }

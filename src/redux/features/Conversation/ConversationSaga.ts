@@ -1,6 +1,6 @@
 import { call, put, takeEvery, takeLatest, takeLeading } from "redux-saga/effects";
 import {  fetchConversationsSuccess , fetchConversationsFailure, sendMessageSuccess, sendMessageFailure, addMessage, removeMessage, addMessageOptimistic, addMessageRevert, markMessagesSeenSuccess } from "./ConversationSlice";
-import { get_conversations, messages_seen, send_message } from "@/axios/conversation";
+import { get_conversations, messages_seen, send_message, send_message_attachment } from "@/axios/conversation";
 
 function* workFetchConversations(){
     try{
@@ -39,6 +39,28 @@ function* workSendMessage(action){
     }
 }
 
+function* workSendMessageWithAttachment(action){
+    const oldMessage = action.payload;
+    const newAttachment = {
+        type:oldMessage.attachment.type, 
+        name:oldMessage.attachment.name,
+        url:URL.createObjectURL(oldMessage.attachment)
+    }
+    yield put(addMessageOptimistic({...oldMessage , attachment:newAttachment}));
+    try{
+        const {receiver_id , text , attachment} = action.payload
+        const response = yield call(send_message_attachment , receiver_id , attachment,text );
+        console.log({RESPONSE:response.data})
+        const newMessage = response.data;
+        yield put(sendMessageSuccess({oldMessageId:oldMessage.id , newMessage }))
+    }catch(err){
+        console.log(err)
+        yield put(addMessageRevert(oldMessage.id));
+        yield put(sendMessageFailure(err.message))
+    }
+}
+
+
 function* workMarkMessagesSeen(action){
     const conveersationId  = action.payload
     try{
@@ -53,6 +75,6 @@ function* workMarkMessagesSeen(action){
 export default function* conversationSaga(){
     yield takeEvery('conversation/fetchConversations' , workFetchConversations);
     yield takeEvery('conversation/sendMessage' , workSendMessage);
+    yield takeEvery('conversation/sendMessageWithAttachment' , workSendMessageWithAttachment);
     yield takeEvery('conversation/markMessagesSeen' , workMarkMessagesSeen);
-
 }

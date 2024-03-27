@@ -6,6 +6,9 @@
     color: white;
     flex-grow: 1;
     max-height: 92vh;
+    display: grid;
+    grid-template-rows: 1fr 6fr 1fr ;
+
     @media (max-width:700px){
         position: fixed;
         max-height: revert;
@@ -29,9 +32,10 @@
 
 .inner_container{
     padding: 1em;
-    height: 75%;
     overflow-y: auto;
-
+    @media (max-width:700px) {
+        height: 75%;
+    }
 }
 
 .infos{

@@ -1,6 +1,6 @@
 .message{
     margin-top: 2rem;
-    max-width: 400px;
+    max-width: 350px;
     
     .message_infos{
         width: 100%;
@@ -24,22 +24,38 @@
         }
     }
 
-    p{
+    .body{
         margin-top: .2rem;
-        padding: .5em;
         border-radius: .4rem;
+        padding: .5em;
+
+        .attachment{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--primary);
+            position: relative;
+            height: 250px;
+            width: 100%;
+        
+        }
+
+        p{
+            margin-top: .5rem;
+        }
+    
     }
 }
 
 .message_self{
     margin-left: auto;
-    p{
+    .body{
         border-top-right-radius: 0;
         background-color: var(--accent);
     }
 }
 .message_other{
-    p{
+    .body{
         border-top-left-radius: 0;
         background-color: var(--accent-second);
     }

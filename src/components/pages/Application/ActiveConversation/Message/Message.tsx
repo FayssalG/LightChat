@@ -2,6 +2,8 @@ import { useSelector } from 'react-redux';
 import styles from './Message.module.css';
 import { VscEye } from 'react-icons/vsc';
 import { selectMessageById } from '@/redux/features/Conversation/ConversationSelectors';
+import { CgFileDocument } from 'react-icons/cg';
+import Attachment from './Attachment/Attachment';
 // import { selectMessageById } from '@/redux/features/FriendConversation/FriendConversationSlice';
 
 
@@ -9,11 +11,12 @@ export default function Message({messageRef ,   messageId , friend} : any) {
   const user = useSelector(state=>state.auth.user);
   const message = useSelector((state)=>selectMessageById(state,messageId)) ;
 
-  const {text  , isSent , isSeen} = message;
+  const {text , attachment , isSent , isSeen} = message;
 
   const type = message?.sender_id == user.id ? 'self' : null;
   const message_style_classname = type == 'self' ? styles.message_self : styles.message_other  
   
+
   return (
     <div ref={messageRef} style={{opacity:isSent===false ? 0.5 : 1}} className={styles.message+' '+message_style_classname}>
        
@@ -26,9 +29,18 @@ export default function Message({messageRef ,   messageId , friend} : any) {
           }
         </div>
         
-        <p>
-          {text}
-        </p>
+        <div className={styles.body}>
+          {attachment &&
+            <div className={styles.attachment}>
+              <Attachment attachment={attachment}/>          
+            </div>
+
+          }
+
+          <p>
+            {text}
+          </p>
+        </div>
     </div>
 
   )

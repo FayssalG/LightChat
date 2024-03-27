@@ -99,7 +99,25 @@ const ConversationSlice = createSlice({
             state.status = 'failed';
             state.error = action.payload; 
         },
+
         
+        sendMessageWithAttachment:(state , action)=>{
+            state.status = 'loading';
+        },
+        
+        sendMessageWithAttachmentSuccess:(state , action)=>{
+            state.status = 'succeeded';
+            const {newMessage , oldMessageId}  = action.payload;
+            removeOneMessageById(state,oldMessageId);
+            addOneMessage(state,{...newMessage , isSent:true})
+        },
+        
+        sendMessageWithAttachmentFailure:(state , action)=>{
+            state.status = 'failed';
+            state.error = action.payload; 
+        },
+
+
         markMessagesSeen : (state,action)=>{
  
         },
@@ -121,6 +139,7 @@ const ConversationSlice = createSlice({
 
         addMessageOptimistic:(state,action)=>{
             const message = action.payload;
+            console.log({message})
             addOneMessage(state,message)
         },
         addMessageRevert:(state,action)=>{
@@ -200,8 +219,10 @@ export const {
     fetchConversationsFailure,
 
     sendMessage,
+    sendMessageWithAttachment,
     sendMessageSuccess,
     sendMessageFailure,
+
     markMessagesSeen,
     markMessagesSeenSuccess,
     markMessagesSeenFailure,
