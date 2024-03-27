@@ -1,3 +1,4 @@
+import {FileIcon} from 'react-file-icon';
 import { CgClose } from 'react-icons/cg';
 import styles from './AttachmentPreview.module.css';
 
@@ -9,15 +10,32 @@ export default function AttachmentPreview({attachment , setAttachment}) {
     setAttachment(null)
   }
   
-  const attachmentObjectUrl = ()=>{
-    const url = URL.createObjectURL(attachment);
-    return url
+  const renderAttachment = ()=>{
+
+    
+  
+    if(attachment.type.split('/')[0] == 'image'){
+      const attachmentUrl = URL.createObjectURL(attachment);
+      return <img className={styles.image_attachment} src={attachmentUrl} alt="" />      
+    }else{
+      const attachmeExtension = attachment.name.slice((attachment.name.lastIndexOf('.')-1 >>> 0) + 2);
+      console.log({attachmeExtension})
+      return (
+        <div className={styles.file_attachment}>
+          <FileIcon extension={attachmeExtension} ></FileIcon>
+          <p className={styles.attachment_name}>{attachment.name}</p>
+        </div>
+      )
+    }
   }
+
+  
 
   return (
     <div className={styles.container}>
         <CgClose className={styles.close} onClick={handleCloseAttachment}/>
-        <img className={styles.preview} src={attachmentObjectUrl()} alt="" />
+
+        {renderAttachment()}
     </div>
   )
 }

@@ -1,7 +1,7 @@
 .container{
     /* border: 2px solid white;
     border-radius: 1rem; */
-  
+    overflow-y: auto;
     background-color: var(--primary);
     color: white;
     flex-grow: 1;

@@ -16,22 +16,23 @@ export default function MessageInput({friend}) {
   
   const handleSendMessage= (e : React.FormEvent)=>{
     e.preventDefault();
-    
+    const text = inputRef.current.value = '';
     if(attachment){
       const newMessage = {
         id: Math.floor(Math.random()*2000), //set a random id for now  
         conversation_id : friend.conversation_id,
         sender_id :  user.id ,
         receiver_id:friend.user_id , 
-        text: inputRef?.current?.value || null,
+        text: text || null,
         attachment : attachment,
         isSent:false,
         isSeen:false
       }
 
       dispatch(sendMessageWithAttachment(newMessage))
+  
     }
-    else if(inputRef.current?.value){
+    else if(text){
       
       const newMessage = {
         id: Math.floor(Math.random()*2000), //set a random id for now  
@@ -43,9 +44,11 @@ export default function MessageInput({friend}) {
         isSeen:false
       }
       dispatch(sendMessage(newMessage))
-      inputRef.current.value = '';
     }
-    
+
+    inputRef.current.value = '';
+    setAttachment(null)
+
   }
 
 
