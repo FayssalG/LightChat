@@ -16,36 +16,31 @@ export default function MessageInput({friend}) {
   
   const handleSendMessage= (e : React.FormEvent)=>{
     e.preventDefault();
-    const text = inputRef.current.value = '';
-    if(attachment){
-      const newMessage = {
-        id: Math.floor(Math.random()*2000), //set a random id for now  
-        conversation_id : friend.conversation_id,
-        sender_id :  user.id ,
-        receiver_id:friend.user_id , 
-        text: text || null,
-        attachment : attachment,
-        isSent:false,
-        isSeen:false
-      }
-
-      dispatch(sendMessageWithAttachment(newMessage))
-  
+    let newMessage = {
+      id: Math.floor(Math.random()*2000), //set a random id for now  
+      conversation_id : friend.conversation_id,
+      sender_id :  user.id ,
+      receiver_id:friend.user_id , 
+      isSent:false,
+      isSeen:false,
+      text : '',
+      attachment : null
     }
-    else if(text){
-      
-      const newMessage = {
-        id: Math.floor(Math.random()*2000), //set a random id for now  
-        conversation_id : friend.conversation_id,
-        sender_id :  user.id ,
-        receiver_id:friend.user_id , 
+
+    if(attachment){
+      newMessage = {...newMessage,
         text:inputRef.current.value,
-        isSent:false,
-        isSeen:false
+        attachment : attachment ? attachment : null
+      }
+      dispatch(sendMessageWithAttachment(newMessage))  
+    }
+    else if(inputRef.current.value){
+      newMessage = {...newMessage,
+        text:inputRef.current.value,
       }
       dispatch(sendMessage(newMessage))
     }
-
+    
     inputRef.current.value = '';
     setAttachment(null)
 
