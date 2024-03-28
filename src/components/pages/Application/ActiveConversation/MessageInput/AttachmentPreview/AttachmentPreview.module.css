@@ -1,7 +1,11 @@
 .container{
-    position: relative;
-    max-width: fit-content;
-    @media (max-width:700px) {
+    position: absolute;
+    bottom:  100%;
+    left: 0;
+    width: 100%;
+    background-color: var(--primary-dark);
+    padding: 1em;
+    @media (max-width:1000px) {
         
     }
 
@@ -27,8 +31,11 @@
 
     .file_attachment{
         margin-bottom: 5rem;
-        max-width: 100px;
-        max-height: 100px;
+        /* max-width: 100px;
+        max-height: 100px; */
+        @media (max-width:1000px) {
+            
+        }
         .attachment_name{
             color: var(--accent);
             font-size: .9rem;

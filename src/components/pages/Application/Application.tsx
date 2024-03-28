@@ -16,6 +16,7 @@ import { fetchBlockedUsers} from '@/redux/features/Block/BlockSlice';
 import useAuth from '@/components/hooks/useAuth';
 import { selectActiveConversation } from '@/redux/features/Conversation/ConversationSelectors';
 import NoActiveConversation from './NoActiveConverastion/NoActiveConversation';
+import VoiceCall from './VoiceCall/VoiceCall';
 
 
 
@@ -121,24 +122,38 @@ export default function Application() {
       if(!activeConversation){
         return <NoActiveConversation/>
       }
-
       return <ActiveConversation activeConversation={activeConversation}/>
   }
   
   return (
-    <>
-        <Navbar/>
+    <div className={styles.container}>
+        <div className={styles.navbar}>
+          <Navbar/>
+        </div>
 
         <div className={styles.sections_activeconversation}>
-          { !isVerified &&
-            <div className={styles.email_verification}><EmailNotVerified/></div>
-          }
-          
-          {selectedSection()}
 
-          {renderActiveConversation()}
+          
+          <div className={styles.email_verification}>
+            {/* { !isVerified &&<EmailNotVerified/>} */}
+          </div>
+
+          <div className={styles.sections}>
+            {selectedSection()}
+          
+          </div>          
+
+          <div className={styles.active_conversation}>
+            {renderActiveConversation()}        
+          </div>          
+
+          
+          <div className={styles.voice_call}>
+              {/* <VoiceCall/> */}
+          </div>
+
         </div>        
 
-    </>
+    </div>
   )
 }

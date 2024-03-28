@@ -1,11 +1,11 @@
 .container{
-           
+    position: relative;  
     margin: 0 1rem;
     margin-top: 1rem;
     padding: .4em .9em;
     border-radius: .5rem;
     background-color: var(--primary-dark);
-    @media (max-width:700px) {
+    @media (max-width:1000px) {
 
     }
 

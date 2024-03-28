@@ -17,7 +17,7 @@
         }
     }
     .name_status{
-        @media (max-width:700px) {
+        @media (max-width:1000px) {
             flex-grow: 1;
         }
         .name{
@@ -34,7 +34,7 @@
     .close{
         display: none;
         
-        @media (max-width:700px){
+        @media (max-width:1000px){
             display: block;
             svg{
                 width: 25px;
