@@ -4,7 +4,8 @@ interface IConversationState{
     error : string | null,
     status : 'idle' | 'loading' | 'succeeded'  | 'failed',
     conversations : [Conversation?],
-    activeConversationId : string | null
+    activeConversationId : string | null,
+    openConversationsIds : [string?],
 }  
 
 
@@ -74,15 +75,32 @@ const ConversationSlice = createSlice({
         },
         fetchConversationsSuccess : (state  , action)=>{
             state.status = 'succeeded';
-            const {messages , conversations} = action.payload
+            const {conversations} = action.payload
             conversationsAdapter.setAll(state, conversations) ;
-            messagesAdapter.setAll(state.messages ,messages);
             state.error = null;
         },
         fetchConversationsFailure : (state , action)=>{
             state.status = 'failed';
             state.error = action.payload;
         },
+        fetchMessages : (state)=>{
+            state.status = 'loading';
+            state.error = null;
+
+        },
+        fetchMessagesSuccess : (state ,action)=>{
+            state.status = 'succeeded';
+            const messages = action.payload
+            messagesAdapter.setAll(state.messages ,messages);            
+            state.error = null;
+
+        },
+        fetchMessagesFailure : (state , action)=>{
+            state.status = 'failed';
+            state.error = action.payload;
+
+        },
+
 
         sendMessage:(state , action)=>{
             state.status = 'loading';
@@ -91,8 +109,8 @@ const ConversationSlice = createSlice({
         sendMessageSuccess:(state , action)=>{
             state.status = 'succeeded';
             const {newMessage , oldMessageId}  = action.payload;
-            removeOneMessageById(state,oldMessageId);
-            addOneMessage(state,{...newMessage , isSent:true})
+            messagesAdapter.removeOne(state.messages,oldMessageId);
+            messagesAdapter.addOne(state.messages,{...newMessage , isSent:true})
         },
         
         sendMessageFailure:(state , action)=>{
@@ -108,8 +126,8 @@ const ConversationSlice = createSlice({
         sendMessageWithAttachmentSuccess:(state , action)=>{
             state.status = 'succeeded';
             const {newMessage , oldMessageId}  = action.payload;
-            removeOneMessageById(state,oldMessageId);
-            addOneMessage(state,{...newMessage , isSent:true})
+            messagesAdapter.removeOne(state.messages,oldMessageId);
+            messagesAdapter.addMany(state.messages,{...newMessage , isSent:true})
         },
         
         sendMessageWithAttachmentFailure:(state , action)=>{
@@ -140,11 +158,11 @@ const ConversationSlice = createSlice({
         addMessageOptimistic:(state,action)=>{
             const message = action.payload;
             console.log({message})
-            addOneMessage(state,message)
+            messagesAdapter.addOne(state.messages,message)
         },
         addMessageRevert:(state,action)=>{
             const messageId = action.payload;
-            removeOneMessageById(state,messageId);
+            messagesAdapter.removeOne(state.messages,messageId);
         },
 
 
@@ -158,7 +176,6 @@ const ConversationSlice = createSlice({
                 }
             });
             state.activeConversationId = action.payload        
-
         },
 
         setActiveConversation : (state , action)=>{
@@ -167,7 +184,9 @@ const ConversationSlice = createSlice({
 
         closeConversation : (state ,action)=>{
             const conversationId = action.payload;
-            state.activeConversationId = null;
+            if(conversationId == state.activeConversationId){
+                state.activeConversationId = null;
+            }
             conversationsAdapter.updateOne(state, {
                 id: conversationId,
                 changes : {
@@ -190,7 +209,7 @@ const ConversationSlice = createSlice({
                     isOpen : true,
                 }
             })
-            addOneMessage(state,newMessage)
+            messagesAdapter.addOne(state.messages,newMessage)
         },
 
         setRealtimeMessagesSeen : (state , action)=>{
@@ -217,6 +236,9 @@ export const {
     fetchConversations,
     fetchConversationsSuccess,
     fetchConversationsFailure,
+    fetchMessages,
+    fetchMessagesFailure,
+    fetchMessagesSuccess,
 
     sendMessage,
     sendMessageWithAttachment,

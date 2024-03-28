@@ -7,10 +7,9 @@ import Attachment from './Attachment/Attachment';
 // import { selectMessageById } from '@/redux/features/FriendConversation/FriendConversationSlice';
 
 
-export default function Message({messageRef ,   messageId , friend} : any) {
+export default function Message({messageRef ,   message , friend} : any) {
   const user = useSelector(state=>state.auth.user);
-  const message = useSelector((state)=>selectMessageById(state,messageId)) ;
-
+  
   const {text , attachment , isSent , isSeen} = message;
 
   const type = message?.sender_id == user.id ? 'self' : null;

@@ -1,27 +1,37 @@
 import { call, put, takeEvery, takeLatest, takeLeading } from "redux-saga/effects";
-import {  fetchConversationsSuccess , fetchConversationsFailure, sendMessageSuccess, sendMessageFailure, addMessage, removeMessage, addMessageOptimistic, addMessageRevert, markMessagesSeenSuccess } from "./ConversationSlice";
-import { get_conversations, messages_seen, send_message, send_message_attachment } from "@/axios/conversation";
+import {  fetchConversationsSuccess , fetchConversationsFailure, fetchUnseenMessagesSuccess,fetchUnseenMessagesFailure, sendMessageSuccess, sendMessageFailure, addMessageOptimistic, addMessageRevert, markMessagesSeenSuccess, fetchMessagesSuccess, fetchMessagesFailure } from "./ConversationSlice";
+import { get_conversations, get_messages, messages_seen, send_message, send_message_attachment } from "@/axios/conversation";
 
 function* workFetchConversations(){
     try{
         const response = yield call(get_conversations);
         
         const conversations = response.data.map((conversation)=>{
-            return {conversation_id:conversation.conversation_id, friend_id:conversation.friend_id, isOpen:false  , messagesIds :conversation.messages.reduce((prev,{id})=>[...prev,id] ,[]) }
+            return {conversation_id:conversation.conversation_id, friend_id:conversation.friend_id, isOpen:false}
         } );
 
-        const messages = response.data.map((conversation)=>{
-            return conversation.messages.map((message)=>{
-                 return {...message }; 
-            })
-        }).flat();
-    
-        yield put(fetchConversationsSuccess({conversations , messages}))
+        
+        yield put(fetchConversationsSuccess({conversations}))
 
     }catch(err){
         yield put(fetchConversationsFailure(err.message))
     }
 }
+
+
+function* workFetchMessages(){
+    try{
+        const response = yield call(get_messages);
+        console.log({RESPONSE:response.data})
+        const messages = response.data
+
+        yield put(fetchMessagesSuccess(messages))
+
+    }catch(err){
+        yield put(fetchMessagesFailure(err.message))
+    }
+}
+
 
 function* workSendMessage(action){
     const oldMessage = action.payload;
@@ -72,8 +82,10 @@ function* workMarkMessagesSeen(action){
 }
 
 
+
 export default function* conversationSaga(){
     yield takeEvery('conversation/fetchConversations' , workFetchConversations);
+    yield takeEvery('conversation/fetchMessages' , workFetchMessages);
     yield takeEvery('conversation/sendMessage' , workSendMessage);
     yield takeEvery('conversation/sendMessageWithAttachment' , workSendMessageWithAttachment);
     yield takeEvery('conversation/markMessagesSeen' , workMarkMessagesSeen);

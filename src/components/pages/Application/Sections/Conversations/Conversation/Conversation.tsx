@@ -24,8 +24,8 @@ export default function Conversation({conversation} : {conversation : Conversati
     dispatch(closeConversation(conversation.conversation_id));
   }
 
-  const lastMessageId : number | undefined = conversation.messagesIds[conversation.messagesIds.length-1];
-  const lastMessage  : FriendMessage | {} = useSelector(state=>selectMessageById(state,lastMessageId));
+  // const lastMessageId : number | undefined = conversation.messagesIds[conversation.messagesIds.length-1];
+  // const lastMessage  : FriendMessage | {} = useSelector(state=>selectMessageById(state,lastMessageId));
 
   return (
     <div data-selected={isSelected} className={styles.conversation}>
@@ -36,8 +36,8 @@ export default function Conversation({conversation} : {conversation : Conversati
         <UnstyledButton className={styles.name_lastmsg} onClick={handleSelectConversation}>
             <h2 className={styles.name}>{friend.display_name}</h2>
             <div className={styles.lastmsg}>
-              <p className={styles.text}> {lastMessage?.text || null} </p>
-              <p className={styles.time}> {lastMessage?.created_at || null} </p>
+              {/* <p className={styles.text}> {lastMessage?.text || null} </p>
+              <p className={styles.time}> {lastMessage?.created_at || null} </p> */}
             </div>
         </UnstyledButton>
 

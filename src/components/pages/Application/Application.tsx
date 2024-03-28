@@ -5,18 +5,11 @@ import ConversationsSection from "./Sections/Conversations/ConversationsSection"
 import FriendsSection from "./Sections/Friends/FriendsSection";
 import GroupsSection from "./Sections/Groups/GroupsSection";
 
-// import AddFriendModal from "@/components/modals/AddFriendModal/AddFriendModal";
-// import FriendDetailsModal from "@/components/modals/FriendDetailsModal/FriendDetailsModal";
-// import ConfirmBlockFriendModal from "@/components/modals/ConfirmBlockFriendModal/ConfirmBlockFriendModal";
-// import CreateGroupModal from "@/components/modals/CreateGroupModal/CreateGroupModal";
-// import GroupDetailsModal from "@/components/modals/GroupDetailsModal/GroupDetailsModal";
-// import ConfirmRemoveFriendModal from '@/components/modals/ConfirmRemoveFriendModal/ConfirmRemoveFriendModal';
-
 import { useDispatch, useSelector } from "react-redux";
 import EmailNotVerified from '@/components/pages/Application/EmailNotVerified/EmailNotVerified';
 import { useEffect } from 'react';
 import { useSocket } from '@/components/context/SocketProvider';
-import {  addRealtimeMessage, createRealtimeConversation, deleteRealtimeConversation, fetchConversations, setRealtimeMessagesSeen } from '@/redux/features/Conversation/ConversationSlice';
+import {  addRealtimeMessage,  fetchConversations, fetchMessages, setRealtimeMessagesSeen } from '@/redux/features/Conversation/ConversationSlice';
 import { addRequest, fetchRequests, removeRequest } from '@/redux/features/FriendRequest/FriendRequestSlice';
 import { RealtimeAddFriend, RealtimeChangeFriendStatus, RealtimeRemoveFriend, fetchFriends } from '@/redux/features/Friend/FriendSlice';
 import { fetchBlockedUsers} from '@/redux/features/Block/BlockSlice';
@@ -92,11 +85,23 @@ export default function Application() {
 
 
   useEffect(()=>{
-    dispatch(fetchFriends());
-    dispatch(fetchConversations());
-    dispatch(fetchBlockedUsers());
-    dispatch(fetchRequests())
-
+    const timestamp = JSON.parse(localStorage.getItem('neochat-timestamp'));    
+    const now = new Date();
+    const lastFetchDate = new Date(timestamp) 
+    //if timestamp is null date given here is unix epoch
+  
+    const isOld = (Math.round((now.getTime() - lastFetchDate.getTime()) / (1000*60)) > 20) // in minutes
+    
+    dispatch(fetchMessages());
+    if(isOld){
+      console.log({isOld})
+      dispatch(fetchFriends());
+      dispatch(fetchConversations());
+      dispatch(fetchBlockedUsers());
+      dispatch(fetchRequests())
+      localStorage.setItem('neochat-timestamp' , JSON.stringify(now));    
+    }
+    
   },[dispatch])
  
 

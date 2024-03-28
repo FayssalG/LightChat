@@ -20,8 +20,8 @@
     }
 
     .image_attachment{
-        width: 50%;
-        height: 50%;
+        max-width: 250px;
+        max-height: 250px;
         object-fit:cover;
     }
 

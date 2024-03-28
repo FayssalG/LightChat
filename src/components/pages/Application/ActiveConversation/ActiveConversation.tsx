@@ -8,14 +8,14 @@ import { useCallback, useEffect} from 'react';
 import { selectFriendById  } from '@/redux/features/Friend/FriendSlice';
 
 import { markMessagesSeen} from '@/redux/features/Conversation/ConversationSlice';
-import { selectMessageById } from '@/redux/features/Conversation/ConversationSelectors';
+import { selectMessageById, selectMessagesByConversationId } from '@/redux/features/Conversation/ConversationSelectors';
 
 export default function ActiveConversation({activeConversation}) {
   const dispatch = useDispatch();
   const conversationVisibility = useSelector((state)=>state.ui.conversationVisibility);
-  const lastMsgId = activeConversation?.messagesIds[activeConversation.messagesIds.length - 1];
-  const lastMsg = useSelector(state=>selectMessageById(state,lastMsgId));
-
+  const messages = useSelector(selectMessagesByConversationId(activeConversation.conversation_id))
+  const lastMsg = messages[messages.length - 1];
+  console.log({MESSAGES:messages})
   const friend = useSelector((state)=>selectFriendById(state,activeConversation?.friend_id));
   
   //scroll down when a message is added
@@ -34,12 +34,12 @@ export default function ActiveConversation({activeConversation}) {
 
 
   const renderMessages = ()=>{    
-     return   activeConversation.messagesIds.map((messageId , index)=>{
-                    const isLast = activeConversation.messagesIds.length -1 === index;
+     return   messages.map((message , index)=>{
+                    const isLast = messages.length -1 === index;
                             
                     return <Message  messageRef={isLast ? setRef : null} 
-                            key={messageId}
-                            messageId = {messageId} 
+                            key={message.id}
+                            message = {message} 
                             friend={friend}  
                         />
                 })
