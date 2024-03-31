@@ -16,6 +16,7 @@
             border-radius: 50%;
         }
     }
+
     .name_status{
         @media (max-width:1000px) {
             flex-grow: 1;
@@ -31,6 +32,18 @@
         }
     }
 
+    
+    .call{
+        margin-left: auto;
+        button {
+            svg{
+                width: 20px;
+                height: 20px;
+            }
+    
+        }
+    }
+    
     .close{
         display: none;
         

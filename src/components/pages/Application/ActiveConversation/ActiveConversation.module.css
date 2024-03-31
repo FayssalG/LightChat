@@ -6,10 +6,9 @@
     background-color: var(--primary);
     color: white;
     flex-grow: 1;
-    /* max-height: 95vh; */
     display: grid;
-    grid-template-rows: minmax(50px,70px) minmax(200px,400px)  minmax(50px,70px) ;
-    align-content: space-between;
+    grid-template-rows: minmax(50px,70px) minmax(220px,420px)  minmax(50px,70px) ;
+    /* align-content: space-around; */
 
     @media (max-width:1000px){
         position: fixed;

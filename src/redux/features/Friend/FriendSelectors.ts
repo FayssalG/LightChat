@@ -1,0 +1,1 @@
+import { friendsAdapter } from "./FriendSlice";

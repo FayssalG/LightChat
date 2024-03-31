@@ -1,6 +1,7 @@
 .message{
     /* margin-top: 2rem; */
     max-width: 350px;    
+    min-width: 250px;    
     .message_infos{
         width: 100%;
         display: flex;
@@ -58,5 +59,4 @@
         border-top-left-radius: 0;
         background-color: var(--accent-second);
     }
-
 }

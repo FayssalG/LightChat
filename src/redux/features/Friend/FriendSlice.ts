@@ -3,7 +3,7 @@ import { createAsyncThunk, createEntityAdapter, createSelector, createSlice } fr
 
 
 
-const friendsAdapter = createEntityAdapter({
+export	const friendsAdapter = createEntityAdapter({
     selectId:(friend)=>friend.user_id
 })
 
@@ -113,6 +113,9 @@ export const selectAccessibleFriends =  createSelector([seletctAllFriends],(AllF
     return AllFriends.filter((friend)=>friend.isFriend);
 })
 
+export const selectFriendByUsername = (username:string) => createSelector([seletctAllFriends],(AllFriends)=>{
+    return AllFriends.find((friend)=>friend.username == username);
+ })
 
 export default FriendSlice.reducer;
 export const {RealtimeChangeFriendStatus, RealtimeAddFriend , RealtimeRemoveFriend , setFriendAsBlocked,setFriendAsUnblocked , fetchFriends , fetchFriendsFailure , fetchFriendsSuccess , unFriend , unFriendFailure , unFriendSuccess} = FriendSlice.actions;  

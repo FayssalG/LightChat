@@ -1,3 +1,8 @@
+/// fix error when destoying peer connection (simple peer)
+import * as process from 'process'
+window.process = process
+////////////////////
+
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'

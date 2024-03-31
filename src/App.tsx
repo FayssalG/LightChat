@@ -11,6 +11,7 @@ import ResetPassword from './components/pages/Auth/ResetPassword/ResetPassword';
 
 import SocketProvider from '@/components/context/SocketProvider';
 import { SkeletonTheme } from 'react-loading-skeleton';
+import CallProvider from './components/context/CallProvider';
 
 function App() {
   
@@ -54,7 +55,9 @@ function ProtectedRoute(){
 
   return( 
     <SocketProvider>
-      <Outlet/>
+      <CallProvider>
+        <Outlet/>      
+      </CallProvider>
     </SocketProvider>
   )
 } 

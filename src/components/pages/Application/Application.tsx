@@ -16,9 +16,9 @@ import { fetchBlockedUsers} from '@/redux/features/Block/BlockSlice';
 import useAuth from '@/components/hooks/useAuth';
 import { selectActiveConversation } from '@/redux/features/Conversation/ConversationSelectors';
 import NoActiveConversation from './NoActiveConverastion/NoActiveConversation';
+import { useCall } from '@/components/context/CallProvider';
+
 import VoiceCall from './VoiceCall/VoiceCall';
-
-
 
 export default function Application() {
   const {user} = useAuth();
@@ -26,6 +26,7 @@ export default function Application() {
   const isVerified : Boolean = useSelector(state => state.auth.isVerified);
   const socket = useSocket()
   const activeConversation  = useSelector(selectActiveConversation)
+  const {status:callingStatus}= useCall();
 
   const dispatch = useDispatch();
 
@@ -95,7 +96,6 @@ export default function Application() {
     
     dispatch(fetchMessages());
     if(isOld){
-      console.log({isOld})
       dispatch(fetchFriends());
       dispatch(fetchConversations());
       dispatch(fetchBlockedUsers());
@@ -135,7 +135,7 @@ export default function Application() {
 
           
           <div className={styles.email_verification}>
-            {/* { !isVerified &&<EmailNotVerified/>} */}
+            { !isVerified &&<EmailNotVerified/>}
           </div>
 
           <div className={styles.sections}>
@@ -149,9 +149,10 @@ export default function Application() {
 
           
           <div className={styles.voice_call}>
-              {/* <VoiceCall/> */}
+              {callingStatus !=='idle' && <VoiceCall />}
           </div>
 
+          
         </div>        
 
     </div>
