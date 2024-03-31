@@ -35,6 +35,8 @@
     
     .call{
         margin-left: auto;
+        display: flex;
+        gap: 1rem;
         button {
             svg{
                 width: 20px;
@@ -42,7 +44,14 @@
             }
     
         }
+        button[disabled]{
+            svg{
+                opacity: .5;
+            }
+        }
     }
+
+
     
     .close{
         display: none;

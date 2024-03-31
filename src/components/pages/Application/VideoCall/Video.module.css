@@ -1,0 +1,105 @@
+.container{
+    position: fixed;
+    width: 100svw;
+    height: 100svh;
+    z-index: 2;
+    left: 0;
+    top: 0;
+
+    padding: 1em;
+    background-color: var(--primary);
+    color: white;
+    display: grid;
+    grid-template-columns: 1fr ;
+    align-items: center;
+    gap: 1rem;
+   @media (max-width:1000px) {
+        grid-template-columns: 1fr;
+   }
+   
+    .user_container{
+        height: 200px;
+        max-width: 150px;
+        position: absolute;
+        bottom: 2rem;
+        right: 2rem;
+        .video_container{
+            height: 100%;
+            background-color: blueviolet;
+        }
+    }
+
+    .friend_container{
+        position: relative;
+        height: 100%;
+        .video_container{
+            height: 100%;
+            background-color: aqua;
+        }
+
+        .name{
+            margin: .5rem;
+            position: absolute;
+        }
+    }
+
+    .timer_container{
+
+    }
+
+
+    .controls_container {
+        position: absolute;
+        display: flex;
+        gap: 1rem;
+        margin-top: auto;
+        /* @media (max-width:1000px) {
+            margin-left: auto;   
+        }*/
+        button{
+            display: flex;
+            border-radius: 50%;
+            padding: .9em;
+            background-color: var(--danger);
+            svg{
+                width: 20px;
+                height: 20px;
+            }
+        }
+
+        .endcall_btn{
+            background-color: var(--danger);
+        }
+        .recall_btn{
+            background-color: var(--success);
+        }
+        
+        .close_btn{
+            color: black;
+            background-color: white;
+        }
+
+        
+        .mute_btn{
+            color: black;
+            background-color: white;
+        }
+
+    }
+}
+
+
+@keyframes pulse {
+    0%{
+        transform:  scale(1);
+        box-shadow: 0 0 0 10px rgba(24, 90, 90, .7);
+    }
+    75%{
+        transform:  scale(.95);
+        box-shadow: 0 0 0 20px rgba(24, 90, 90, 0);
+    }
+    100%{
+        transform:  scale(1);
+        box-shadow: 0 0 0 25px rgba(24, 90, 90, 0);
+    }
+}

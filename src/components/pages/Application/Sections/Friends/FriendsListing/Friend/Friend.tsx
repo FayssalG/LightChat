@@ -8,6 +8,7 @@ import useModal from '@/components/modal/useModal';
 import { openConversation } from '@/redux/features/Conversation/ConversationSlice';
 
 import FriendSkeleton from '../../FriendSkeleton/FriendSkeleton';
+import { toggleConversationVisibility } from '@/redux/features/UiSlice';
 
 
 export default function Friend({friend}) {
@@ -28,6 +29,7 @@ export default function Friend({friend}) {
 
   const handleSendMessageClick= ()=>{
     setShowOptionsMenu(false)
+    dispatch(toggleConversationVisibility())
     dispatch(openConversation(friend.conversation_id));
   } 
 

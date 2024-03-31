@@ -5,6 +5,7 @@ import { useDispatch} from 'react-redux';
 import { toggleConversationVisibility } from '@/redux/features/UiSlice';
 import useModal from '@/components/modal/useModal';
 import { useCall } from '@/components/context/CallProvider';
+import { BiCamera, BiPhoneCall, BiVideo } from 'react-icons/bi';
 
 export default function Topbar({friend}) {
   const dispatch = useDispatch();
@@ -28,9 +29,22 @@ export default function Topbar({friend}) {
         </UnstyledButton>
 
         <div className={styles.call}>
-            <UnstyledButton onClick={()=>call(friend.username)}>
-              <IoCall/>
+            <UnstyledButton 
+              title={friend.online_status!=='online' ? 'user is offline' : null} 
+              disabled={friend.online_status!=='online'} 
+              onClick={()=>call(friend.username)}
+            >
+              <BiPhoneCall/>
             </UnstyledButton>          
+
+            <UnstyledButton 
+              title={friend.online_status!=='online' ? 'user is offline' : null} 
+              disabled={friend.online_status!=='online'} 
+              
+            >
+              <BiVideo/>
+            </UnstyledButton>          
+
         </div>        
 
         <UnstyledButton onClick={()=>dispatch(toggleConversationVisibility())} className={styles.close}>

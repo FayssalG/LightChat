@@ -19,6 +19,7 @@ import NoActiveConversation from './NoActiveConverastion/NoActiveConversation';
 import { useCall } from '@/components/context/CallProvider';
 
 import VoiceCall from './VoiceCall/VoiceCall';
+import VideoCall from './VideoCall/VideoCall';
 
 export default function Application() {
   const {user} = useAuth();
@@ -150,8 +151,9 @@ export default function Application() {
           
           <div className={styles.voice_call}>
               {callingStatus !=='idle' && <VoiceCall />}
+              {/* <VideoCall/> */}
           </div>
-
+          
           
         </div>        
 

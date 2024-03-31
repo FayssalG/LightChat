@@ -122,7 +122,7 @@ export default function CallProvider({children}) {
     }
 
     return (
-        <CallContext.Provider value={{call , answer, end, reject,close,status, isReceivingCall, callerUsername , remoteStreamRef}}>
+        <CallContext.Provider value={{call , answer, end, reject,close,status, isReceivingCall, callerUsername , remoteStreamRef,localStreamRef}}>
             {isReceivingCall && <CallNotification callerUsername={callerUsername} answer={answer} reject={reject}/>}
             {children}
         </CallContext.Provider>
