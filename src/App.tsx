@@ -12,6 +12,7 @@ import ResetPassword from './components/pages/Auth/ResetPassword/ResetPassword';
 import SocketProvider from '@/components/context/SocketProvider';
 import { SkeletonTheme } from 'react-loading-skeleton';
 import CallProvider from './components/context/CallProvider';
+import VideoCallProvider from './components/context/VideoCallProvider';
 
 function App() {
   
@@ -56,7 +57,9 @@ function ProtectedRoute(){
   return( 
     <SocketProvider>
       <CallProvider>
-        <Outlet/>      
+        <VideoCallProvider>
+          <Outlet/>      
+        </VideoCallProvider>
       </CallProvider>
     </SocketProvider>
   )

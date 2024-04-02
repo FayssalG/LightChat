@@ -6,7 +6,6 @@
     left: 0;
     top: 0;
 
-    padding: 1em;
     background-color: var(--primary);
     color: white;
     display: grid;
@@ -16,62 +15,88 @@
    @media (max-width:1000px) {
         grid-template-columns: 1fr;
    }
-   
+    
+    .call_ended_msg{
+        text-align: center;
+    }
+    
+
     .user_container{
         height: 200px;
         max-width: 150px;
         position: absolute;
-        bottom: 2rem;
+        bottom: 5rem;
         right: 2rem;
-        .video_container{
+
+    
+        .video_player{
+            /* transform: rotateY(180deg); */
             height: 100%;
-            background-color: blueviolet;
+            width: 100%;
         }
     }
 
-    .friend_container{
-        position: relative;
+    .participants_container{        
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(3 , minmax(0,1fr)) ;
         height: 100%;
-        .video_container{
-            height: 100%;
-            background-color: aqua;
+           
+        .participant:only-child{
+            grid-area: 1/span 3;
         }
 
-        .name{
-            margin: .5rem;
-            position: absolute;
+        .participant{
+            position: relative;
+            .video_container{
+                width: 100%;
+                height: 100%;
+                .video_player{
+                    object-fit: cover;
+                    /* transform: rotateY(180deg); */
+                    width: 100%;
+                    height: 100%;
+                }
+    
+            }
+    
+            .name{
+                padding: .2em .5em;
+                background-color: rgba(0, 0, 0, 0.23);
+                z-index: 20;
+                margin: .5rem;
+                position: absolute;
+            }
         }
-    }
-
-    .timer_container{
-
+    
     }
 
 
     .controls_container {
         position: absolute;
         display: flex;
+        justify-content: center;
         gap: 1rem;
-        margin-top: auto;
+        width: 100%;
+        height: fit-content;
+        bottom: 2rem;
         /* @media (max-width:1000px) {
             margin-left: auto;   
         }*/
         button{
-            display: flex;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             padding: .9em;
             background-color: var(--danger);
             svg{
-                width: 20px;
-                height: 20px;
+                width: 100%;
+                height: 100%;
             }
         }
 
         .endcall_btn{
             background-color: var(--danger);
-        }
-        .recall_btn{
-            background-color: var(--success);
         }
         
         .close_btn{

@@ -20,6 +20,7 @@ import { useCall } from '@/components/context/CallProvider';
 
 import VoiceCall from './VoiceCall/VoiceCall';
 import VideoCall from './VideoCall/VideoCall';
+import { useVideoCall } from '@/components/context/VideoCallProvider';
 
 export default function Application() {
   const {user} = useAuth();
@@ -28,6 +29,7 @@ export default function Application() {
   const socket = useSocket()
   const activeConversation  = useSelector(selectActiveConversation)
   const {status:callingStatus}= useCall();
+  const {status:videoCallingStatus} = useVideoCall();
 
   const dispatch = useDispatch();
 
@@ -151,7 +153,7 @@ export default function Application() {
           
           <div className={styles.voice_call}>
               {callingStatus !=='idle' && <VoiceCall />}
-              {/* <VideoCall/> */}
+              {videoCallingStatus !== 'idle' && <VideoCall/>}
           </div>
           
           

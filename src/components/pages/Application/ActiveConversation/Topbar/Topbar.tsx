@@ -6,11 +6,13 @@ import { toggleConversationVisibility } from '@/redux/features/UiSlice';
 import useModal from '@/components/modal/useModal';
 import { useCall } from '@/components/context/CallProvider';
 import { BiCamera, BiPhoneCall, BiVideo } from 'react-icons/bi';
+import { useVideoCall } from '@/components/context/VideoCallProvider';
 
 export default function Topbar({friend}) {
   const dispatch = useDispatch();
 
   const {call} = useCall(); 
+  const {call : videoCall} = useVideoCall();
   const {onOpen : onOpenFriendDetailsModal} = useModal('FriendDetailsModal'); 
 
   const handleOpenFriendDetails = ()=>{
@@ -40,7 +42,7 @@ export default function Topbar({friend}) {
             <UnstyledButton 
               title={friend.online_status!=='online' ? 'user is offline' : null} 
               disabled={friend.online_status!=='online'} 
-              
+              onClick={()=>videoCall(friend.username)}
             >
               <BiVideo/>
             </UnstyledButton>          

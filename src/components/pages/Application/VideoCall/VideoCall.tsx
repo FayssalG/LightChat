@@ -1,85 +1,81 @@
 import avatar from '@/assets/avatar.png';
-import styles from './Video.module.css';
+import styles from './VideoCall.module.css';
 import { BiPhoneCall, BiPhoneOff } from 'react-icons/bi';
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
-import { useEffect, useState } from 'react';
-import { useCall } from '@/components/context/CallProvider';
+import { useEffect, useRef, useState } from 'react';
 import { IoClose } from 'react-icons/io5';
-import { FiMicOff } from 'react-icons/fi';
+import { FiCamera, FiMic, FiMicOff } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 import { selectFriendByUsername } from '@/redux/features/Friend/FriendSlice';
+import { useVideoCall } from '@/components/context/VideoCallProvider';
+import { MdCameraswitch } from 'react-icons/md';
 
 export default function VideoCall() {
-    const {localStreamRef, remoteStreamRef, status:callStatus , end:endFn, call , close:closeFn ,callerUsername  } = useCall()
+    const {localStreamRef, remoteStreamRef, status:callStatus , end:endFn, close:closeFn , muteMic, swapCamera ,callerUsername  } = useVideoCall()
     const caller = useSelector(selectFriendByUsername(callerUsername))
 
-    const [isMute , setIsMute] = useState(false)
-   
-    const handleMute = ()=>{
-        setIsMute(!isMute)
+    const [cameraFacing , setCameraFacing]= useState('user')
+    const [isMuted , setIsMuted] = useState(false)
+    
+    const userScreenRef = useRef(null);
+    const participantScreenRef = useRef(null)
+
+    const handleSwapScreen = ()=>{
+        const remoteStream = remoteStreamRef.current.srcObject
+        const localStream = localStreamRef.current.srcObject
+        localStreamRef.current.srcObject = remoteStream;
+        remoteStreamRef.current.srcObject = localStream
     }
+
+    const handleSwapCamera = ()=>{
+        if(cameraFacing=='user'){
+            setCameraFacing('environment')
+            swapCamera('environment')
+        } 
+        else{
+            setCameraFacing('user')
+            swapCamera('user')
+        } 
+    }
+
+    const handleMute = ()=>{
+        setIsMuted(!isMuted)
+        muteMic()
+    }
+
     const handleEndCall = ()=>{
         endFn();
-    }
-
-    const [timer , setTimer] = useState(0)
-    useEffect(()=>{
-        if(callStatus == 'ended') setTimer(0) 
-
-        let interval = null
-        if(callStatus == 'ongoing'){
-            interval = setInterval(()=>{setTimer((prev)=>prev+1)},1000) 
-        }
-        return ()=>clearInterval(interval)
-      },[callStatus])
-
-    const renderTimer = ()=>{
-        const minutes = (timer/60 < 9) ? '0'+Math.floor(timer/60) : Math.floor(timer/60) 
-        const seconds = (timer%60 < 9) ? '0'+Math.floor(timer%60) : Math.floor(timer%60)
-        const time = minutes+':'+seconds
-        return  time  
     }
 
         
     return (
     <div className={styles.container}>
-      
-        <div className={styles.friend_container}>
-            {/* <div data-pulsing={callStatus === 'calling'} className={styles.picture}>
-                <img src={avatar} alt="" />
-            </div> */}
-            <p className={styles.name}>Jack Martins</p>
-            <div className={styles.video_container}>
-                <video className={styles.video_player} ref={remoteStreamRef} playsInline autoPlay></video>
-            </div>
-        </div>
+
+        {
+            callStatus == 'ended' ? 
+            <p className={styles.call_ended_msg}>Call Ended</p>
+            :
+        <div ref={participantScreenRef} className={styles.participants_container}>
+            <div className={styles.participant}>
+                <p className={styles.name}>{caller.display_name}</p>
+                <div className={styles.video_container}>
+                    <video   ref={remoteStreamRef} className={styles.video_player} playsInline autoPlay></video>
+                </div>
+            </div>    
+          </div>
+
+        }
+
         
-        <div className={styles.user_container}>
-            {/* <div data-pulsing={callStatus === 'calling'} className={styles.picture}>
-                <img src={avatar} alt="" />
-            </div> */}
-            {/* <p className={styles.name}>Jack Martins</p> */}
+        <div ref={userScreenRef} onClick={handleSwapScreen} className={styles.user_container}>
             <div className={styles.video_container}>
-                <video className={styles.video_player} ref={localStreamRef} playsInline autoPlay></video>
+                <video ref={localStreamRef} className={styles.video_player} muted  playsInline autoPlay></video>
             </div>
         </div>
 
-        {/* <div className={styles.timer_container}>
-            <p>
-                {callStatus == 'ongoing' && renderTimer()}
-                {callStatus == 'calling' && 'Calling...'}
-                {callStatus == 'ended' && 'Call Ended'}
-            </p>
-        </div> */}
 
         <div className={styles.controls_container}>
 
-            {
-                callStatus === 'receivingCall' &&
-                <UnstyledButton>
-                    
-                </UnstyledButton>
-            }
 
             {   
                 (callStatus === 'ongoing' || callStatus === 'calling') &&
@@ -90,9 +86,17 @@ export default function VideoCall() {
 
             {
                 callStatus=='ongoing' &&
-                <UnstyledButton onClick={handleMute} className={styles.mute_btn}>
-                    <FiMicOff/>
-                </UnstyledButton>
+                <>
+                    <UnstyledButton onClick={handleMute} className={styles.mute_btn}>
+                        {isMuted ? <FiMicOff/> : <FiMic/>}
+                    </UnstyledButton>
+                    
+                    <UnstyledButton onClick={handleSwapCamera}  className={styles.mute_btn}>
+                        <MdCameraswitch/>
+                    </UnstyledButton>
+                    
+                </>
+                
             }
             
 
@@ -102,10 +106,6 @@ export default function VideoCall() {
                     <UnstyledButton onClick={closeFn}  className={styles.close_btn}>
                         <IoClose/>
                     </UnstyledButton>
-
-                    <UnstyledButton onClick={()=>call(callerUsername)} className={styles.recall_btn}>
-                        <BiPhoneCall/>
-                    </UnstyledButton>                
                 </>    
             }
 
