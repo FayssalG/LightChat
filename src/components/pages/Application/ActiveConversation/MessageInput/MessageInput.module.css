@@ -26,7 +26,7 @@
         }
         input[type='text']{
             padding-inline: .5em;
-            color: white;
+            color: inherit;
             flex-grow: 1;
             width: 100%;
             height: 100%;

@@ -46,6 +46,10 @@
             }
     
         }
+
+        button:hover{
+            color: var(--accent);
+        }
         button[disabled]{
             svg{
                 opacity: .5;

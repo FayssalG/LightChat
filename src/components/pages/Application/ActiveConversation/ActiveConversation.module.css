@@ -4,13 +4,13 @@
     height: 100%;
     overflow-y: auto;
     background-color: var(--primary);
-    color: white;
     flex-grow: 1;
     display: grid;
     grid-template-rows: minmax(50px,70px) minmax(220px,420px)  minmax(50px,60px) ;
     align-content: space-between;
 
     @media (max-width:1000px){
+        z-index: 5;
         position: fixed;
         /* max-height: revert; */
         width: 100svw;

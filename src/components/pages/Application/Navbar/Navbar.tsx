@@ -3,13 +3,19 @@ import { Link, useLocation } from 'react-router-dom'
 import styles from './Navbar.module.css';
 import avatar from '../../../../assets/avatar.png';
 import { FaUserFriends } from "react-icons/fa";
-import { BiSolidMessageSquare } from "react-icons/bi";
-import { MdGroups } from "react-icons/md";
-import { IoLogOut } from "react-icons/io5";
+import { BiMessageSquare, BiSolidMessageSquare } from "react-icons/bi";
+import { MdGroups, MdOutlineGroup } from "react-icons/md";
+import { IoLogOut, IoPersonOutline } from "react-icons/io5";
 import { useDispatch, useSelector } from 'react-redux';
 import {  changeVisibleSection } from '../../../../redux/features/UiSlice';
 import UnstyledButton from '../../../shared/UnstyledButton/UnstyledButton';
 import useAuth from '@/components/hooks/useAuth';
+import { LiaUserFriendsSolid } from 'react-icons/lia';
+import { HiOutlineUserGroup } from 'react-icons/hi';
+import { RiGroupLine } from 'react-icons/ri';
+import { LuMessageSquare } from 'react-icons/lu';
+import { CiLogout } from 'react-icons/ci';
+import { GoPerson } from 'react-icons/go';
 
 export default function Navbar() {
     const {pathname} = useLocation();
@@ -28,7 +34,7 @@ export default function Navbar() {
                 <Link to='/' 
                     className={`${pathname=='/' ? styles.active : ''} ${styles.section} ${styles.friends} ` }
                 >
-                    <FaUserFriends />
+                    <GoPerson/>
                     <p>Friends</p>
                 </Link>
 
@@ -37,7 +43,7 @@ export default function Navbar() {
                 
                 >
                     
-                    <BiSolidMessageSquare />
+                    <BiMessageSquare />
                     <p>Messages</p>
 
                 </Link>
@@ -46,15 +52,17 @@ export default function Navbar() {
                     className={`${pathname=='/groups' ? styles.active : ''} ${styles.section} ${styles.groups} ` }                
                 >
                 
-                    <MdGroups />
+                    <LiaUserFriendsSolid />
                     <p>Groups</p>
                 </Link>
+         
             </div>
 
             <div className={styles.logout}>
                 <UnstyledButton onClick={logoutUser}>
-                    <IoLogOut size={25}/>
+                    <CiLogout />
                 </UnstyledButton>
+                <p>Logout</p>
             </div>
         
         </div>

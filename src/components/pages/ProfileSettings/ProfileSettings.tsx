@@ -10,10 +10,11 @@ import { Link } from 'react-router-dom';
 import useAuth from '@/components/hooks/useAuth';
 import useModal from '@/components/modal/useModal';
 import { updateUser } from '@/redux/features/AuthSlice';
+import { CiLogout } from 'react-icons/ci';
 
 export default function ProfileSettings() {
 
-  const { user} = useAuth()
+  const { user , logoutUser} = useAuth()
   const dispatch = useDispatch()
   const {onOpen : onOpenEditModal} = useModal('EditModal');
 
@@ -54,9 +55,16 @@ export default function ProfileSettings() {
     
   return (
     <div className={styles.container}>
-        <Link to='/' className={styles.back}>
-            <IoArrowBack/>
-        </Link>
+        <div className={styles.top}>
+            <Link to='/' className={styles.back_link}>
+                <IoArrowBack/>
+            </Link>
+
+            <UnstyledButton onClick={logoutUser} className={styles.logout_btn_container}>
+                <CiLogout/>
+            </UnstyledButton>
+        </div>
+
         <div className={styles.inner_container}>
             <div className={styles.header}>
                 <UnstyledButton onClick={()=>handleClick('picture',updateImage)}  className={styles.picture}>

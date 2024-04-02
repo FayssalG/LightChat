@@ -3,6 +3,7 @@
 body{
     overflow: hidden;
     font-family: "Inter", sans-serif;
+    color: white;
     @media (max-width:1000px) {
         overflow: auto;
     }
@@ -14,18 +15,33 @@ body{
     box-sizing: border-box;
 }
 :root{
+    /* --background : #d9d9d9;
+    --navbar : #d9d9d9;
+    
+    --primary : #d9d9d9;
+    --primary-dark : #b4b4b4;
+    
+    --secondary : #e6e6e6;
+    --accent: #b3000f;
+    --accent-second : #004396;
+
+    --danger : #eb0000; 
+    --success : #00FF66;  */
+
+    
     --background : #242424;
+    --navbar : #242424;
 
     --primary : #242424;
     --primary-dark : #1B1B1B;
     
     --secondary : #121425;
-    
     --accent: #619AF0;
-    --accent-second : #0066FF;
+    --accent-second : #004396;
 
     --danger : #eb0000; 
     --success : #00FF66; 
+
 
 }
 
