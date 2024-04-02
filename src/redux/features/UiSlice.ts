@@ -23,8 +23,12 @@ const UiSlice = createSlice({
         changeVisibleSection : (state , action)=>{
             state.visibleSection = action.payload;
         },
-        toggleConversationVisibility : (state )=>{
-            state.conversationVisibility = !state.conversationVisibility;
+        hideConversationOnMobile : (state )=>{
+            state.conversationVisibility = false;
+        },
+
+        showConversationOnMobile : (state )=>{
+            state.conversationVisibility = true;
         },
 
         toggleShowEditModal : (state )=>{
@@ -89,7 +93,8 @@ export default UiSlice.reducer;
 export const {
     setIsLoading,
     changeVisibleSection , 
-    toggleConversationVisibility , 
+    hideConversationOnMobile,
+    showConversationOnMobile,
     toggleShowEditModal,
     
     openFriendDetailsModal,

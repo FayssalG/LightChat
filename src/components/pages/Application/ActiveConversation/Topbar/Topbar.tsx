@@ -2,21 +2,32 @@ import styles from './Topbar.module.css';
 import UnstyledButton from '../../../../shared/UnstyledButton/UnstyledButton';
 import { IoCall, IoClose } from 'react-icons/io5';
 import { useDispatch} from 'react-redux';
-import { toggleConversationVisibility } from '@/redux/features/UiSlice';
+import { hideConversationOnMobile} from '@/redux/features/UiSlice';
 import useModal from '@/components/modal/useModal';
 import { useCall } from '@/components/context/CallProvider';
 import { BiCamera, BiPhoneCall, BiVideo } from 'react-icons/bi';
 import { useVideoCall } from '@/components/context/VideoCallProvider';
+import { useEffect } from 'react';
 
 export default function Topbar({friend}) {
   const dispatch = useDispatch();
 
   const {call} = useCall(); 
   const {call : videoCall} = useVideoCall();
+
   const {onOpen : onOpenFriendDetailsModal} = useModal('FriendDetailsModal'); 
 
   const handleOpenFriendDetails = ()=>{
     onOpenFriendDetailsModal({friend:friend})
+  }
+
+  useEffect(()=>{
+    window.addEventListener('popstate',()=>{
+      dispatch(hideConversationOnMobile())
+    })
+  },[])
+  const handleMobileClose=()=>{
+    dispatch(hideConversationOnMobile())
   }
 
   return (
@@ -49,7 +60,7 @@ export default function Topbar({friend}) {
 
         </div>        
 
-        <UnstyledButton onClick={()=>dispatch(toggleConversationVisibility())} className={styles.close}>
+        <UnstyledButton onClick={handleMobileClose} className={styles.close}>
           <IoClose/>
         </UnstyledButton>
     </div>

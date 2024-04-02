@@ -13,6 +13,10 @@ import SocketProvider from '@/components/context/SocketProvider';
 import { SkeletonTheme } from 'react-loading-skeleton';
 import CallProvider from './components/context/CallProvider';
 import VideoCallProvider from './components/context/VideoCallProvider';
+import FriendsSection from './components/pages/Application/Sections/Friends/FriendsSection';
+import ConversationsSection from './components/pages/Application/Sections/Conversations/ConversationsSection';
+import GroupsSection from './components/pages/Application/Sections/Groups/GroupsSection';
+import ActiveConversation from './components/pages/Application/ActiveConversation/ActiveConversation';
 
 function App() {
   
@@ -22,9 +26,16 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route element={<ProtectedRoute/>}>
-              <Route path='/' element={<Application/>} ></Route>
+             
+              <Route path='/' element={<Application/>}>
+                <Route path='/' element={<FriendsSection/>}></Route>
+                <Route path='/conversations' element={<ConversationsSection/>}></Route>
+                <Route path='/groups' element={<GroupsSection/>}></Route>
+              </Route>
+              
               <Route path='/profil' element={<ProfileSettings/>}></Route>          
             </Route>
+
             <Route path='/login' element={<Login/>}></Route>          
             <Route path='/register' element={<Register/>}></Route>          
             <Route path='/password-reset/:token' element={<ResetPassword/>}></Route>

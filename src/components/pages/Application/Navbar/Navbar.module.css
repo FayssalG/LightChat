@@ -6,7 +6,8 @@
    */
     color: white;
     height: 100%;
-    background-image: linear-gradient(   rgb(2, 4, 81),rgb(26, 0, 42)  );
+    /* background-image: linear-gradient(   rgb(2, 4, 81),rgb(26, 0, 42)  ); */
+    background-color: var(--primary-dark);
     padding-block: .5em;
     display: flex;
     flex-direction: column;
@@ -23,7 +24,7 @@
     width: 50px;
     cursor: pointer;
     border-radius: 50%;
-    border: 1px solid var(--success);
+    border: 1px solid var(--accent);
     padding: .2em;
     transition: padding 200ms ease;
     &:hover{
@@ -64,6 +65,8 @@
     }
 
     .section{
+        color: inherit;
+        text-decoration: unset;
         font-size: .7rem;
         font-weight: 400;
         display: flex;
@@ -89,14 +92,14 @@
             }
         }
 
-        &:hover , &:focus{
+        &:hover {
             color:  var(--success);
             
         }
     }  
 
     .active{
-        color: var(--success);
+        color: var(--accent);
         
     }
 

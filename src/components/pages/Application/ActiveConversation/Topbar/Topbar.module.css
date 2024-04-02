@@ -1,16 +1,18 @@
 .topbar{
     /* border-radius: 1rem; */
-  
+    
     background-color: var(--primary-dark);
     display: flex;
     gap: 1rem;
     align-items: center;
     padding-inline: 1em;
-  
+    padding-block: .5em;
+    
     .picture{
         width: 50px;
         height: 50px;
         img{
+            object-fit: cover;
             width: 100%;
             height: 100%;
             border-radius: 50%;

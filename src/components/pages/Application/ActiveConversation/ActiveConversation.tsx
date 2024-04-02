@@ -8,7 +8,7 @@ import { useCallback, useEffect} from 'react';
 import { selectFriendById  } from '@/redux/features/Friend/FriendSlice';
 
 import { markMessagesSeen} from '@/redux/features/Conversation/ConversationSlice';
-import { selectMessageById, selectMessagesByConversationId } from '@/redux/features/Conversation/ConversationSelectors';
+import {selectMessagesByConversationId } from '@/redux/features/Conversation/ConversationSelectors';
 
 export default function ActiveConversation({activeConversation}) {
   const dispatch = useDispatch();

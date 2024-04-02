@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 ;
 import styles from './Navbar.module.css';
 import avatar from '../../../../assets/avatar.png';
@@ -12,13 +12,11 @@ import UnstyledButton from '../../../shared/UnstyledButton/UnstyledButton';
 import useAuth from '@/components/hooks/useAuth';
 
 export default function Navbar() {
-    const visibleSection : string = useSelector(state=>state.ui.visibleSection);
+    const {pathname} = useLocation();
     const dispatch = useDispatch();
+    console.log(pathname)
     const {logoutUser , user} = useAuth()
 
-    const handleVisibleSection = (newSection : string)=>{
-        dispatch(changeVisibleSection(newSection))
-    }
 
     return (
         <div className={styles.container}>
@@ -27,34 +25,30 @@ export default function Navbar() {
             </Link>
             
             <div className={styles.sections}>
-                <UnstyledButton 
-                    onClick={()=>handleVisibleSection('friends')} 
-                    className={`${visibleSection=='friends' ? styles.active : ''} ${styles.section} ${styles.friends} ` }
+                <Link to='/' 
+                    className={`${pathname=='/' ? styles.active : ''} ${styles.section} ${styles.friends} ` }
                 >
                     <FaUserFriends />
                     <p>Friends</p>
-                </UnstyledButton>
+                </Link>
 
-                <UnstyledButton 
-                    onClick={()=>handleVisibleSection('conversations')} 
-                    className={`${visibleSection=='conversations' ? styles.active : ''} ${styles.section} ${styles.conversations} ` }
+                <Link to='/conversations' 
+                    className={`${pathname=='/conversations' ? styles.active : ''} ${styles.section} ${styles.conversations} ` }
                 
                 >
                     
                     <BiSolidMessageSquare />
                     <p>Messages</p>
 
-                </UnstyledButton>
+                </Link>
 
-                <UnstyledButton 
-                    onClick={()=>handleVisibleSection('groups')} 
-                    className={`${visibleSection=='groups' ? styles.active : ''} ${styles.section} ${styles.groups} ` }
-                
+                <Link to='/groups' 
+                    className={`${pathname=='/groups' ? styles.active : ''} ${styles.section} ${styles.groups} ` }                
                 >
                 
                     <MdGroups />
                     <p>Groups</p>
-                </UnstyledButton>
+                </Link>
             </div>
 
             <div className={styles.logout}>

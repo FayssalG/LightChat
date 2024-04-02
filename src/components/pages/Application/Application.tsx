@@ -21,6 +21,8 @@ import { useCall } from '@/components/context/CallProvider';
 import VoiceCall from './VoiceCall/VoiceCall';
 import VideoCall from './VideoCall/VideoCall';
 import { useVideoCall } from '@/components/context/VideoCallProvider';
+import Sections from './Sections/Sections';
+import { Outlet } from 'react-router-dom';
 
 export default function Application() {
   const {user} = useAuth();
@@ -142,8 +144,7 @@ export default function Application() {
           </div>
 
           <div className={styles.sections}>
-            {selectedSection()}
-          
+            <Outlet/>
           </div>          
 
           <div className={styles.active_conversation}>
