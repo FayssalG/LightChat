@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import useAuth from '@/components/hooks/useAuth';
 import useModal from '@/components/modal/useModal';
-import { updateUser } from '@/redux/features/AuthSlice';
+import { updateUser } from '@/redux/features/Auth/AuthSlice';
 import { CiLogout } from 'react-icons/ci';
 
 export default function ProfileSettings() {

@@ -37,11 +37,15 @@ export default function CallProvider({children}) {
         })
     }
 
-    console.log({OUTSIDE:status})
 
     useEffect(()=>{
         console.log('RE RENDER')
         if(socket){
+            socket.on('cancel-receiving-call' , ()=>{
+                setIsReceivingVideoCall(false)
+                setIsReceivingAudioCall(false)
+            })
+
             socket.on('receiving-call' , ({from , signal , callType })=>{
 
                 // if(callStatus.audio == 'ongoing' || callStatus.video == 'ongoing' ){
@@ -137,12 +141,6 @@ export default function CallProvider({children}) {
     const answerAudio = ()=>{
         if(callStatus.audio == 'ongoing') end();
 
-        setOtherPersonUsername(personCallingUsername)
-
-        setCallStatus(prev=>{
-            return {...prev, audio: 'ongoing'}
-        })
-
 
         navigator.mediaDevices.getUserMedia({
             audio:true,
@@ -151,8 +149,13 @@ export default function CallProvider({children}) {
 
         .then(stream=>{    
             streamRef.current = stream
-    
+
+            setOtherPersonUsername(personCallingUsername)
+            setCallStatus(prev=>{
+                return {...prev, audio: 'ongoing'}
+            })    
             setIsReceivingAudioCall(false)
+
             const peer = new Peer({
                 initiator:false,
                 trickle:false,
@@ -171,6 +174,9 @@ export default function CallProvider({children}) {
     
             peerConnRef.current = peer
                 
+        })
+        .catch(err=>{
+            console.log(err)
         })
     }
 
@@ -232,36 +238,40 @@ export default function CallProvider({children}) {
 
 
     const answerVideo = async ()=>{
-        const stream = await navigator.mediaDevices.getUserMedia({
-            audio:true,
-            video:true
-        })
+        try{
+            const stream = await navigator.mediaDevices.getUserMedia({
+                audio:true,
+                video:true
+            })
+            streamRef.current = stream
 
-        streamRef.current = stream
-
-        setIsReceivingVideoCall(false)
-        setCallStatus(prev=>{
-            return {...prev, video: 'ongoing'}
-        })
-        const peer = new Peer({
-            initiator:false,
-            trickle:false,
-            stream:stream
-        })
-
-        peer.on('signal' , (signal)=>{
-            socket.emit('answer' , {to:personCallingUsername , signal , callType:'video'})
-        })
-
-        peer.on('stream' , (mediaStream)=>{
-            remoteStreamRef.current.srcObject = mediaStream
-            localStreamRef.current.srcObject = stream
-
-        })
-
-        peer.signal(callerSignal)
-
-        peerConnRef.current =peer
+            setIsReceivingVideoCall(false)
+            setCallStatus(prev=>{
+                return {...prev, video: 'ongoing'}
+            })
+            const peer = new Peer({
+                initiator:false,
+                trickle:false,
+                stream:stream
+            })
+    
+            peer.on('signal' , (signal)=>{
+                socket.emit('answer' , {to:personCallingUsername , signal , callType:'video'})
+            })
+    
+            peer.on('stream' , (mediaStream)=>{
+                remoteStreamRef.current.srcObject = mediaStream
+                localStreamRef.current.srcObject = stream
+    
+            })
+    
+            peer.signal(callerSignal)
+    
+            peerConnRef.current =peer
+    
+        }catch(err){
+            console.log(err)
+        }
     }
 
     
@@ -286,6 +296,7 @@ export default function CallProvider({children}) {
     
     const cancelCall = ()=>{
         peerConnRef.current.destroy()
+        socket.emit('cancel' , otherPersonUsername)
         setCallStatus(prev=>{
             return {video:'idle', audio: 'idle'}
         })

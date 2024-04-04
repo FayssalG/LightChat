@@ -3,7 +3,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import UiReducer from './features/UiSlice';
-import AuthReducer from './features/AuthSlice';
+import AuthReducer from './features/Auth/AuthSlice';
 import FriendReducer from './features/Friend/FriendSlice';
 import ModalReducer from "./features/ModalSlice";
 import ConversationReducer from "./features/Conversation/ConversationSlice";

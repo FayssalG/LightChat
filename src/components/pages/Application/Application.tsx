@@ -27,7 +27,6 @@ import { useCall } from '@/components/context/CallProvider/CallProvider';
 
 export default function Application() {
   const {user} = useAuth();
-  const visibleSection : string = useSelector(state=>state.ui.visibleSection)
   const isVerified : Boolean = useSelector(state => state.auth.isVerified);
   const socket = useSocket()
   const activeConversation  = useSelector(selectActiveConversation)
@@ -95,25 +94,25 @@ export default function Application() {
   },[socket])
 
 
-  useEffect(()=>{
-      const timestamp = JSON.parse(localStorage.getItem('neochat-timestamp'));    
-      const now = new Date();
-      const lastFetchDate = new Date(timestamp) 
-      //if timestamp is null date given here is unix epoch
+  // useEffect(()=>{
+  //     const timestamp = JSON.parse(localStorage.getItem('neochat-timestamp'));    
+  //     const now = new Date();
+  //     const lastFetchDate = new Date(timestamp) 
+  //     //if timestamp is null date given here is unix epoch
 
-      const isOld = (Math.round((now.getTime() - lastFetchDate.getTime()) / (1000*60)) > 20) // in minutes
+  //     const isOld = (Math.round((now.getTime() - lastFetchDate.getTime()) / (1000*60)) > 20) // in minutes
       
-      dispatch(fetchFriends());
-      dispatch(fetchConversations());
-      dispatch(fetchMessages());
-      dispatch(fetchBlockedUsers());
-      dispatch(fetchRequests())
+  //     dispatch(fetchFriends());
+  //     dispatch(fetchConversations());
+  //     dispatch(fetchMessages());
+  //     dispatch(fetchBlockedUsers());
+  //     dispatch(fetchRequests())
 
-      if(isOld){
-        localStorage.setItem('neochat-timestamp' , JSON.stringify(now));    
-      }
+  //     if(isOld){
+  //       localStorage.setItem('neochat-timestamp' , JSON.stringify(now));    
+  //     }
     
-  },[dispatch])
+  // },[dispatch])
  
 
 

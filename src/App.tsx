@@ -18,6 +18,12 @@ import ConversationsSection from './components/pages/Application/Sections/Conver
 import GroupsSection from './components/pages/Application/Sections/Groups/GroupsSection';
 import ActiveConversation from './components/pages/Application/ActiveConversation/ActiveConversation';
 import CallProvider from './components/context/CallProvider/CallProvider';
+import { fetchUser } from './redux/features/Auth/AuthSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchFriends } from './redux/features/Friend/FriendSlice';
+import { fetchConversations, fetchMessages } from './redux/features/Conversation/ConversationSlice';
+import { fetchBlockedUsers } from './redux/features/Block/BlockSlice';
+import { fetchRequests } from './redux/features/FriendRequest/FriendRequestSlice';
 
 function App() {
   
@@ -52,20 +58,31 @@ function App() {
 
 function ProtectedRoute(){
   // if user is authenticated show the component otherwise redirect to login page
-  const {isAuth , getAuthenticatedUser} = useAuth()  
-  const [isLoading ,setIsLoading] = useState(true)
+  const dispatch = useDispatch()
+  const isAuth = useSelector(state=>state.auth.isAuth)
+
+  const authStatus = useSelector(state=>state.auth.status);  
+  const friendStatus = useSelector(state=>state.friend.status);  
+  const conversationStatus = useSelector(state=>state.conversation.status);  
+  const requestsStatus = useSelector(state=>state.friendRequest.status);
+
+  const isLoading = authStatus=='loading' || friendStatus=='loading'||conversationStatus=='loading' || requestsStatus=='loading'   
 
   useEffect(()=>{
-    getAuthenticatedUser()
-    .finally(()=>
-      setIsLoading(false)
-    )
-  },[])
+    dispatch(fetchUser())
+    dispatch(fetchFriends());
+    dispatch(fetchConversations());
+    dispatch(fetchMessages());
+    dispatch(fetchBlockedUsers());
+    dispatch(fetchRequests())
 
-  if(isLoading) return <Loading/>
+  },[dispatch])
 
   if(!isAuth) return <Navigate replace to='/login' />
 
+  if(isLoading) return <Loading/>
+
+  
   return( 
     <SocketProvider>
 
