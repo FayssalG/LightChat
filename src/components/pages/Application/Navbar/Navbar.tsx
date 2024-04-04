@@ -26,20 +26,24 @@ export default function Navbar() {
 
     return (
         <div className={styles.container}>
-            <Link to='/profil' className={styles.user}>
-                <img src={user.image || avatar} alt="avatar" />
-            </Link>
             
-            <div className={styles.sections}>
+            <div className={styles.inner_container}>
+
+                <div className={styles.user_link_container}>
+                    <Link to='/profil' className={styles.user_link}>
+                        <img src={user.image || avatar} alt="avatar" />
+                    </Link>
+                </div>
+
                 <Link to='/' 
-                    className={`${pathname=='/' ? styles.active : ''} ${styles.section} ${styles.friends} ` }
+                    className={`${pathname=='/' ? styles.active : ''} ${styles.section_link} ${styles.friends} ` }
                 >
                     <GoPerson/>
                     <p>Friends</p>
                 </Link>
 
                 <Link to='/conversations' 
-                    className={`${pathname=='/conversations' ? styles.active : ''} ${styles.section} ${styles.conversations} ` }
+                    className={`${pathname=='/conversations' ? styles.active : ''} ${styles.section_link} ${styles.conversations} ` }
                 
                 >
                     
@@ -49,7 +53,7 @@ export default function Navbar() {
                 </Link>
 
                 <Link to='/groups' 
-                    className={`${pathname=='/groups' ? styles.active : ''} ${styles.section} ${styles.groups} ` }                
+                    className={`${pathname=='/groups' ? styles.active : ''} ${styles.section_link} ${styles.groups} ` }                
                 >
                 
                     <LiaUserFriendsSolid />

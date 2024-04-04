@@ -10,9 +10,9 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { selectFriendByUsername } from '@/redux/features/Friend/FriendSlice';
 
-export default function CallNotification({answer , reject , callerUsername}) {
-    console.log({callerUsername})
-    const caller = useSelector(selectFriendByUsername(callerUsername));
+export default function CallNotification({answer , reject , personCallingUsername , callStatus}) {
+    console.log({personCallingUsername})
+    const caller = useSelector(selectFriendByUsername(personCallingUsername));
 
     useEffect(()=>{
         const audio = new Audio(notification)
@@ -42,10 +42,10 @@ export default function CallNotification({answer , reject , callerUsername}) {
 
             <div className={styles.controls}>
                 <UnstyledButton onClick={answer}  className={styles.accept_btn}>
-                    <BiPhoneCall/>
+                {callStatus=='ongoing' ? 'End an answer' : <BiPhoneCall/> }
                 </UnstyledButton>
                 <UnstyledButton onClick={handleReject} className={styles.decline_btn}>
-                    <BiPhoneOff/>
+                     <BiPhoneOff/> 
                 </UnstyledButton>
             </div>
         </div>

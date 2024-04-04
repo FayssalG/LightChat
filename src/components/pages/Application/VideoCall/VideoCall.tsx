@@ -9,11 +9,13 @@ import { useSelector } from 'react-redux';
 import { selectFriendByUsername } from '@/redux/features/Friend/FriendSlice';
 import { useVideoCall } from '@/components/context/VideoCallProvider';
 import { MdCameraswitch } from 'react-icons/md';
+import { useCall } from '@/components/context/CallProvider/CallProvider';
 
 export default function VideoCall() {
-    const {localStreamRef, remoteStreamRef, status:callStatus , end:endFn, close:closeFn , muteMic, swapCamera ,callerUsername  } = useVideoCall()
-    const caller = useSelector(selectFriendByUsername(callerUsername))
+    const {localStreamRef, remoteStreamRef, callStatus , end:endFn, close:closeFn , muteMic, swapCamera ,otherPersonUsername  } = useCall()
+    const videoCallStatus = callStatus.video
 
+    const caller = useSelector(selectFriendByUsername(otherPersonUsername))
     const [cameraFacing , setCameraFacing]= useState('user')
     const [isMuted , setIsMuted] = useState(false)
     
@@ -50,19 +52,19 @@ export default function VideoCall() {
         
     return (
     <div className={styles.container}>
-
         {
-            callStatus == 'ended' ? 
-            <p className={styles.call_ended_msg}>Call Ended</p>
-            :
-        <div ref={participantScreenRef} className={styles.participants_container}>
-            <div className={styles.participant}>
-                <p className={styles.name}>{caller.display_name}</p>
-                <div className={styles.video_container}>
-                    <video   ref={remoteStreamRef} className={styles.video_player} playsInline autoPlay></video>
-                </div>
-            </div>    
-          </div>
+            videoCallStatus == 'calling' && <p style={{textAlign:'center'}}>Calling...</p>
+        }
+        {
+            videoCallStatus == 'ongoing' &&
+            <div ref={participantScreenRef} className={styles.participants_container}>
+                <div className={styles.participant}>
+                    <p className={styles.name}>{caller.display_name}</p>
+                    <div className={styles.video_container}>
+                        <video   ref={remoteStreamRef} className={styles.video_player} playsInline autoPlay></video>
+                    </div>
+                </div>    
+            </div>
 
         }
 
@@ -78,14 +80,14 @@ export default function VideoCall() {
 
 
             {   
-                (callStatus === 'ongoing' || callStatus === 'calling') &&
+                (videoCallStatus === 'ongoing' || callStatus === 'calling') &&
                 <UnstyledButton onClick={handleEndCall} className={styles.endcall_btn}>
                     <BiPhoneOff/> 
                 </UnstyledButton>
             }
 
             {
-                callStatus=='ongoing' &&
+                videoCallStatus=='ongoing' &&
                 <>
                     <UnstyledButton onClick={handleMute} className={styles.mute_btn}>
                         {isMuted ? <FiMicOff/> : <FiMic/>}
@@ -100,14 +102,14 @@ export default function VideoCall() {
             }
             
 
-            {
-                callStatus=='ended' &&
+            {/* {
+                videoCallStatus=='ended' &&
                 <>
                     <UnstyledButton onClick={closeFn}  className={styles.close_btn}>
                         <IoClose/>
                     </UnstyledButton>
                 </>    
-            }
+            } */}
 
         </div>
     </div>

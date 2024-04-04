@@ -4,31 +4,41 @@ import avatar from '@/assets/avatar.png';
 import { BiPhoneCall, BiPhoneOff } from 'react-icons/bi';
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import { useEffect, useState } from 'react';
-import { useCall } from '@/components/context/CallProvider';
+import { useAudioCall} from '@/components/context/AudioCallProvider';
 import { IoClose } from 'react-icons/io5';
-import { FiMicOff } from 'react-icons/fi';
+import { FiMic, FiMicOff } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 import { selectFriendByUsername } from '@/redux/features/Friend/FriendSlice';
+import { useCall } from '@/components/context/CallProvider/CallProvider';
 
 export default function VoiceCall() {
-    const {remoteStreamRef, isReceivingCall , status:callStatus , end:endFn, call , close:closeFn ,callerUsername  } = useCall()
-    const caller = useSelector(selectFriendByUsername(callerUsername))
+    const {remoteStreamRef , callStatus , end:endFn , otherPersonUsername, muteMic,cancelCall} = useCall()
+    const caller = useSelector(selectFriendByUsername(otherPersonUsername))
+
+    const voiceCallStatus = callStatus.audio
 
     const [isMute , setIsMute] = useState(false)
-   
+
     const handleMute = ()=>{
         setIsMute(!isMute)
+        muteMic()
     }
+
     const handleEndCall = ()=>{
         endFn();
     }
 
+    const handleCancelCall = ()=>{
+        cancelCall()
+    }
+
     const [timer , setTimer] = useState(0)
+
     useEffect(()=>{
-        if(callStatus == 'ended') setTimer(0) 
+        if(callStatus !== 'ongoing') setTimer(0) 
 
         let interval = null
-        if(callStatus == 'ongoing'){
+        if(voiceCallStatus == 'ongoing'){
             interval = setInterval(()=>{setTimer((prev)=>prev+1)},1000) 
         }
         return ()=>clearInterval(interval)
@@ -46,7 +56,7 @@ export default function VoiceCall() {
     <div className={styles.container}>
         <video className={styles.audio_player} ref={remoteStreamRef} playsInline autoPlay></video>
        
-        <div className={styles.friend_container}>
+        <div className={styles.participant_container}>
             <div data-pulsing={callStatus === 'calling'} className={styles.picture}>
                 <img src={caller.image} alt="" />
             </div>
@@ -55,49 +65,36 @@ export default function VoiceCall() {
 
         <div className={styles.timer_container}>
             <p>
-                {callStatus == 'ongoing' && renderTimer()}
-                {callStatus == 'calling' && 'Calling...'}
-                {callStatus == 'ended' && 'Call Ended'}
+                {voiceCallStatus == 'ongoing' && renderTimer()}
+                {voiceCallStatus == 'calling' && 'Calling...'}
             </p>
         </div>
 
         <div className={styles.controls_container}>
 
-            {
-                callStatus === 'receivingCall' &&
-                <UnstyledButton>
-                    
-                </UnstyledButton>
-            }
-
+            
             {   
-                (callStatus === 'ongoing' || callStatus === 'calling') &&
+                (voiceCallStatus === 'ongoing') &&
                 <UnstyledButton onClick={handleEndCall} className={styles.endcall_btn}>
                     <BiPhoneOff/> 
                 </UnstyledButton>
             }
 
             {
-                callStatus=='ongoing' &&
+                voiceCallStatus === 'calling' &&
+                <UnstyledButton onClick={handleCancelCall} className={styles.endcall_btn}>
+                    <BiPhoneOff/> 
+                </UnstyledButton>
+                
+            }
+
+            {
+                voiceCallStatus=='ongoing' &&
                 <UnstyledButton onClick={handleMute} className={styles.mute_btn}>
-                    <FiMicOff/>
+                    {isMute ? <FiMicOff/> : <FiMic/>}
                 </UnstyledButton>
             }
             
-
-            {
-                callStatus=='ended' &&
-                <>
-                    <UnstyledButton onClick={closeFn}  className={styles.close_btn}>
-                        <IoClose/>
-                    </UnstyledButton>
-
-                    <UnstyledButton onClick={()=>call(callerUsername)} className={styles.recall_btn}>
-                        <BiPhoneCall/>
-                    </UnstyledButton>                
-                </>    
-            }
-
         </div>
     </div>
   )

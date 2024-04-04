@@ -4,16 +4,18 @@ import { IoCall, IoClose } from 'react-icons/io5';
 import { useDispatch} from 'react-redux';
 import { hideConversationOnMobile} from '@/redux/features/UiSlice';
 import useModal from '@/components/modal/useModal';
-import { useCall } from '@/components/context/CallProvider';
+import { useAudioCall } from '@/components/context/AudioCallProvider';
 import { BiCamera, BiPhoneCall, BiVideo } from 'react-icons/bi';
 import { useVideoCall } from '@/components/context/VideoCallProvider';
 import { useEffect } from 'react';
+import { useCall } from '@/components/context/CallProvider/CallProvider';
 
 export default function Topbar({friend}) {
   const dispatch = useDispatch();
 
-  const {call} = useCall(); 
-  const {call : videoCall} = useVideoCall();
+  // const {call} = useAudioCall(); 
+  // const {call : videoCall} = useVideoCall();
+  const {callVideo,callAudio} = useCall(); 
 
   const {onOpen : onOpenFriendDetailsModal} = useModal('FriendDetailsModal'); 
 
@@ -21,11 +23,7 @@ export default function Topbar({friend}) {
     onOpenFriendDetailsModal({friend:friend})
   }
 
-  useEffect(()=>{
-    window.addEventListener('popstate',()=>{
-      dispatch(hideConversationOnMobile())
-    })
-  },[])
+
   const handleMobileClose=()=>{
     dispatch(hideConversationOnMobile())
   }
@@ -45,7 +43,7 @@ export default function Topbar({friend}) {
             <UnstyledButton 
               title={friend.online_status!=='online' ? 'user is offline' : null} 
               disabled={friend.online_status!=='online'} 
-              onClick={()=>call(friend.username)}
+              onClick={()=>callAudio(friend.username)}
             >
               <BiPhoneCall/>
             </UnstyledButton>          
@@ -53,7 +51,7 @@ export default function Topbar({friend}) {
             <UnstyledButton 
               title={friend.online_status!=='online' ? 'user is offline' : null} 
               disabled={friend.online_status!=='online'} 
-              onClick={()=>videoCall(friend.username)}
+              onClick={()=>callVideo(friend.username)}
             >
               <BiVideo/>
             </UnstyledButton>          

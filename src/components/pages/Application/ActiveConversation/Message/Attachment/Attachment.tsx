@@ -8,7 +8,6 @@ export default function Attachment({attachment}) {
         if(attachment){
           const [type] =attachment.type.split('/');
           const extension = attachment.name.split('.')[1];
-          console.log({extension})
           switch(type){
             case 'image':
               return <img className={styles.image_attachment} src={attachment.url}></img>

@@ -16,13 +16,14 @@ import { fetchBlockedUsers} from '@/redux/features/Block/BlockSlice';
 import useAuth from '@/components/hooks/useAuth';
 import { selectActiveConversation } from '@/redux/features/Conversation/ConversationSelectors';
 import NoActiveConversation from './NoActiveConverastion/NoActiveConversation';
-import { useCall } from '@/components/context/CallProvider';
+import { useAudioCall } from '@/components/context/AudioCallProvider';
 
 import VoiceCall from './VoiceCall/VoiceCall';
 import VideoCall from './VideoCall/VideoCall';
 import { useVideoCall } from '@/components/context/VideoCallProvider';
 import Sections from './Sections/Sections';
 import { Outlet } from 'react-router-dom';
+import { useCall } from '@/components/context/CallProvider/CallProvider';
 
 export default function Application() {
   const {user} = useAuth();
@@ -30,9 +31,12 @@ export default function Application() {
   const isVerified : Boolean = useSelector(state => state.auth.isVerified);
   const socket = useSocket()
   const activeConversation  = useSelector(selectActiveConversation)
-  const {status:callingStatus}= useCall();
-  const {status:videoCallingStatus} = useVideoCall();
+  // const {status:callingStatus}= useAudioCall();
+  // const {status:videoCallingStatus} = useVideoCall();
 
+  const {callStatus}= useCall()
+
+  console.log({CALLSTATUS:callStatus})
   const dispatch = useDispatch();
 
 
@@ -92,36 +96,26 @@ export default function Application() {
 
 
   useEffect(()=>{
-    const timestamp = JSON.parse(localStorage.getItem('neochat-timestamp'));    
-    const now = new Date();
-    const lastFetchDate = new Date(timestamp) 
-    //if timestamp is null date given here is unix epoch
-  
-    const isOld = (Math.round((now.getTime() - lastFetchDate.getTime()) / (1000*60)) > 20) // in minutes
-    
-    dispatch(fetchMessages());
-    if(isOld){
+      const timestamp = JSON.parse(localStorage.getItem('neochat-timestamp'));    
+      const now = new Date();
+      const lastFetchDate = new Date(timestamp) 
+      //if timestamp is null date given here is unix epoch
+
+      const isOld = (Math.round((now.getTime() - lastFetchDate.getTime()) / (1000*60)) > 20) // in minutes
+      
       dispatch(fetchFriends());
       dispatch(fetchConversations());
+      dispatch(fetchMessages());
       dispatch(fetchBlockedUsers());
       dispatch(fetchRequests())
-      localStorage.setItem('neochat-timestamp' , JSON.stringify(now));    
-    }
+
+      if(isOld){
+        localStorage.setItem('neochat-timestamp' , JSON.stringify(now));    
+      }
     
   },[dispatch])
  
 
-
-  const selectedSection  = ()=>{
-    switch(visibleSection){
-      case 'friends':
-        return <FriendsSection/>
-      case 'conversations':
-        return <ConversationsSection/>
-      case 'groups':
-        return <GroupsSection/>
-    }
-  }
 
   const renderActiveConversation = ()=>{
       if(!activeConversation){
@@ -137,27 +131,22 @@ export default function Application() {
         </div>
 
         <div className={styles.sections_activeconversation}>
+            <div className={styles.email_verification}>
+              { !isVerified &&<EmailNotVerified/>}
+            </div>
 
-          
-          <div className={styles.email_verification}>
-            { !isVerified &&<EmailNotVerified/>}
-          </div>
+            <div className={styles.sections}>
+              <Outlet/>
+            </div>          
 
-          <div className={styles.sections}>
-            <Outlet/>
-          </div>          
-
-          <div className={styles.active_conversation}>
-            {renderActiveConversation()}        
-          </div>          
-
-          
-          <div className={styles.voice_call}>
-              {callingStatus !=='idle' && <VoiceCall />}
-              {videoCallingStatus !== 'idle' && <VideoCall/>}
-          </div>
-          
-          
+            <div className={styles.active_conversation}>
+              {renderActiveConversation()}        
+            </div>          
+            
+            <div className={styles.voice_call}>
+                {['calling' , 'ongoing'].includes(callStatus.audio) && <VoiceCall />}
+                {['calling' , 'ongoing'].includes(callStatus.video)  && <VideoCall/>}
+            </div>                    
         </div>        
 
     </div>

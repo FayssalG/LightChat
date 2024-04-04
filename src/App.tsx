@@ -11,12 +11,13 @@ import ResetPassword from './components/pages/Auth/ResetPassword/ResetPassword';
 
 import SocketProvider from '@/components/context/SocketProvider';
 import { SkeletonTheme } from 'react-loading-skeleton';
-import CallProvider from './components/context/CallProvider';
+
 import VideoCallProvider from './components/context/VideoCallProvider';
 import FriendsSection from './components/pages/Application/Sections/Friends/FriendsSection';
 import ConversationsSection from './components/pages/Application/Sections/Conversations/ConversationsSection';
 import GroupsSection from './components/pages/Application/Sections/Groups/GroupsSection';
 import ActiveConversation from './components/pages/Application/ActiveConversation/ActiveConversation';
+import CallProvider from './components/context/CallProvider/CallProvider';
 
 function App() {
   
@@ -67,6 +68,7 @@ function ProtectedRoute(){
 
   return( 
     <SocketProvider>
+
       <CallProvider>
         <VideoCallProvider>
           <Outlet/>      

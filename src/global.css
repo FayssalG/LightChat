@@ -36,8 +36,12 @@ body{
     --primary-dark : #1B1B1B;
     
     --secondary : #121425;
-    --accent: #619AF0;
-    --accent-second : #004396;
+    --accent: #00b2df;
+
+    /* --accent: #619AF0; */
+    /* --accent: #b3000f; */
+    
+    --accent-second : #00b39b;
 
     --danger : #eb0000; 
     --success : #00FF66; 

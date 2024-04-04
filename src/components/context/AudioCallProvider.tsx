@@ -1,20 +1,19 @@
-import CallNotification from '../pages/Application/CallNotification/CallNotification';
+import CallNotification from './CallProvider/CallNotification/CallNotification';
 
 import { createContext, useContext, useEffect, useRef, useState } from "react"
 import { useSocket } from "./SocketProvider"
 import Peer from 'simple-peer';
 import useAuth from "../hooks/useAuth";
 
-const CallContext = createContext()
-export function useCall(){
-    return useContext(CallContext)
+const AudioCallContext = createContext()
+export function useAudioCall(){
+    return useContext(AudioCallContext)
 }
 
-export default function CallProvider({children}) {    
+export default function AudioCallProvider({children}) {    
     const {user} = useAuth();
     const socket = useSocket()
     
-    const [stream , setStream] = useState(null); 
     const [isReceivingCall , setIsReceivingCall] = useState(false)
     const [status , setStatus] : ['idle'| 'ongoing' | 'ended' | 'calling'  , Function] = useState('idle');
     const [callerUsername , setCallerUsername] = useState('')
@@ -33,22 +32,37 @@ export default function CallProvider({children}) {
         })
     }
 
+    console.log({OUTSIDE:status})
+
     useEffect(()=>{
+        console.log('RE RENDER')
         if(socket){
             socket.on('receiving-call' , ({from , signal })=>{
-                setCallerUsername(from)
-                setIsReceivingCall(true)
-                setCallerSignal(signal)
-            })
-            
+                console.log({INSIDE:status})
+                if(status == 'idle' || status == 'ended'){
+                    setCallerUsername(from)
+                    setIsReceivingCall(true)
+                    setCallerSignal(signal)    
+                }else{
+                    const to = from
+                    socket.emit('busy' , to)
+                }
+            })            
+            return ()=>socket.off('receiving-call');
+        }
+
+    },[socket , status])
+
+    useEffect(()=>{
+        if(socket){
             socket.on('call-ended' , ()=>{
                 setStatus('ended')
                 stopStream()
                 // peerConnRef.current.destroy()
-            })
+        
+            })    
         }
     },[socket])
-    
     
 
     const call = async (toUsername : string)=>{
@@ -73,8 +87,9 @@ export default function CallProvider({children}) {
             setStatus('ongoing')
             peer.signal(signal)
         })
-        socket.once('call-rejected' , (signal)=>{
+        socket.once('call-rejected' , (message)=>{
             setStatus('ended')
+            console.log(message)
         })
 
         peer.on('signal' , (signal)=>{
@@ -90,33 +105,63 @@ export default function CallProvider({children}) {
     
     }
 
-    const answer = async ()=>{
-        const stream = await navigator.mediaDevices.getUserMedia({
-            audio:true,
-            video:false
-        })
-
-        streamRef.current = stream
-
-        setIsReceivingCall(false)
+    const answer = ()=>{
         setStatus('ongoing')
-        const peer = new Peer({
-            initiator:false,
-            trickle:false,
-            stream:stream
+
+        navigator.mediaDevices.getUserMedia({
+            audio:true,
+            video:false            
         })
 
-        peer.on('signal' , (signal)=>{
-            socket.emit('answer' , {to:callerUsername , signal})
+        .then(stream=>{
+    
+            streamRef.current = stream
+    
+            setIsReceivingCall(false)
+            const peer = new Peer({
+                initiator:false,
+                trickle:false,
+                stream:stream
+            })
+    
+            peer.on('signal' , (signal)=>{
+                socket.emit('answer' , {to:callerUsername , signal})
+            })
+    
+            peer.on('stream' , (stream)=>{
+                remoteStreamRef.current.srcObject = stream
+            })
+    
+            peer.signal(callerSignal)
+    
+            peerConnRef.current =peer
+                
         })
+        // const stream = await navigator.mediaDevices.getUserMedia({
+        //     audio:true,
+        //     video:false
+        // })
 
-        peer.on('stream' , (stream)=>{
-            remoteStreamRef.current.srcObject = stream
-        })
+        // streamRef.current = stream
 
-        peer.signal(callerSignal)
+        // setIsReceivingCall(false)
+        // const peer = new Peer({
+        //     initiator:false,
+        //     trickle:false,
+        //     stream:stream
+        // })
 
-        peerConnRef.current =peer
+        // peer.on('signal' , (signal)=>{
+        //     socket.emit('answer' , {to:callerUsername , signal})
+        // })
+
+        // peer.on('stream' , (stream)=>{
+        //     remoteStreamRef.current.srcObject = stream
+        // })
+
+        // peer.signal(callerSignal)
+
+        // peerConnRef.current =peer
     }
 
 
@@ -131,6 +176,7 @@ export default function CallProvider({children}) {
         setStatus('idle')
         stopStream()
         socket.emit('end' , callerUsername);
+        streamRef.current = null
         peerConnRef.current.destroy();
     }
 
@@ -139,9 +185,9 @@ export default function CallProvider({children}) {
     }
 
     return (
-        <CallContext.Provider value={{call , answer, end, reject,close,status, isReceivingCall, callerUsername , remoteStreamRef,localStreamRef}}>
+        <AudioCallContext.Provider value={{call , answer, end, reject,close,status, isReceivingCall, callerUsername , remoteStreamRef,localStreamRef}}>
             {isReceivingCall && <CallNotification callerUsername={callerUsername} answer={answer} reject={reject}/>}
             {children}
-        </CallContext.Provider>
+        </AudioCallContext.Provider>
     )
 }

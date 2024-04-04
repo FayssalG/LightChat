@@ -86,7 +86,6 @@ const ConversationSlice = createSlice({
         fetchMessages : (state)=>{
             state.status = 'loading';
             state.error = null;
-
         },
         fetchMessagesSuccess : (state ,action)=>{
             state.status = 'succeeded';

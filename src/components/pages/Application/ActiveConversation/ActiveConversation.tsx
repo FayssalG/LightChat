@@ -9,6 +9,7 @@ import { selectFriendById  } from '@/redux/features/Friend/FriendSlice';
 
 import { markMessagesSeen} from '@/redux/features/Conversation/ConversationSlice';
 import {selectMessagesByConversationId } from '@/redux/features/Conversation/ConversationSelectors';
+import { hideConversationOnMobile } from '@/redux/features/UiSlice';
 
 export default function ActiveConversation({activeConversation}) {
   const dispatch = useDispatch();
@@ -23,27 +24,43 @@ export default function ActiveConversation({activeConversation}) {
     if(element) element.scrollIntoView({smooth:true});
   },[]);
 
-  useEffect(()=>{
+  
+useEffect(()=>{
     if(activeConversation){
         if(lastMsg && lastMsg?.sender_id == friend?.user_id && lastMsg?.isSeen == false ) {
             dispatch(markMessagesSeen(activeConversation.conversation_id));
         }
     }
-  },[activeConversation])
+},[activeConversation])
+    
+//Handling hiding activeConversation when the browser back button is pressed
+useEffect(()=>{
+    if(conversationVisibility){
+        window.history.pushState(null, document.title, window.location.href);
+    }
+
+    const handleCloseOnBackButton = (event) => {
+        event.preventDefault();
+        dispatch(hideConversationOnMobile())
+    };
+
+    window.addEventListener('popstate', handleCloseOnBackButton);
   
+    return () => window.removeEventListener('popstate', handleCloseOnBackButton);
+  
+},[conversationVisibility])
 
 
-  const renderMessages = ()=>{    
-     return   messages.map((message , index)=>{
-                    const isLast = messages.length -1 === index;
-                            
-                    return <Message  messageRef={isLast ? setRef : null} 
+const renderMessages = ()=>{    
+    return   messages.map((message , index)=>{
+                const isLast = messages.length -1 === index;                        
+                return <Message  messageRef={isLast ? setRef : null} 
                             key={message.id}
                             message = {message} 
                             friend={friend}  
                         />
-                })
-  }
+            })
+}
 
   
 
@@ -68,23 +85,21 @@ export default function ActiveConversation({activeConversation}) {
             </div>
             
             {   friend.isFriend  &&
-                
                 <div className={styles.messages}>
+                
                     {renderMessages()}
+                
                 </div>
             }
-    
         </div>
         
         {
             friend.isFriend ?
                 <MessageInput friend={friend}/>
             :
-
-            <div className={styles.restrict_message}>
-                <p>Conversation restricted, you can't contact <span>{friend.display_name}</span> for now</p>
-            </div>
-
+                <div className={styles.restrict_message}>
+                    <p>Conversation restricted, you can't contact <span>{friend.display_name}</span> for now</p>
+                </div>
         }
 
     </div>

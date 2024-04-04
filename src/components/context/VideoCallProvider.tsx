@@ -1,4 +1,4 @@
-import CallNotification from '../pages/Application/CallNotification/CallNotification';
+import CallNotification from './CallProvider/CallNotification/CallNotification';
 
 import { createContext, useContext, useEffect, useRef, useState } from "react"
 import { useSocket } from "./SocketProvider"
@@ -25,7 +25,7 @@ export default function VideoCallProvider({children}) {
     const remoteStreamRef = useRef(null);
     const peerConnRef =useRef(null) 
 
-
+    
     const stopStream = async ()=>{
         streamRef.current.getTracks().forEach((track)=>{
             track.stop()
@@ -157,6 +157,11 @@ export default function VideoCallProvider({children}) {
                 peerConnRef.current.replaceTrack(
                     peerConnRef.current.streams[0].getVideoTracks()[0],
                     newStream.getVideoTracks()[0],
+                    peerConnRef.current.streams[0]
+                )
+                peerConnRef.current.replaceTrack(
+                    peerConnRef.current.streams[0].getAudioTracks()[0],
+                    newStream.getAudioTracks()[0],
                     peerConnRef.current.streams[0]
                 )
                     

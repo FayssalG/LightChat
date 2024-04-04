@@ -12,17 +12,17 @@ import BlockReducer from './features/Block/BlockSlice';
 
 import rootSaga from './sagas';
 
-const conversationPersistConfig = {
-    key:'conversation',
-    storage,
-    blacklist : ['messages','activeConversationId' , 'status','error'] 
-}
+// const conversationPersistConfig = {
+//     key:'conversation',
+//     storage,
+//     blacklist : ['messages','activeConversationId' , 'status','error'] 
+// }
 
-const friendPersistConfig = {
-    key:'friend',
-    storage,
-    blacklist : ['status','error'] 
-}
+// const friendPersistConfig = {
+//     key:'friend',
+//     storage,
+//     blacklist : ['status','error'] 
+// }
 
 const authPersistConfig = {
     key:'auth',
@@ -35,10 +35,10 @@ const store = configureStore({
     reducer : {
         ui : UiReducer,
         auth : persistReducer(authPersistConfig, AuthReducer),
-        friend : persistReducer(friendPersistConfig,FriendReducer),
+        friend : FriendReducer,
         friendRequest : FriendRequestReducer,
         block : BlockReducer,
-        conversation : persistReducer(conversationPersistConfig ,ConversationReducer),
+        conversation : ConversationReducer,
         modal : ModalReducer,
     },
 
