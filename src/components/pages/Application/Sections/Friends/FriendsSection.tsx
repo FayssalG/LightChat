@@ -53,14 +53,8 @@ export default function FriendsSection() {
 
 
         <div className={styles.friends_list}>
-          {isLoading ? 
-            <>
-              <FriendSkeleton/>  
-              <FriendSkeleton/>  
-              <FriendSkeleton/>  
-            </>
-          : renderListings()
-          }
+          
+          {renderListings()}
             
         </div>
 

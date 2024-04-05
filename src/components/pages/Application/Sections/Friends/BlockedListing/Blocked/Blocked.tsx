@@ -7,8 +7,8 @@ import FriendSkeleton from '../../FriendSkeleton/FriendSkeleton';
 
 
 export default function Blocked({blocked}) {
-  const status : string = useSelector(state=>state.block.status);
-  const isLoading = status == 'loading' ; 
+  const unBlockStatus : string = useSelector(state=>state.block.unBlockStatus);
+  const isLoading = unBlockStatus == 'loading' ; 
   const dispatch = useDispatch();
 
   const handleUnblock = ()=>{

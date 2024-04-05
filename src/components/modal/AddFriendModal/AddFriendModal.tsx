@@ -2,11 +2,11 @@ import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import styles from './AddFriendModal.module.css';
 import { IoClose } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { send_friend_request } from '@/axios/friend';
 import { AxiosResponse } from 'axios';
 import Spinner from '@/components/shared/Spinner/Spinner';
-import { addRequest, sendRequest } from '@/redux/features/FriendRequest/FriendRequestSlice';
+import { addRequest, clearError, sendRequest } from '@/redux/features/FriendRequest/FriendRequestSlice';
 import { BaseModal } from '../BaseModal';
 
 export default function AddFriendModal(props) { 
@@ -17,13 +17,14 @@ export default function AddFriendModal(props) {
 
   
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [errors , setErrors] : [[string?] , Function] = useState([]);
-  const [success  , setSuccess] : [string |null ,  Function] = useState(null);
   
+
+  useEffect(()=>{
+    return ()=>dispatch(clearError())
+  },[])
 
   const handleSend = (e : React.FormEvent)=>{
       e.preventDefault();
-
       if(inputRef.current) {
         const username = inputRef.current.value;
         // setErrors([]);
@@ -60,7 +61,7 @@ export default function AddFriendModal(props) {
 
                 <div className={styles.message}>
                   {error && <p className={styles.error}>{error}</p>}
-                  {success &&  <p className={styles.success}>{success}</p>}
+                  {status=='succeeded' &&  <p className={styles.success}>Request sent successfully !</p>}
                 </div>
 
                 <UnstyledButton disabled={isLoading}>

@@ -61,22 +61,23 @@ function ProtectedRoute(){
   const dispatch = useDispatch()
   const isAuth = useSelector(state=>state.auth.isAuth)
 
-  const authStatus = useSelector(state=>state.auth.status);  
-  const friendStatus = useSelector(state=>state.friend.status);  
-  const conversationStatus = useSelector(state=>state.conversation.status);  
-  const requestsStatus = useSelector(state=>state.friendRequest.status);
+  const authStatus = useSelector(state=>state.auth.fetchStatus);  
+ 
 
-  const isLoading = authStatus=='loading' || friendStatus=='loading'||conversationStatus=='loading' || requestsStatus=='loading'   
+  const isLoading = authStatus=='loading' ;   
 
   useEffect(()=>{
-    dispatch(fetchUser())
-    dispatch(fetchFriends());
-    dispatch(fetchConversations());
-    dispatch(fetchMessages());
-    dispatch(fetchBlockedUsers());
-    dispatch(fetchRequests())
+    if(isAuth){
+      dispatch(fetchUser())
+      dispatch(fetchFriends());
+      dispatch(fetchConversations());
+      dispatch(fetchMessages());
+      dispatch(fetchBlockedUsers());
+      dispatch(fetchRequests())
+  
+    }
 
-  },[dispatch])
+  },[dispatch , isAuth])
 
   if(!isAuth) return <Navigate replace to='/login' />
 

@@ -119,7 +119,8 @@ export default function CallProvider({children}) {
             })
             peer.signal(signal)
         })
-        socket.once('call-rejected' , (message)=>{
+        socket.once('call-rejected' , ()=>{
+            stopStream()
             setCallStatus(prev=>{
                 return {...prev, audio: 'ended'}
             })
@@ -183,16 +184,16 @@ export default function CallProvider({children}) {
 
     
     const callVideo = async (toUsername : string)=>{
+        const stream = await navigator.mediaDevices.getUserMedia({
+            audio:true,
+            video:true
+        })
         setOtherPersonUsername(toUsername)
         
         setCallStatus(prev=>{
             return {...prev, video: 'calling'}
         })
 
-        const stream = await navigator.mediaDevices.getUserMedia({
-            audio:true,
-            video:true
-        })
         
         localStreamRef.current.srcObject = stream
 
@@ -214,7 +215,8 @@ export default function CallProvider({children}) {
             peer.signal(signal)
         })
 
-        socket.once('call-rejected' , (signal)=>{
+        socket.once('call-rejected' , ()=>{
+            stopStream()
            setCallStatus(prev=>{
                 return {...prev, video: 'ended'}
             })

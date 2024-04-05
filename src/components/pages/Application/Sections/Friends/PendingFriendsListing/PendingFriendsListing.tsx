@@ -3,20 +3,28 @@ import { setFriends, setPendingFriends } from "@/redux/features/Friend/FriendSli
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import PendingFriend from "./PendingFriend/PendingFriend";
+import FriendSkeleton from "../FriendSkeleton/FriendSkeleton";
 
 
 
 
 
 export default function PendingFriendsListing() {
-    const friendRequests : [Friend?] = useSelector(state=>state.friendRequest.requests);
+  const status = useSelector(state=>state.friendRequest.status);
+  const isLoading = status == 'loading';
+
+  const friendRequests : [Friend?] = useSelector(state=>state.friendRequest.requests);
     
     console.log({friendRequests})
   
 
     return (
     <>
-        {friendRequests.map((request , key : number)=><PendingFriend key={key} pendingFriend={request}/>)}
+        {isLoading ?
+            <FriendSkeleton/>
+          :
+          friendRequests.map((request , key : number)=><PendingFriend key={key} pendingFriend={request}/>)
+        }
     </>
   )
 }

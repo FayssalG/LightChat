@@ -53,6 +53,11 @@ const FriendSlice = createSlice({
             state.status = 'failed';
             state.error = action.payload
         },
+        clearFriends:(state)=>{
+            friendsAdapter.setAll(state , [])
+            state.status = 'idle'
+            state.error = null
+        },
 
         setFriendAsBlocked : (state, action)=>{
             const friendId = action.payload;
@@ -118,4 +123,4 @@ export const selectFriendByUsername = (username:string) => createSelector([selet
  })
 
 export default FriendSlice.reducer;
-export const {RealtimeChangeFriendStatus, RealtimeAddFriend , RealtimeRemoveFriend , setFriendAsBlocked,setFriendAsUnblocked , fetchFriends , fetchFriendsFailure , fetchFriendsSuccess , unFriend , unFriendFailure , unFriendSuccess} = FriendSlice.actions;  
+export const {RealtimeChangeFriendStatus, RealtimeAddFriend , RealtimeRemoveFriend , setFriendAsBlocked,setFriendAsUnblocked , fetchFriends , fetchFriendsFailure , fetchFriendsSuccess, clearFriends , unFriend , unFriendFailure , unFriendSuccess} = FriendSlice.actions;  

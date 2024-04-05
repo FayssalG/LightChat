@@ -45,6 +45,10 @@
     }
 
     .options{
+
+        @media (max-width:700px) {
+            display: none;
+        }
         .options_btn{
             cursor: pointer;
             height: 35px;

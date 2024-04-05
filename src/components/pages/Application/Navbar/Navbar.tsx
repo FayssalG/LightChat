@@ -16,13 +16,17 @@ import { RiGroupLine } from 'react-icons/ri';
 import { LuMessageSquare } from 'react-icons/lu';
 import { CiLogout } from 'react-icons/ci';
 import { GoPerson } from 'react-icons/go';
+import { logoutUser } from '@/redux/features/Auth/AuthSlice';
 
 export default function Navbar() {
     const {pathname} = useLocation();
     const dispatch = useDispatch();
-    console.log(pathname)
-    const {logoutUser , user} = useAuth()
-
+    const user = useSelector(state=>state.auth.user)
+    
+    const handleLogout = ()=>{
+        dispatch(logoutUser())
+    }
+    
 
     return (
         <div className={styles.container}>
@@ -63,7 +67,7 @@ export default function Navbar() {
             </div>
 
             <div className={styles.logout}>
-                <UnstyledButton onClick={logoutUser}>
+                <UnstyledButton onClick={handleLogout}>
                     <CiLogout />
                 </UnstyledButton>
                 <p>Logout</p>

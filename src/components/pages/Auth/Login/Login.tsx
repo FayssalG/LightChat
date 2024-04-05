@@ -7,36 +7,44 @@ import { Link, Navigate } from 'react-router-dom';
 import { useRef, useState } from 'react';
 import Spinner from '@/components/shared/Spinner/Spinner';
 import { IoCheckmark } from 'react-icons/io5';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginUser, passwordForgot } from '@/redux/features/Auth/AuthSlice';
 
 export default function Login() {
-    const {isAuth, isLoading , loginUser , forgotPassword } = useAuth();
+    const dispatch = useDispatch()
+    const loginStatus = useSelector(state=>state.auth.loginStatus)
+    const passwordForgotStatus = useSelector(state=>state.auth.passwordForgotStatus)
+    const isLoading = loginStatus == 'loading' || passwordForgotStatus=='loading'
+    const loginError = useSelector(state=>state.auth.loginError)
+    const passwordForgotError = useSelector(state=>state.auth.passwordForgotError)
+    
+    
+
+
+
+    const {isAuth  , forgotPassword } = useAuth();
     const emailRef  = useRef(null);
     const passwordRef = useRef(null);
-    const [error , setError] : [string , Function]= useState('') 
 
-    async function handleLogin(e : React.FormEvent) {
+
+    function handleLogin(e : React.FormEvent) {
         e.preventDefault()
         const email : string = emailRef.current.value;
         const password : string = passwordRef.current.value;
-        if (email && password)  {
-            await loginUser(email , password , setError)
-        }else{
-            setError("Please fill out all fields")
-        }  
+
+        dispatch(loginUser({email,password}))
+        
     }
 
-    async function handleForgot(e : React.MouseEvent<HTMLAnchorElement>) {
+    function handleForgot(e : React.MouseEvent<HTMLAnchorElement>) {
         e.preventDefault();
         const email : string = emailRef.current.value;
-        if(email){
-            await forgotPassword(email) ;
-        }else{
-            setError('Type your email address')
-        } 
+      
+        dispatch(passwordForgot({email})) 
     }
     
     if(isAuth)  return <Navigate replace to={'/'} /> 
-    
+
     return (
         <div className={styles.container}>
             <div className={styles.inner_container}>
@@ -64,13 +72,17 @@ export default function Login() {
                     </label> */}
 
                     <p className={styles.error}>
-                        { error ? error : '' }
+                        { loginError ? loginError : '' }
                     </p>
+                    <p className={styles.error}>
+                        { passwordForgotError ? passwordForgotError : '' }
+                    </p>
+
 
                     <UnstyledButton disabled={isLoading} className={styles.submit_btn}>
                         {isLoading ? <Spinner size={25}/> : 'Log In'}
                     </UnstyledButton>
-                    
+
                     <p className={styles.register}>
                         {!isLoading && <span> Need an account? <Link to='/register'>Register</Link> </span>}
                     </p>

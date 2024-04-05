@@ -23,11 +23,19 @@ const BlockSlice = createSlice({
             state.status = 'failed';
             state.error = action.payload ;
         },
+        clearBlockedUsers:(state)=>{
+            state.blockedUsers = []
+            state.status = 'idle'
+            state.error = null
+        },
+
+        
 
         blockUser : (state , action)=>{
             state.status = 'loading'
             state.error = null ;
         },
+
         blockUserSuccess : (state , action)=>{
             state.status = 'succeded'
             state.blockedUsers.push(action.payload);
@@ -74,7 +82,8 @@ export const {removeBlockedUser,
     fetchBlockedUsers ,
     fetchBlockedUsersSuccess , 
     fetchBlockedUsersFailure , 
-    
+    clearBlockedUsers,
+
     blockUser,
     blockUserSuccess,
     blockUserFailure , 

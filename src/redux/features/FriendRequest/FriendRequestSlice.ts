@@ -142,19 +142,27 @@ const FriendRequestSlice = createSlice({
     reducers: {
  
         fetchRequests : (state)=>{
+            state.error = null
             state.status = 'loading'
         },
         fetchRequestsSuccess : (state , action)=>{
             console.log({action:action.payload})
             state.status = 'succeeded'
             state.requests = action.payload
+            state.error = null
         },
         fetchRequestsFailure : (state , action)=>{
             state.status = 'failed'
             state.error  = action.payload
         },
+        clearRequests:(state)=>{
+            state.requests = []
+            state.status = 'idle'
+            state.error = null
+        },
 
         sendRequest : (state , action)=>{
+            state.error  = null
             state.status = 'loading'
         },
         sendRequestSuccess : (state , action)=>{
@@ -165,6 +173,11 @@ const FriendRequestSlice = createSlice({
             console.log({action})
             state.status = 'failed'
             state.error  = action.payload
+        },
+
+        clearError:(state)=>{
+            state.status = 'idle'
+            state.error = null
         },
 
         cancelRequest : (state , action)=>{
@@ -198,6 +211,7 @@ const FriendRequestSlice = createSlice({
             state.error = action.payload
         },
 
+        
 
         removeRequest:(state,{payload:requestId})=>{
             state.requests = state.requests.filter((request)=>request.request_id !==  requestId );
@@ -216,10 +230,12 @@ export const {
     fetchRequests,
     fetchRequestsSuccess , 
     fetchRequestsFailure, 
+    clearRequests ,
 
     sendRequestSuccess,
     sendRequestFailure, 
     sendRequest ,
+    clearError,
 
     cancelIgnoreRequestSuccess , 
     cancelIgnoreRequestFailure , 

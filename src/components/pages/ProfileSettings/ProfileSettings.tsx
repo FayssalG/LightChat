@@ -1,11 +1,12 @@
 import {update_display_name, update_email, update_image, update_username} from '@/axios/user';
+import { logoutUser, updateImage as updateImageAction } from '@/redux/features/Auth/AuthSlice';
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import styles from './ProfileSettings.module.css';
 import { IoArrowBack } from 'react-icons/io5';
 // import EditModal from '@/components/modals/EditModal/EditModal';
 
 //redux
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import useAuth from '@/components/hooks/useAuth';
 import useModal from '@/components/modal/useModal';
@@ -14,11 +15,15 @@ import { CiLogout } from 'react-icons/ci';
 
 export default function ProfileSettings() {
 
-  const { user , logoutUser} = useAuth()
+  const user = useSelector(state=>state.auth.user)
   const dispatch = useDispatch()
   const {onOpen : onOpenEditModal} = useModal('EditModal');
 
-   const {image ,display_name:displayName  , username , email } = user
+  const {image ,display_name:displayName  , username , email } = user
+
+  const  handleLogout = ()=>{
+    dispatch(logoutUser());
+  }
 
   const handleClick = (whatToUpdate : string , updateFn:Function)=>{
     onOpenEditModal({user , whatToUpdate , updateFn})
@@ -31,6 +36,7 @@ export default function ProfileSettings() {
         if([200,201,202,204].includes(res.status)) dispatch(updateUser({image:res.data}));
         return  res;
     }
+
   }
 
   const updateDisplayName = async (newDisplayName : string , password : string)=>{    
@@ -60,7 +66,7 @@ export default function ProfileSettings() {
                 <IoArrowBack/>
             </Link>
 
-            <UnstyledButton onClick={logoutUser} className={styles.logout_btn_container}>
+            <UnstyledButton onClick={handleLogout} className={styles.logout_btn_container}>
                 <CiLogout/>
             </UnstyledButton>
         </div>

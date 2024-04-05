@@ -4,18 +4,20 @@ import { useRef, useState } from 'react';
 import useAuth from '@/components/hooks/useAuth';
 import { useParams, useSearchParams } from 'react-router-dom';
 import Spinner from '@/components/shared/Spinner/Spinner';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {openPasswordResetSuccessAlert} from '@/redux/features/UiSlice';
 import PasswordResetSuccessAlert from '@/components/alerts/PasswordResetSuccessAlert/PasswordResetSuccessAlert';
+import { passwordReset } from '@/redux/features/Auth/AuthSlice';
 
 export default function ResetPassword() {
     const dispatch = useDispatch()
+    const errors = useSelector(state=>state.auth.passwordResetError)
+    const status = useSelector(state=>state.auth.passwordResetStatus)
+    const isLoading = status=='loading';
 
     const {token } = useParams()
     const [query , setQuery] = useSearchParams()
 
-    const {resetPassword , isLoading} = useAuth()
-    const [errors , setErrors] : [ [string?] , Function ]   = useState([]);
     const passwordRef = useRef<HTMLInputElement>(null)
     const confirmRef = useRef<HTMLInputElement>(null)
 
@@ -23,21 +25,8 @@ export default function ResetPassword() {
         e.preventDefault();
         const email : string | null = query.get('email');
         const password : string = passwordRef.current.value;
-        const passwordConfirmation : string   = confirmRef.current.value
-        
-        if(token && email && password && passwordConfirmation){
-            resetPassword(token,email,password,passwordConfirmation)
-            .then((res)=>{
-                if(res?.status == 200){
-                    dispatch(openPasswordResetSuccessAlert())
-                }
-            })
-            .catch((err)=>{
-                setErrors(err.response.data.errors.password || ["Something went wrong!"])
-            })
-        }else{
-            setErrors(["Please fill out all fields"])
-        }
+        const passwordConfirmation : string   = confirmRef.current.value        
+        dispatch(passwordReset({token,email,password,passwordConfirmation}))
     }
     
 
@@ -59,7 +48,7 @@ export default function ResetPassword() {
                     <input ref={confirmRef} type="password" />
                 </div>
                 {
-                    errors.length > 0 &&
+                    (errors && errors?.length) &&
                     <ul className={styles.errors}>
                         {errors.map((err)=><li className={styles.error}>{err}</li>)}
                     </ul>

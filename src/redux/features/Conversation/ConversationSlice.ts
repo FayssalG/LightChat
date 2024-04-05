@@ -99,6 +99,13 @@ const ConversationSlice = createSlice({
             state.error = action.payload;
 
         },
+        clearConversations:(state)=>{
+            messagesAdapter.setAll(state.messages , [])
+            conversationsAdapter.setAll(state , [])
+            state.status = 'idle'
+            state.error = null
+        },
+
 
 
         sendMessage:(state , action)=>{
@@ -238,6 +245,7 @@ export const {
     fetchMessages,
     fetchMessagesFailure,
     fetchMessagesSuccess,
+    clearConversations,
 
     sendMessage,
     sendMessageWithAttachment,

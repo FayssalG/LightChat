@@ -4,10 +4,18 @@ import useAuth from '@/components/hooks/useAuth';
 import { useRef, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import Spinner from '@/components/shared/Spinner/Spinner';
+import { useDispatch, useSelector } from 'react-redux';
+import { registerUser } from '@/redux/features/Auth/AuthSlice';
 
 export default function Register() {
-    const {registerUser , isAuth , isLoading} = useAuth();
-    const [errors  , setErrors] = useState({email : '' , displayName : '' , username:'',password:''})
+    const {isAuth } = useAuth();
+    // const [errors  , setErrors] = useState({email : '' , displayName : '' , username:'',password:''})
+    const errors = useSelector(state=>state.auth.registerError)
+    const status = useSelector(state=>state.auth.registerStatus)
+    const isLoading = status == 'loading'
+
+    const dispatch = useDispatch()
+    
     const emailRef = useRef(null)
     const usernameRef = useRef(null)
     const displayNameRef = useRef(null)
@@ -22,11 +30,12 @@ export default function Register() {
         const  password = passwordRef.current?.value;
         const  passwordConfirmation = passwordConfirmationRef.current?.value;
 
-        registerUser(email , displayName , username, password,passwordConfirmation , setErrors)
+        dispatch(registerUser({email , displayName , username , password , passwordConfirmation}))
     }
 
     if(isAuth)  return <Navigate replace to={'/'} /> 
 
+    console.log({errors})
   return (
     <div className={styles.container}>
         <div className={styles.inner_container}>
@@ -35,27 +44,27 @@ export default function Register() {
                 <div className= {`${styles.input_container} ${styles.email}`} >
                     <p className={styles.label}>Email</p>
                     <input ref={emailRef} type="text" placeholder='Email' />
-                    {errors.email && <p className={styles.error}>{errors.email}</p>}
+                    {errors?.email && <p className={styles.error}>{errors.email}</p>}
                 </div>
 
                 <div className= {`${styles.input_container} ${styles.displayname}`} >
                     <p className={styles.label}>Display Name</p>
                     <input ref={displayNameRef} type="text" placeholder='Display Name' />
-                    {errors.displayName && <p className={styles.error}>{errors.displayName}</p>}
+                    {errors?.display_name && <p className={styles.error}>{errors.display_name}</p>}
                 </div>
 
 
                 <div className= {`${styles.input_container} ${styles.username}`} >
                     <p className={styles.label}>Username</p>
                     <input ref={usernameRef} type="text" placeholder='Username' />
-                    {errors.username && <p className={styles.error}>{errors.username}</p>}
+                    {errors?.username && <p className={styles.error}>{errors.username}</p>}
                 </div>
 
 
                 <div className= {`${styles.input_container} ${styles.password}`} >
                     <p className={styles.label}>Password</p>
                     <input ref={passwordRef} type="password" placeholder='Password' />
-                    {errors.password && <p className={styles.error}>{errors.password}</p>}
+                    {errors?.password && <p className={styles.error}>{errors.password}</p>}
                 </div>
 
                 <div className= {`${styles.input_container} ${styles.confirm_password}`} >

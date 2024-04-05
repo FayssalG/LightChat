@@ -10,7 +10,7 @@ function* workGetRequests(){
         yield put(fetchRequestsSuccess(response.data));
     
     }catch(err){
-        yield put(fetchRequestsFailure(err.response.data.errors[0]));
+        yield put(fetchRequestsFailure(err.response.message));
     }
 }
 function* workSendRequest(action){

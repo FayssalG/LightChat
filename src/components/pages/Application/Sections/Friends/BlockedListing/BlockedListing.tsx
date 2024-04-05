@@ -2,19 +2,29 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Blocked from "./Blocked/Blocked";
+import FriendSkeleton from "../FriendSkeleton/FriendSkeleton";
 
 
 
 
 export default function BlockedListing() {
-    const blockedUsers = useSelector(state=>state.block.blockedUsers);
-    const dispatch = useDispatch();
+  const status = useSelector(state=>state.block.status);
+  const isLoading = status == 'loading';
 
-    console.log({blockedUsers});
-    
+  const blockedUsers = useSelector(state=>state.block.blockedUsers);
+  const dispatch = useDispatch();
+  
+  console.log({blockedUsers});
+  
     return (
     <>
-        {blockedUsers.map((blocked , key : number)=><Blocked key={key} blocked={blocked}/>)}
+        {isLoading ?
+          <FriendSkeleton/>
+        :
+          blockedUsers.map((blocked , key : number)=><Blocked key={key} blocked={blocked}/>)
+        
+        }
+
     </>
   )
 }

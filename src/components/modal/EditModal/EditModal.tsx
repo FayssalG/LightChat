@@ -3,14 +3,13 @@ import styles from './EditModal.module.css';
 import { IoClose } from 'react-icons/io5';
 //redux
 import { useDispatch , useSelector} from 'react-redux';
-import { toggleShowEditModal } from '@/redux/features/UiSlice';
+import { setGlobalLoading, toggleShowEditModal } from '@/redux/features/UiSlice';
 import useBiAnimation from '@/components/hooks/useBiAnimation';
 import EditDisplayName from './EditDisplayName/EditDisplayName';
 import EditPicture from './EditPicture/EditPicture';
 import { useEffect, useRef, useState } from 'react';
 import EditEmail from './EditEmail/EditEmail';
 import EditUsername from './EditUsername/EditUsername';
-import { setIsLoading } from '@/redux/features/UiSlice';
 import Spinner from '@/components/shared/Spinner/Spinner';
 import { BaseModal } from '../BaseModal';
 
@@ -24,11 +23,12 @@ export default function EditModal(props) {
     const {user , whatToUpdate , updateFn , onClose , isOpen} = props;
 
     const dispatch = useDispatch()
-    const isLoading = useSelector(state=>state.ui.isLoading);
+    const [isLoading , setIsLoading] = useState(false);
     
     const [errors , setErrors] : [ [string?] ,Function ] = useState([]);
     const infoRef = useRef<HTMLInputElement>(null)
     const passwordRef = useRef<HTMLInputElement>(null)
+ 
     
     //empty errors when modal closes
     const handleUpdate = (e:React.FormEvent)=>{
@@ -41,7 +41,7 @@ export default function EditModal(props) {
             return
         }
         
-        dispatch(setIsLoading(true))
+        setIsLoading(true)
         updateFn(info , password)
         .then((res)=>{
             if([204,200,201].includes(res.status)){
@@ -53,7 +53,7 @@ export default function EditModal(props) {
             setErrors(err.response.data.errors)
         })
         .finally(()=>{
-            dispatch(setIsLoading(false))
+            setIsLoading(false)
         })
     }
 
