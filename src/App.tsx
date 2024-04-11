@@ -18,12 +18,22 @@ import ConversationsSection from './components/pages/Application/Sections/Conver
 import GroupsSection from './components/pages/Application/Sections/Groups/GroupsSection';
 import ActiveConversation from './components/pages/Application/ActiveConversation/ActiveConversation';
 import CallProvider from './components/context/CallProvider/CallProvider';
-import { fetchUser } from './redux/features/Auth/AuthSlice';
+import { fetchUser } from './redux/features/auth/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchFriends } from './redux/features/Friend/FriendSlice';
-import { fetchConversations, fetchMessages } from './redux/features/Conversation/ConversationSlice';
-import { fetchBlockedUsers } from './redux/features/Block/BlockSlice';
-import { fetchRequests } from './redux/features/FriendRequest/FriendRequestSlice';
+import { clearFriends, fetchFriends } from './redux/features/friend/FriendSlice';
+import { clearConversations, fetchConversations, fetchMessages } from './redux/features/Conversation/ConversationSlice';
+import { clearBlockedUsers, fetchBlockedUsers } from './redux/features/block/blockSlice';
+import { clearRequests, fetchRequests } from './redux/features/friendRequest/friendRequestSlice';
+
+
+import { useGetUserQuery, useLazyGetUserQuery } from './redux/features/auth/authApi';
+import { useGetFriendsQuery, useLazyGetFriendsQuery } from './redux/features/friend/friendApi';
+import { useGetBlockedUsersQuery, useLazyGetBlockedUsersQuery } from './redux/features/block/blockApi';
+import { useGetConversationsQuery, useGetMessagesQuery, useLazyGetConversationsQuery, useLazyGetMessagesQuery } from './redux/features/Conversation/conversationApi';
+import { useGetFriendRequestsQuery, useLazyGetFriendRequestsQuery } from './redux/features/friendRequest/friendRequestApi';
+import FriendsListing from './components/pages/Application/Sections/Friends/FriendsListing/FriendsListing';
+import PendingFriendsListing from './components/pages/Application/Sections/Friends/PendingFriendsListing/PendingFriendsListing';
+import BlockedListing from './components/pages/Application/Sections/Friends/BlockedListing/BlockedListing';
 
 function App() {
   
@@ -35,7 +45,11 @@ function App() {
             <Route element={<ProtectedRoute/>}>
              
               <Route path='/' element={<Application/>}>
-                <Route path='/' element={<FriendsSection/>}></Route>
+                <Route path='/friends' element={<FriendsSection/>}>
+                  <Route path='/friends' element={<FriendsListing/>}></Route>
+                  <Route path='/friends/pending' element={<PendingFriendsListing/>}></Route>
+                  <Route path='/friends/blocked' element={<BlockedListing/>}></Route>
+                </Route>
                 <Route path='/conversations' element={<ConversationsSection/>}></Route>
                 <Route path='/groups' element={<GroupsSection/>}></Route>
               </Route>
@@ -57,31 +71,51 @@ function App() {
 
 
 function ProtectedRoute(){
-  // if user is authenticated show the component otherwise redirect to login page
+  const {data:user,isLoading:isLoadingUser} = useGetUserQuery(undefined);
+  const {isLoading:isLoadingFriends} = useGetFriendsQuery(undefined);
+  const {isLoading:isLoadingRequests} = useGetFriendRequestsQuery(undefined);
+  const {isLoading:isLoadingBlocks} = useGetBlockedUsersQuery(undefined);
+  const {isLoading:isLoadingConversations} = useGetConversationsQuery(undefined);
+  const {isLoading:isLoadingMessages} = useGetMessagesQuery(undefined);
+  console.log({user})
+  // const [getFriendRequests, {isLoading:isLoadingFriends}] = useLazyGetFriendsQuery();
+  // const [getFriends , {isLoading:isLoadingRequests}] = useLazyGetFriendRequestsQuery();
+  // const [getBlockedUsers , {isLoading:isLoadingBlocks}] = useLazyGetBlockedUsersQuery();
+  // const [getConversations , {isLoading:isLoadingConversations}] = useLazyGetConversationsQuery();
+  // const [getMessages , {isLoading:isLoadingMessages}] = useLazyGetMessagesQuery();
+  
   const dispatch = useDispatch()
-  const isAuth = useSelector(state=>state.auth.isAuth)
-
-  const authStatus = useSelector(state=>state.auth.fetchStatus);  
- 
-
-  const isLoading = authStatus=='loading' ;   
+  // const isAuth = useSelector(state=>state.auth.isAuth)
+  const isLoading = isLoadingFriends || isLoadingConversations 
+  || isLoadingBlocks || isLoadingMessages || isLoadingUser || isLoadingRequests;
 
   useEffect(()=>{
-    if(isAuth){
-      dispatch(fetchUser())
-      dispatch(fetchFriends());
-      dispatch(fetchConversations());
-      dispatch(fetchMessages());
-      dispatch(fetchBlockedUsers());
-      dispatch(fetchRequests())
-  
+    if(user){
+      // getFriends(undefined);
+      // getFriendRequests(undefined);
+      // getBlockedUsers(undefined);
+      // getConversations(undefined)
+      // getMessages(undefined)
+      // dispatch(fetchFriends());
+      // dispatch(fetchRequests())
+      // dispatch(fetchBlockedUsers());
+      // dispatch(fetchConversations());
+      // dispatch(fetchMessages());
     }
+    else{
+      // dispatch(clearFriends())
+      // dispatch(clearRequests())
+      // dispatch(clearConversations())
+      // dispatch(clearBlockedUsers())
+   }
 
-  },[dispatch , isAuth])
+  },[dispatch , user])
 
-  if(!isAuth) return <Navigate replace to='/login' />
-
+  // if user is authenticated show the component otherwise redirect to login page
   if(isLoading) return <Loading/>
+
+  if(!user) return <Navigate replace to='/login' />
+
 
   
   return( 

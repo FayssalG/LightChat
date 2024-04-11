@@ -7,14 +7,14 @@ import Spinner from '@/components/shared/Spinner/Spinner';
 import { useDispatch, useSelector } from 'react-redux';
 import {openPasswordResetSuccessAlert} from '@/redux/features/UiSlice';
 import PasswordResetSuccessAlert from '@/components/alerts/PasswordResetSuccessAlert/PasswordResetSuccessAlert';
-import { passwordReset } from '@/redux/features/Auth/AuthSlice';
+import { passwordReset } from '@/redux/features/auth/authSlice';
+import { useResetPasswordMutation } from '@/redux/features/auth/authApi';
 
 export default function ResetPassword() {
     const dispatch = useDispatch()
-    const errors = useSelector(state=>state.auth.passwordResetError)
-    const status = useSelector(state=>state.auth.passwordResetStatus)
-    const isLoading = status=='loading';
-
+    const [resetPassword , {isLoading , error}] = useResetPasswordMutation();
+    const errors = error?.data?.errors
+    
     const {token } = useParams()
     const [query , setQuery] = useSearchParams()
 
@@ -25,8 +25,12 @@ export default function ResetPassword() {
         e.preventDefault();
         const email : string | null = query.get('email');
         const password : string = passwordRef.current.value;
-        const passwordConfirmation : string   = confirmRef.current.value        
-        dispatch(passwordReset({token,email,password,passwordConfirmation}))
+        const password_confirmation : string   = confirmRef.current.value        
+    
+        resetPassword({token,email,password,password_confirmation})
+        .then(()=>{
+            dispatch(openPasswordResetSuccessAlert())
+        })
     }
     
 

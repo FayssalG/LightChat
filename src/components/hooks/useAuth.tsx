@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import {login, register , logout, getUser, forgot, reset , verify} from '@/axios/axios';
 import { useDispatch, useSelector } from "react-redux";
-import { setUser, setIsAuth, setIsVerified } from "@/redux/features/Auth/AuthSlice";
+import { setUser, setIsAuth, setIsVerified } from "@/redux/features/auth/authSlice";
 import { mark_user_connected, mark_user_disconnected } from "@/axios/user";
 
 export default function useAuth(){

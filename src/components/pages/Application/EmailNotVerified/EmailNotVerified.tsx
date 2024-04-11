@@ -4,17 +4,16 @@ import styles  from './EmailNotVerified.module.css';
 import Spinner from '../../../shared/Spinner/Spinner';
 import { useState } from 'react';
 import { MdDone } from 'react-icons/md';
+import { useSendEmailVerificationMutation } from '@/redux/features/auth/authApi';
 
 export default function EmailNotVerified() {
-  const {verifyEmail , isLoading} = useAuth();
+  const [sendEmailVerification , {isLoading}] = useSendEmailVerificationMutation()
   const [emailSent , setEmailSent] = useState(false)
 
   const handleSendVerificationEmail = ()=>{
-      verifyEmail()
-      .then((res)=>{
-          if(res.status==200){
-            setEmailSent(true);
-          }
+      sendEmailVerification(null)
+      .then(()=>{
+        setEmailSent(true);
       })
   }
 

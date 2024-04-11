@@ -139,86 +139,7 @@ const FriendRequestSlice = createSlice({
         error : null,
         requests : [],
     },
-    reducers: {
- 
-        fetchRequests : (state)=>{
-            state.error = null
-            state.status = 'loading'
-        },
-        fetchRequestsSuccess : (state , action)=>{
-            console.log({action:action.payload})
-            state.status = 'succeeded'
-            state.requests = action.payload
-            state.error = null
-        },
-        fetchRequestsFailure : (state , action)=>{
-            state.status = 'failed'
-            state.error  = action.payload
-        },
-        clearRequests:(state)=>{
-            state.requests = []
-            state.status = 'idle'
-            state.error = null
-        },
-
-        sendRequest : (state , action)=>{
-            state.error  = null
-            state.status = 'loading'
-        },
-        sendRequestSuccess : (state , action)=>{
-            state.status = 'succeeded'
-            state.requests.push(action.payload)
-        },
-        sendRequestFailure : (state , action)=>{
-            console.log({action})
-            state.status = 'failed'
-            state.error  = action.payload
-        },
-
-        clearError:(state)=>{
-            state.status = 'idle'
-            state.error = null
-        },
-
-        cancelRequest : (state , action)=>{
-            state.status = 'loading'
-        },
-        ignoreRequest : (state,action)=>{
-            state.status = 'loading'
-        },
-        cancelIgnoreRequestSuccess : (state , {payload:requestId})=>{
-            console.log({requestId})
-            state.status = 'succeeded'
-            state.requests = state.requests.filter((request : FriendRequest)=>requestId !== request.request_id )
-        },
-        cancelIgnoreRequestFailure : (state , action)=>{
-            console.log({action})
-            state.status = 'failed'
-            state.error  = action.payload
-        },
-
-
-        acceptRequest : (state , action)=>{
-            state.status = 'loading'
-        },
-        acceptRequestSuccess : (state , {payload:requestId})=>{
-            state.status = 'succeeded'
-            state.requests = state.requests.filter((request)=>request.request_id !==  requestId );
-            state.error = null
-        },
-        acceptRequestFailure : (state , action)=>{
-            state.status = 'failed'
-            state.error = action.payload
-        },
-
-        
-
-        removeRequest:(state,{payload:requestId})=>{
-            state.requests = state.requests.filter((request)=>request.request_id !==  requestId );
-        },
-        addRequest : (state,action)=>{
-            state.requests.push(action.payload)
-        }
+    reducers: { 
     },
 
 })
@@ -226,29 +147,7 @@ const FriendRequestSlice = createSlice({
 
 
 export default FriendRequestSlice.reducer;
-export const {
-    fetchRequests,
-    fetchRequestsSuccess , 
-    fetchRequestsFailure, 
-    clearRequests ,
-
-    sendRequestSuccess,
-    sendRequestFailure, 
-    sendRequest ,
-    clearError,
-
-    cancelIgnoreRequestSuccess , 
-    cancelIgnoreRequestFailure , 
-    ignoreRequest , 
-    cancelRequest,
-
-    acceptRequest,
-    acceptRequestSuccess,
-    acceptRequestFailure,
-
-    removeRequest ,
-    addRequest,
-} 
+export const {} 
 = FriendRequestSlice.actions;  
 
 

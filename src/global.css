@@ -7,6 +7,7 @@ body{
     @media (max-width:1000px) {
         overflow: auto;
     }
+
 }
 
 *{
@@ -30,12 +31,12 @@ body{
 
     
     --background : #242424;
-    --navbar : #242424;
+    --navbar : #121425;
 
-    --primary : #242424;
+    --primary : #121425;
     --primary-dark : #1B1B1B;
     
-    --secondary : #121425;
+    --secondary : #242424;
     --accent: #00b2df;
 
     /* --accent: #619AF0; */

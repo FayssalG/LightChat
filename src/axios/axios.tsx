@@ -58,6 +58,7 @@ const verify = async ()=>{
 }
 
 async function logout(){
+    await api.get('/sanctum/csrf-cookie');
     const response = await api.post('/logout')
     return response
 }

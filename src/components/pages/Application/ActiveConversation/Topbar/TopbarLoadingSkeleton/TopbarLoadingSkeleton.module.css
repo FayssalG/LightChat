@@ -1,0 +1,13 @@
+.container{
+    padding: .5rem 1rem ;
+    display: flex;
+    background-color: var(--primary-dark);
+    align-items: center;
+    justify-content: center;
+}
+.inner_container{
+    display: flex;
+    width: 100%;
+    gap: 1rem;
+    
+}

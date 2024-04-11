@@ -5,103 +5,107 @@ import Message from './Message/Message';
 import MessageInput from './MessageInput/MessageInput';
 import { useDispatch, useSelector } from 'react-redux';
 import { useCallback, useEffect} from 'react';
-import { selectFriendById  } from '@/redux/features/Friend/FriendSlice';
+import { selectFriendById  } from '@/redux/features/friend/FriendSlice';
 
-import { markMessagesSeen} from '@/redux/features/Conversation/ConversationSlice';
-import {selectMessagesByConversationId } from '@/redux/features/Conversation/ConversationSelectors';
 import { hideConversationOnMobile } from '@/redux/features/UiSlice';
+import { useGetConversationsQuery, useGetMessagesQuery, useMarkMessagesSeenMutation } from '@/redux/features/Conversation/conversationApi';
+import NoActiveConversation from '../NoActiveConverastion/NoActiveConversation';
+import TopbarLoadingSkeleton from './Topbar/TopbarLoadingSkeleton/TopbarLoadingSkeleton';
+import MessagesListing from './MessagesListing/MessagesListing';
+import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
+import { useBlockUserMutation, useGetBlockedUsersQuery, useUnBlockUserMutation } from '@/redux/features/block/blockApi';
+import { useGetFriendsQuery, useUnFriendMutation } from '@/redux/features/friend/friendApi';
+import { useGetFriendRequestsQuery, useSendRequestMutation } from '@/redux/features/friendRequest/friendRequestApi';
+import Interlocutor from './Interlocutor/Interlocutor';
+import { setActiveConversation } from '@/redux/features/Conversation/ConversationSlice';
 
-export default function ActiveConversation({activeConversation}) {
-  const dispatch = useDispatch();
-  const conversationVisibility = useSelector((state)=>state.ui.conversationVisibility);
-  const messages = useSelector(selectMessagesByConversationId(activeConversation.conversation_id))
-  const lastMsg = messages[messages.length - 1];
-  console.log({MESSAGES:messages})
-  const friend = useSelector((state)=>selectFriendById(state,activeConversation?.friend_id));
-  
-  //scroll down when a message is added
-  const setRef = useCallback((element)=>{
-    if(element) element.scrollIntoView({smooth:true});
-  },[]);
-
-  
-useEffect(()=>{
-    if(activeConversation){
-        if(lastMsg && lastMsg?.sender_id == friend?.user_id && lastMsg?.isSeen == false ) {
-            dispatch(markMessagesSeen(activeConversation.conversation_id));
-        }
-    }
-},[activeConversation])
+export default function ActiveConversation({activeConversation , isFetching}) {
+    const dispatch = useDispatch();
+    const [markMessagesSeen] = useMarkMessagesSeenMutation();
     
-//Handling hiding activeConversation when the browser back button is pressed
-useEffect(()=>{
-    if(conversationVisibility){
-        window.history.pushState(null, document.title, window.location.href);
-    }
+    const interlocutor = activeConversation?.interlocutor
 
-    const handleCloseOnBackButton = (event) => {
-        event.preventDefault();
-        dispatch(hideConversationOnMobile())
-    };
+    const {friend} = useGetFriendsQuery(undefined  , {
+        selectFromResult : ({data})=>({
+            friend : data?.find(f=>f.user_id == interlocutor.user_id)
+        })
+    })
 
-    window.addEventListener('popstate', handleCloseOnBackButton);
-  
-    return () => window.removeEventListener('popstate', handleCloseOnBackButton);
-  
-},[conversationVisibility])
+    const {messages} = useGetMessagesQuery(undefined , {
+        selectFromResult : ({data , isFetching})=>({
+            isFetching,
+            messages: data?.filter(msg=>msg.conversation_id==activeConversation?.conversation_id)
+        })
+    })    
+    const lastMsg = messages[messages.length - 1];
 
 
-const renderMessages = ()=>{    
-    return   messages.map((message , index)=>{
-                const isLast = messages.length -1 === index;                        
-                return <Message  messageRef={isLast ? setRef : null} 
-                            key={message.id}
-                            message = {message} 
-                            friend={friend}  
-                        />
-            })
-}
+    
+    useEffect(()=>{
+        console.log('RERENDER USEEFFECT')
+        if(activeConversation){
+            if(lastMsg && lastMsg?.sender_id == interlocutor?.user_id && lastMsg?.isSeen == false ) {
+                markMessagesSeen(activeConversation.conversation_id);
+            }
+        }
+    },[lastMsg])
 
-  
+        
+    //Handling hiding activeConversation when the browser back button is pressed
+    useEffect(()=>{
+        if(activeConversation){
+            window.history.pushState(null, document.title, window.location.href);
+        }
+
+        const handleCloseOnBackButton = (event) => {
+            event.preventDefault();
+            dispatch(setActiveConversation(null))
+        };
+
+        window.addEventListener('popstate', handleCloseOnBackButton);
+    
+        return () => window.removeEventListener('popstate', handleCloseOnBackButton);
+    
+    },[activeConversation])
+
+
+
+        
+    if(!activeConversation) return <NoActiveConversation/>
 
     return (
-    <div data-visible={conversationVisibility ? 'true' : 'false'} className={styles.container}>
+    <div data-visible={activeConversation ? 'true' : 'false'} className={styles.container}>
         
-        <Topbar friend={friend} />
+        {
+            isFetching ?
+            <TopbarLoadingSkeleton/>
+            :
+            <Topbar person={friend ?? interlocutor} />        
+        }
         
         <div className={styles.inner_container}>
             <div className={styles.infos}> 
-                <div className={styles.picture}>
-                    <img src={avatar} alt="" />
-                </div>
-                <div className={styles.name_username}>
-                    <h3 className={styles.name}>Jack Martins</h3>
-                    <p className={styles.username}>@jackmartins</p>
-                </div>
-                {/* <div className={styles.btns}>
-                    <UnstyledButton className={styles.remove}>Remove Friend</UnstyledButton>
-                    <UnstyledButton className={styles.block}>Block</UnstyledButton>
-                </div> */}
+                <Interlocutor interlocutor={interlocutor}/>
             </div>
             
-            {   friend.isFriend  &&
+            {   friend  &&
                 <div className={styles.messages}>
                 
-                    {renderMessages()}
-                
+                    <MessagesListing messages={messages} interlocutor={interlocutor}/>
+
                 </div>
             }
         </div>
         
         {
-            friend.isFriend ?
-                <MessageInput friend={friend}/>
+            friend  ?
+                <MessageInput friendId={interlocutor.user_id} conversationId={activeConversation.conversation_id}/>
             :
                 <div className={styles.restrict_message}>
-                    <p>Conversation restricted, you can't contact <span>{friend.display_name}</span> for now</p>
+                    <p>Conversation restricted, you can't contact <span>{interlocutor.display_name}</span> for now</p>
                 </div>
         }
 
     </div>
-  )
+    )
 }

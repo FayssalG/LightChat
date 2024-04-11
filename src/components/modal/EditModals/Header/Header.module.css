@@ -1,0 +1,23 @@
+.title{
+    font-size: 1.2rem;
+}
+.comment{
+    font-size: .9rem;
+    margin-top: .5rem;
+    color: grey;
+}
+
+
+.close{        
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    svg{
+        width: 30px;
+        height: 30px;
+        color: grey;
+    }
+    @media (max-width:700px) {
+        display: none;
+    }
+}

@@ -1,5 +1,6 @@
 
 .container{
+
     
     width: 100%;
     height: 100svh;
@@ -20,13 +21,15 @@
     display: grid;
     /* grid-auto-columns: 1fr 3fr auto ; */
     grid-auto-rows: auto 9fr;
-    grid-template-columns: 1fr 3fr;
+    grid-template-columns: auto 3fr;
     @media (max-width:1000px) {
         grid-template-columns: 1fr;
     }
 
     
     .sections{
+        background-color: var(--primary);
+        
         /* @media (max-width:1000px) {
             grid-column: 1 / span 2; 
         }     */
@@ -34,7 +37,16 @@
     }
 
     .active_conversation{
-
+        background-image: url('/logoLight.png');
+        background-color: var(--primary);
+        background-position: center;
+        background-size: 400px;    
+        background-repeat: no-repeat;    
+        padding: .5rem;        
+        @media (max-width:1000px) {
+            padding: 0;
+        }
+        /* background-blend-mode: overlay; */        
     }
 
     .email_verification{

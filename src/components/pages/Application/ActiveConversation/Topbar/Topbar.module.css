@@ -1,8 +1,10 @@
 .topbar{
     /* border-radius: 1rem; */
     
-    background-color: var(--primary-dark);
+    /* background-color: var(--primary-dark); */
     display: flex;
+    border-bottom: 1px solid rgba(255,255,255, .1);
+    margin-inline: 1rem;
     gap: 1rem;
     align-items: center;
     padding-inline: 1em;
@@ -60,10 +62,17 @@
 
     
     .close{
-        display: none;
-        
+        /* display: none; */
+        color: grey;
+        svg{
+            width: 29px;
+            height: 29px;    
+        }
+        &:hover {
+            opacity: .5;
+        }
         @media (max-width:1000px){
-            display: block;
+            /* display: block; */
             svg{
                 width: 25px;
                 height: 25px;

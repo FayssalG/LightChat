@@ -2,17 +2,18 @@ import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import styles from './ConfirmBlockFriend.module.css';
 import { useDispatch} from 'react-redux';
 import { BaseModal } from '../BaseModal';
-import { blockUser } from '@/redux/features/Block/BlockSlice';
-import { setFriendAsBlocked } from '@/redux/features/Friend/FriendSlice';
+import { setFriendAsBlocked } from '@/redux/features/friend/FriendSlice';
+import { useBlockUserMutation } from '@/redux/features/block/blockApi';
 
 export default function ConfirmBlockFriendModal(props) {
-  const {friend , onClose , isOpen} = props  
+    const [blockUser , {isLoading}] = useBlockUserMutation();
+    const {friend , onClose , isOpen} = props  
 
     const dispatch = useDispatch();
 
     const handleBlock = ()=>{
         onClose();
-        dispatch(blockUser(friend))
+        blockUser(friend.username);
     }    
     
 

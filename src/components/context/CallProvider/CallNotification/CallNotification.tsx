@@ -1,18 +1,18 @@
 
 import styles from './CallNotification.module.css';
-import avatar from '@/assets/avatar.png';
 import notification from '@/assets/notification.mp3';
 
-import { IoIosCall } from 'react-icons/io';
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import { BiPhoneCall, BiPhoneIncoming, BiPhoneOff } from 'react-icons/bi';
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { selectFriendByUsername } from '@/redux/features/Friend/FriendSlice';
+import { useGetFriendsQuery } from '@/redux/features/friend/friendApi';
 
 export default function CallNotification({answer , reject , personCallingUsername , callStatus}) {
-    console.log({personCallingUsername})
-    const caller = useSelector(selectFriendByUsername(personCallingUsername));
+    const {caller} = useGetFriendsQuery(undefined , {
+        selectFromResult : ({data})=>({
+            caller : data.find((f)=>f.username==personCallingUsername)
+        })
+    })
 
     useEffect(()=>{
         const audio = new Audio(notification)

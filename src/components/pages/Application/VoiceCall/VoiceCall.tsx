@@ -8,12 +8,17 @@ import { useAudioCall} from '@/components/context/AudioCallProvider';
 import { IoClose } from 'react-icons/io5';
 import { FiMic, FiMicOff } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
-import { selectFriendByUsername } from '@/redux/features/Friend/FriendSlice';
+import { selectFriendByUsername } from '@/redux/features/friend/FriendSlice';
 import { useCall } from '@/components/context/CallProvider/CallProvider';
+import { useGetFriendsQuery } from '@/redux/features/friend/friendApi';
 
 export default function VoiceCall() {
     const {remoteStreamRef , callStatus , end:endFn , otherPersonUsername, muteMic,cancelCall} = useCall()
-    const caller = useSelector(selectFriendByUsername(otherPersonUsername))
+    const {caller} = useGetFriendsQuery(undefined , {
+        selectFromResult : ({data})=>({
+            caller : data.find((f)=>f.username==otherPersonUsername)
+        })
+    })
 
     const voiceCallStatus = callStatus.audio
 

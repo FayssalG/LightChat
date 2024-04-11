@@ -1,41 +1,40 @@
 import styles from './Application.module.css';
 import ActiveConversation from "./ActiveConversation/ActiveConversation";
 import Navbar from "./Navbar/Navbar";
-import ConversationsSection from "./Sections/Conversations/ConversationsSection";
-import FriendsSection from "./Sections/Friends/FriendsSection";
-import GroupsSection from "./Sections/Groups/GroupsSection";
 
 import { useDispatch, useSelector } from "react-redux";
 import EmailNotVerified from '@/components/pages/Application/EmailNotVerified/EmailNotVerified';
 import { useEffect } from 'react';
 import { useSocket } from '@/components/context/SocketProvider';
-import {  addRealtimeMessage,  fetchConversations, fetchMessages, setRealtimeMessagesSeen } from '@/redux/features/Conversation/ConversationSlice';
-import { addRequest, fetchRequests, removeRequest } from '@/redux/features/FriendRequest/FriendRequestSlice';
-import { RealtimeAddFriend, RealtimeChangeFriendStatus, RealtimeRemoveFriend, fetchFriends } from '@/redux/features/Friend/FriendSlice';
-import { fetchBlockedUsers} from '@/redux/features/Block/BlockSlice';
-import useAuth from '@/components/hooks/useAuth';
-import { selectActiveConversation } from '@/redux/features/Conversation/ConversationSelectors';
 import NoActiveConversation from './NoActiveConverastion/NoActiveConversation';
-import { useAudioCall } from '@/components/context/AudioCallProvider';
 
 import VoiceCall from './VoiceCall/VoiceCall';
 import VideoCall from './VideoCall/VideoCall';
-import { useVideoCall } from '@/components/context/VideoCallProvider';
-import Sections from './Sections/Sections';
 import { Outlet } from 'react-router-dom';
 import { useCall } from '@/components/context/CallProvider/CallProvider';
+import {useGetConversationsQuery } from '@/redux/features/Conversation/conversationApi';
+import { baseApi } from '@/redux/features/baseApi';
+import { openConversation } from '@/redux/features/Conversation/ConversationSlice';
+import { useGetUserQuery } from '@/redux/features/auth/authApi';
 
 export default function Application() {
-  const {user} = useAuth();
-  const isVerified : Boolean = useSelector(state => state.auth.isVerified);
+  const {isVerified} : {isVerified : Boolean} = useGetUserQuery(undefined , {
+    selectFromResult : ({data})=>({
+      isVerified : (data?.email_verified_at !== null)
+    })
+  });
   const socket = useSocket()
-  const activeConversation  = useSelector(selectActiveConversation)
-  // const {status:callingStatus}= useAudioCall();
-  // const {status:videoCallingStatus} = useVideoCall();
+  
+  const activeConversationId = useSelector(state=>state.conversation.activeConversationId) 
+  const {activeConversation , isFetching} = useGetConversationsQuery(undefined , {
+    selectFromResult : ({data,isFetching})=>({
+      isFetching,
+      activeConversation : data?.find(c=>c.conversation_id==activeConversationId)
+    })
+  });
 
   const {callStatus}= useCall()
 
-  console.log({CALLSTATUS:callStatus})
   const dispatch = useDispatch();
 
 
@@ -43,36 +42,31 @@ export default function Application() {
   useEffect(()=>{
     if(socket){
       socket.on('request-received' , (data)=>{
-        if(data){
-          dispatch(addRequest(data));
-        }
+        dispatch(baseApi.util.invalidateTags(['Requests']))        
       })
 
       socket.on('request-deleted' , (data)=>{
-        if(data){
-          dispatch(removeRequest(data.request_id));
-        }
+          dispatch(baseApi.util.invalidateTags(['Requests']))
       })
 
       
       socket.on('request-accepted' , (data)=>{
         if(data){
-          dispatch(fetchConversations());
-          dispatch(removeRequest(data.request_id));
-          dispatch(RealtimeAddFriend(data.friend));
+          dispatch(baseApi.util.invalidateTags(['Friends'  ,  'Requests' , 'Conversations']))
         }
       })
 
+      
       socket.on('friend-removed' , (frinedshipId : string)=>{
-        console.log({frinedshipId})
-        if(frinedshipId){
-          dispatch(RealtimeRemoveFriend(frinedshipId));
-        }
+        console.log(frinedshipId)
+        dispatch(baseApi.util.invalidateTags(['Friends']));
       })
+
 
       socket.on('message-received' , ({message , sender} : {message:FriendMessage , sender:Friend})=>{
         if(message){
-          dispatch(addRealtimeMessage({newMessage:message , senderInfos:sender}));
+          dispatch(openConversation(message.conversation_id))
+          dispatch(baseApi.util.invalidateTags(['Messages']))
         }
       })
 
@@ -80,49 +74,21 @@ export default function Application() {
       socket.on('messages-seen' , (conversationId : string)=>{
         console.log({conversationId})
         if(conversationId){
-          dispatch(setRealtimeMessagesSeen({conversationId , myUserId:user.id}));
+          // dispatch(setRealtimeMessagesSeen({conversationId , myUserId:user.id}));
+          dispatch(baseApi.util.invalidateTags(['Messages']))
         }
       })
 
 
       
       socket.on('online-status-change' , ({userId , onlineStatus})=>{
-          dispatch(RealtimeChangeFriendStatus({friendId:userId , onlineStatus}));
+          dispatch(baseApi.util.invalidateTags(['Friends' ]));
       })
 
     }
   },[socket])
-
-
-  // useEffect(()=>{
-  //     const timestamp = JSON.parse(localStorage.getItem('neochat-timestamp'));    
-  //     const now = new Date();
-  //     const lastFetchDate = new Date(timestamp) 
-  //     //if timestamp is null date given here is unix epoch
-
-  //     const isOld = (Math.round((now.getTime() - lastFetchDate.getTime()) / (1000*60)) > 20) // in minutes
-      
-  //     dispatch(fetchFriends());
-  //     dispatch(fetchConversations());
-  //     dispatch(fetchMessages());
-  //     dispatch(fetchBlockedUsers());
-  //     dispatch(fetchRequests())
-
-  //     if(isOld){
-  //       localStorage.setItem('neochat-timestamp' , JSON.stringify(now));    
-  //     }
-    
-  // },[dispatch])
  
 
-
-  const renderActiveConversation = ()=>{
-      if(!activeConversation){
-        return <NoActiveConversation/>
-      }
-      return <ActiveConversation activeConversation={activeConversation}/>
-  }
-  
   return (
     <div className={styles.container}>
         <div className={styles.navbar}>
@@ -131,16 +97,22 @@ export default function Application() {
 
         <div className={styles.sections_activeconversation}>
             <div className={styles.email_verification}>
-              { !isVerified &&<EmailNotVerified/>}
+              { !isVerified && <EmailNotVerified/>}
             </div>
 
             <div className={styles.sections}>
               <Outlet/>
             </div>          
 
-            <div className={styles.active_conversation}>
-              {renderActiveConversation()}        
-            </div>          
+              <div className={styles.active_conversation}>
+                  {
+                    activeConversation &&
+                    <ActiveConversation 
+                      isFetching={isFetching} 
+                      activeConversation={activeConversation}
+                    />               
+                  }
+              </div>          
             
             <div className={styles.voice_call}>
                 {['calling' , 'ongoing'].includes(callStatus.audio) && <VoiceCall />}

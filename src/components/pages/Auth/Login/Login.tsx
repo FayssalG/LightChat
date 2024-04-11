@@ -8,21 +8,21 @@ import { useRef, useState } from 'react';
 import Spinner from '@/components/shared/Spinner/Spinner';
 import { IoCheckmark } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginUser, passwordForgot } from '@/redux/features/Auth/AuthSlice';
+import { loginUser, passwordForgot } from '@/redux/features/auth/authSlice';
+import { useForgotPasswordMutation, useLoginMutation } from '@/redux/features/auth/authApi';
+import { useLazyInitCsrfQuery } from '@/redux/features/baseApi';
 
 export default function Login() {
-    const dispatch = useDispatch()
-    const loginStatus = useSelector(state=>state.auth.loginStatus)
-    const passwordForgotStatus = useSelector(state=>state.auth.passwordForgotStatus)
-    const isLoading = loginStatus == 'loading' || passwordForgotStatus=='loading'
-    const loginError = useSelector(state=>state.auth.loginError)
-    const passwordForgotError = useSelector(state=>state.auth.passwordForgotError)
-    
-    
+    const [initCsrf] = useLazyInitCsrfQuery()
+    const [login , {isLoading:isLoadingLogin , error:loginErr}] = useLoginMutation();    
+    const [forgotPassword , {isLoading:isLoadingForgotPassword , error:forgotPasswordErr}] = useForgotPasswordMutation()
 
+    const isLoading = isLoadingForgotPassword || isLoadingLogin
 
+    const loginError = loginErr?.data?.message
+    const forgotPasswordError = forgotPasswordErr?.data?.message
 
-    const {isAuth  , forgotPassword } = useAuth();
+    const {isAuth  } = useAuth();
     const emailRef  = useRef(null);
     const passwordRef = useRef(null);
 
@@ -32,15 +32,20 @@ export default function Login() {
         const email : string = emailRef.current.value;
         const password : string = passwordRef.current.value;
 
-        dispatch(loginUser({email,password}))
-        
+        initCsrf(null).
+        then(()=>{
+            login({email,password})
+        })
     }
 
     function handleForgot(e : React.MouseEvent<HTMLAnchorElement>) {
         e.preventDefault();
         const email : string = emailRef.current.value;
       
-        dispatch(passwordForgot({email})) 
+        initCsrf(null).
+        then(()=>{
+            forgotPassword({email})            
+        })
     }
     
     if(isAuth)  return <Navigate replace to={'/'} /> 
@@ -75,7 +80,7 @@ export default function Login() {
                         { loginError ? loginError : '' }
                     </p>
                     <p className={styles.error}>
-                        { passwordForgotError ? passwordForgotError : '' }
+                        { forgotPasswordError ? forgotPasswordError : '' }
                     </p>
 
 

@@ -1,0 +1,12 @@
+.cancel{
+        
+}
+
+.confirm{
+    background-color: var(--accent);
+    padding: 1em;
+    border-radius: .2rem;
+    &:disabled{
+        background-color: grey;
+    }
+}

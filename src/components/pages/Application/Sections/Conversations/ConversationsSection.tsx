@@ -1,13 +1,20 @@
 import { useSelector } from 'react-redux';
 import Conversation from './Conversation/Conversation';
 import styles from './ConversationsSection.module.css';
-import { selectOpenConversations } from '@/redux/features/Conversation/ConversationSelectors';
+import { useGetConversationsQuery } from '@/redux/features/Conversation/conversationApi';
+import SectionContainer from '../SectionContainer';
 
 export default function ConversationsSection() {
-  const openConversations = useSelector(selectOpenConversations);  
+  const openConversationsIds = useSelector(state=>state.conversation.openConversationsIds);  
+  const {openConversations} = useGetConversationsQuery(undefined , {
+    selectFromResult : ({data})=>({
+      openConversations : data?.filter(({conversation_id})=>openConversationsIds.includes(conversation_id)) ?? []
+    })
+  })
+
 
   return (
-    <div className={styles.container}>
+    <SectionContainer>
         <div className={styles.header}>
             <div className={styles.title}>
                 <h1 >Conversations</h1>
@@ -22,6 +29,6 @@ export default function ConversationsSection() {
               })
           }         
         </div>
-    </div>
+    </SectionContainer>
   )
 }

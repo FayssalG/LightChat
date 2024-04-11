@@ -1,43 +1,26 @@
 import styles from './FriendsSection.module.css';
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
-import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
-import PendingFriendsListing from './PendingFriendsListing/PendingFriendsListing';
-import FriendsListing from './FriendsListing/FriendsListing';
-import BlockedListing from './BlockedListing/BlockedListing';
-import FriendSkeleton from './FriendSkeleton/FriendSkeleton';
 import useModal from '@/components/modal/useModal';
+import { Link, Outlet, useLocation } from 'react-router-dom';
+import SectionContainer from '../SectionContainer';
 
 export default function FriendsSection() {
-  const friendStatus = useSelector(state=>state.friend.status);
-  const blockStatus = useSelector(state=>state.block.status);
-  const friendRequestStatus = useSelector(state=>state.friendRequest.status);  
-  const isLoading = (friendStatus == 'loading' ||  friendRequestStatus == 'loading' || blockStatus == 'loading');
-  
-  const dispatch = useDispatch();  
-
-  const [selected , setSelected] : [string , Function]= useState('all');
+  const {pathname} = useLocation();
   const {onOpen : onOpenAddFriendModal } = useModal('AddFriendModal');
 
-  const renderListings = ()=>{
-    switch(selected){
-      case 'all':
-        return <FriendsListing/>
-      case 'pending':
-        return <PendingFriendsListing/>
-      case 'blocked':
-        return <BlockedListing/>
-
-    }
+  const handleAddFriend = ()=>{
+      onOpenAddFriendModal(null)
   }
+
   
   
   return (
-    <div className={styles.container}>
+    <SectionContainer>
         <div className={styles.header}>
           <div className={styles.title_addbtn}>
             <h1>Friends</h1>
-            <UnstyledButton onClick={onOpenAddFriendModal}>Add Friend</UnstyledButton>
+            <UnstyledButton onClick={handleAddFriend}>Add Friend</UnstyledButton>
           </div>
 
           <div className={styles.search}>
@@ -45,21 +28,19 @@ export default function FriendsSection() {
           </div>
 
           <div className={styles.filters}>
-            <UnstyledButton onClick={()=>setSelected('all')} data-active={selected=='all' ? true : false}>All</UnstyledButton>
-            <UnstyledButton onClick={()=>setSelected('blocked')} data-active={selected=='blocked' ? true : false}>Blocked</UnstyledButton>
-            <UnstyledButton onClick={()=>setSelected('pending')} data-active={selected=='pending' ? true : false}>Pending</UnstyledButton>
+            <Link to='/friends' data-active={pathname=='/friends' ? true : false}>All</Link>
+            <Link to='/friends/blocked' data-active={pathname=='/friends/blocked' ? true : false}>Blocked</Link>
+            <Link to='/friends/pending' data-active={pathname=='/friends/pending' ? true : false}>Pending</Link>
           </div>  
         </div>
 
 
         <div className={styles.friends_list}>
-          
-          {renderListings()}
-            
+          <Outlet/>            
         </div>
 
         
         
-    </div>
+    </SectionContainer>
   )
 }

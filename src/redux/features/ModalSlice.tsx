@@ -5,6 +5,7 @@ const ModalSlice = createSlice({
     initialState : {
       AddFriendModal : {
         open : false,
+        
       },
       CreateGroupModal : {
         open : false,

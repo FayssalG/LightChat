@@ -7,31 +7,34 @@ import { openConfirmRemoveFriendModal, setIsLoading } from '@/redux/features/UiS
 import { IoClose } from 'react-icons/io5';
 import { accept_friend_request, cancel_friend_request, ignore_friend_request } from '@/axios/friend';
 import Spinner from '@/components/shared/Spinner/Spinner';
-import { acceptRequest, cancelRequest, ignoreRequest, removeRequest } from '@/redux/features/FriendRequest/FriendRequestSlice';
-import { addFriend } from '@/redux/features/Friend/FriendSlice';
+import {  removeRequest } from '@/redux/features/friendRequest/friendRequestSlice';
+import { addFriend } from '@/redux/features/friend/FriendSlice';
 import FriendSkeleton from '../../FriendSkeleton/FriendSkeleton';
+import { useAcceptRequestMutation, useCancelRequestMutation, useIgnoreRequestMutation } from '@/redux/features/friendRequest/friendRequestApi';
 
 
 export default function PendingFriend({pendingFriend} : {pendingFriend:FriendRequest}  ) {
+  const [acceptRequest ] = useAcceptRequestMutation();
+  const [cancelRequest ] = useCancelRequestMutation();
+  const [ignoreRequest ] = useIgnoreRequestMutation();
+  const isLoading = false;
   const user = useSelector(state=>state.auth.user);
-  const status : string= useSelector(state=>state.friendRequest.status);
-  const isLoading : boolean= status == 'loading';
-  const dispatch = useDispatch()
+  
   
   
   const handleAccept = ()=>{  
-    dispatch(acceptRequest(pendingFriend.request_id));
+    acceptRequest(pendingFriend.request_id);
   }
 
   const handleIgnore = ()=>{
-    dispatch(ignoreRequest(pendingFriend.request_id))
+    ignoreRequest(pendingFriend.request_id)
   }
 
   const handleCancel = ()=>{
-    dispatch(cancelRequest(pendingFriend.request_id))
+    cancelRequest(pendingFriend.request_id)
   }
  
-  console.log(pendingFriend);
+  
 
   const renderActions = ()=>{
     if(pendingFriend.sender_id == user.id){
@@ -56,6 +59,7 @@ export default function PendingFriend({pendingFriend} : {pendingFriend:FriendReq
   }
 
   if(isLoading) return <FriendSkeleton/>
+  
   return (
     <>
          <div className={styles.friend}>

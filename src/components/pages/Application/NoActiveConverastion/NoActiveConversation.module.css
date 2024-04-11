@@ -1,11 +1,14 @@
 .container{
-    background-image: url('/background.png');
-    background-repeat: repeat-x;
+    background-image: url('/logoLight.png');
+    background-color: var(--primary);
     background-position: center;
+    background-size: 400px;    
+    background-repeat: no-repeat;
+    
     color: white;
     height: 100%;
     width: 100%;
-    background-color: var(--primary);
+    /* background-color: var(--primary); */
     @media (max-width:1000px) {
         display: none;
     }

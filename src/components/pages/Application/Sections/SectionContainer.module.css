@@ -1,0 +1,15 @@
+.container{
+    /* border: 2px solid white;
+    border-radius: 1rem; */
+
+    /* background-color: var(--secondary); */
+    /* width: 299px; */
+    position: relative;
+    width: 300px;
+    height: 100%;
+
+    @media (max-width:1000px) {
+        width: auto;
+        height: 100svh;
+    }
+}

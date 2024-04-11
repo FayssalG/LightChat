@@ -2,17 +2,17 @@ import styles from './Blocked.module.css';
 
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import { useDispatch, useSelector } from 'react-redux';
-import { unBlockUser } from '@/redux/features/Block/BlockSlice';
+import { unBlockUser } from '@/redux/features/block/blockSlice';
 import FriendSkeleton from '../../FriendSkeleton/FriendSkeleton';
+import { useUnBlockUserMutation } from '@/redux/features/block/blockApi';
 
 
 export default function Blocked({blocked}) {
-  const unBlockStatus : string = useSelector(state=>state.block.unBlockStatus);
-  const isLoading = unBlockStatus == 'loading' ; 
-  const dispatch = useDispatch();
+  const [unBlockUser , {isLoading}] = useUnBlockUserMutation();
+  
 
   const handleUnblock = ()=>{
-    dispatch(unBlockUser(blocked))
+    unBlockUser(blocked.username)
   }
 
   if(isLoading) return <FriendSkeleton/>

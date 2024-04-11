@@ -188,6 +188,8 @@ export default function CallProvider({children}) {
             audio:true,
             video:true
         })
+        
+        
         setOtherPersonUsername(toUsername)
         
         setCallStatus(prev=>{
@@ -289,10 +291,8 @@ export default function CallProvider({children}) {
         })
         stopStream()
         socket.emit('end' , otherPersonUsername);
-        streamRef.current = null
         peerConnRef.current.destroy();
-        peerConnRef.current = null;
-
+        // peerConnRef.current = null;
     }
 
     

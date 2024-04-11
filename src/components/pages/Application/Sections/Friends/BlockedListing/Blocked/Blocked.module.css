@@ -5,8 +5,8 @@
     gap: .5rem;
     align-items: center;
     .picture{
-        width: 45px;
-        height: 45px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
         position: relative;
         img{
@@ -20,7 +20,7 @@
         flex-grow: 1;
         .displayname{
             font-weight: 400;
-            font-size: 1.2rem;
+            font-size: 1rem;
         }
         .username{
             font-weight: 200;

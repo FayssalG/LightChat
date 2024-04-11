@@ -6,23 +6,18 @@ import { useEffect, useRef, useState } from 'react';
 import { send_friend_request } from '@/axios/friend';
 import { AxiosResponse } from 'axios';
 import Spinner from '@/components/shared/Spinner/Spinner';
-import { addRequest, clearError, sendRequest } from '@/redux/features/FriendRequest/FriendRequestSlice';
+import { addRequest} from '@/redux/features/friendRequest/friendRequestSlice';
 import { BaseModal } from '../BaseModal';
+import { useSendRequestMutation } from '@/redux/features/friendRequest/friendRequestApi';
 
 export default function AddFriendModal(props) { 
-  const status = useSelector((state)=>state.friendRequest.status);
-  const error = useSelector((state)=>state.friendRequest.error);
-  const isLoading = status === 'loading';
+  const [sendRequest , {isLoading , error , isSuccess}] = useSendRequestMutation();
   const dispatch = useDispatch();
 
+  console.log({error , isSuccess})
   
   const inputRef = useRef<HTMLInputElement | null>(null);
   
-
-  useEffect(()=>{
-    return ()=>dispatch(clearError())
-  },[])
-
   const handleSend = (e : React.FormEvent)=>{
       e.preventDefault();
       if(inputRef.current) {
@@ -45,7 +40,8 @@ export default function AddFriendModal(props) {
         //   setErrors(err.response.data.errors);
         // })
 
-        dispatch(sendRequest(username))
+        // dispatch(sendRequest(username))
+        sendRequest(username)
       }
   }
 
@@ -60,8 +56,8 @@ export default function AddFriendModal(props) {
                 <input ref={inputRef} placeholder='Type a username...' />
 
                 <div className={styles.message}>
-                  {error && <p className={styles.error}>{error}</p>}
-                  {status=='succeeded' &&  <p className={styles.success}>Request sent successfully !</p>}
+                  {error && <p className={styles.error}>{error?.data?.errors[0]}</p>}
+                  {isSuccess &&  <p className={styles.success}>Request sent successfully !</p>}
                 </div>
 
                 <UnstyledButton disabled={isLoading}>

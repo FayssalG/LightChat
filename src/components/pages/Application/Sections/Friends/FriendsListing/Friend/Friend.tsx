@@ -5,22 +5,23 @@ import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useModal from '@/components/modal/useModal';
-import { openConversation } from '@/redux/features/Conversation/ConversationSlice';
+import { openConversation, setActiveConversation } from '@/redux/features/Conversation/ConversationSlice';
 
 import FriendSkeleton from '../../FriendSkeleton/FriendSkeleton';
 import { showConversationOnMobile} from '@/redux/features/UiSlice';
+import { useUnFriendMutation } from '@/redux/features/friend/friendApi';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function Friend({friend}) {
-  const blockStatus = useSelector(state=>state.block.status);
-  const friendStatus = useSelector(state=>state.friend.status);
-  const isLoading = (blockStatus=='loading' || friendStatus=='loading')
-
+  const navigate = useNavigate();
+  
   const dispatch = useDispatch()
   const optionsRef = useRef<HTMLDivElement | null>(null)
 
   const {onOpen : onOpenConfirmRemoveFriendModal} = useModal('ConfirmRemoveFriendModal');
   const {onOpen : onOpenFriendDetailsModal} = useModal('FriendDetailsModal');
+
 
   const handleRemoveClick = ()=>{
     setShowOptionsMenu(false)
@@ -31,6 +32,8 @@ export default function Friend({friend}) {
     setShowOptionsMenu(false)
     dispatch(showConversationOnMobile())
     dispatch(openConversation(friend.conversation_id));
+    dispatch(setActiveConversation(friend.conversation_id));
+    navigate('/conversations')
   } 
 
   const handleFriendClick = ()=>{
@@ -51,7 +54,7 @@ export default function Friend({friend}) {
 
   const [showOptionsMenu , setShowOptionsMenu] : [Boolean , Function] = useState(false)
 
-  if(isLoading) return <FriendSkeleton/>
+  // if(isLoading) return <FriendSkeleton/>
   
   return (
     <>

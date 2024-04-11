@@ -1,23 +1,28 @@
 import { selectActiveConversation, selectMessageById } from '@/redux/features/Conversation/ConversationSelectors';
 import styles from './Conversation.module.css';
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
-import { closeConversation, setActiveConversation } from '@/redux/features/Conversation/ConversationSlice';
-import { selectFriendById } from '@/redux/features/Friend/FriendSlice';
+import { closeConversation, openConversation, setActiveConversation} from '@/redux/features/Conversation/ConversationSlice';
 
 import { IoClose } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
 import { showConversationOnMobile } from '@/redux/features/UiSlice';
+import { useGetMessagesQuery } from '@/redux/features/Conversation/conversationApi';
 
 export default function Conversation({conversation} : {conversation : Conversation}) {
-  const friend : Friend = useSelector((state)=>selectFriendById(state , conversation.friend_id));
-  const activeConversation : Conversation | {} = useSelector(selectActiveConversation);
-  const isSelected = activeConversation?.conversation_id === conversation.conversation_id 
-  
+  const activeConversationId : string | null = useSelector(state=>state.conversation.activeConversationId);
+  const isSelected = activeConversationId == conversation.conversation_id 
+  const {unSeenMessages} = useGetMessagesQuery(undefined , {
+    selectFromResult : ({data})=>({
+      unSeenMessages : [...data]?.filter((msg)=>!msg.isSeen && msg.sender_id==conversation.interlocutor.user_id)
+    })
+  }) 
+
   const dispatch = useDispatch()
   
   const handleSelectConversation = ()=>{
     dispatch(showConversationOnMobile());
     dispatch(setActiveConversation(conversation.conversation_id))
+    dispatch(openConversation(conversation.conversation_id))
   }
 
   const handleCloseConversation = ()=>{
@@ -30,19 +35,19 @@ export default function Conversation({conversation} : {conversation : Conversati
   return (
     <div data-selected={isSelected} className={styles.conversation}>
         <div className={styles.picture}>
-            <img src={friend.image} alt="avatar" />
+            <img src={conversation.interlocutor.image} alt="avatar" />
         </div>
 
         <UnstyledButton className={styles.name_lastmsg} onClick={handleSelectConversation}>
-            <h2 className={styles.name}>{friend.display_name}</h2>
-            <div className={styles.lastmsg}>
-              {/* <p className={styles.text}> {lastMessage?.text || null} </p>
-              <p className={styles.time}> {lastMessage?.created_at || null} </p> */}
-            </div>
+            <h2 className={styles.name}>{conversation.interlocutor.display_name}</h2>
+            {/* <div className={styles.lastmsg}>
+              <p className={styles.text}> {lastMessage?.text || null} </p>
+              <p className={styles.time}> {lastMessage?.created_at || null} </p>
+            </div> */}
         </UnstyledButton>
 
-        <div data-visible={false} className={styles.notread_marker}> 
-          10
+        <div data-visible={unSeenMessages?.length != 0} className={styles.notread_marker}> 
+            {unSeenMessages?.length}
         </div>
 
         <UnstyledButton className={styles.close} onClick={handleCloseConversation}>

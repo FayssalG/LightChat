@@ -1,5 +1,5 @@
 import {update_display_name, update_email, update_image, update_username} from '@/axios/user';
-import { logoutUser, updateImage as updateImageAction } from '@/redux/features/Auth/AuthSlice';
+import { logoutUser, updateImage as updateImageAction } from '@/redux/features/auth/authSlice';
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import styles from './ProfileSettings.module.css';
 import { IoArrowBack } from 'react-icons/io5';
@@ -7,64 +7,51 @@ import { IoArrowBack } from 'react-icons/io5';
 
 //redux
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useAuth from '@/components/hooks/useAuth';
 import useModal from '@/components/modal/useModal';
-import { updateUser } from '@/redux/features/Auth/AuthSlice';
+import { updateUser } from '@/redux/features/auth/authSlice';
 import { CiLogout } from 'react-icons/ci';
+import { AuthApi, useGetUserQuery, useLoginMutation, useLogoutMutation, useUpdateDisplayNameMutation, useUpdateEmailMutation, useUpdateImageMutation, useUpdateUsernameMutation } from '@/redux/features/auth/authApi';
 
 export default function ProfileSettings() {
-
-  const user = useSelector(state=>state.auth.user)
-  const dispatch = useDispatch()
-  const {onOpen : onOpenEditModal} = useModal('EditModal');
-
+    const navigate = useNavigate()
+  const {data:user} = useGetUserQuery(undefined);
   const {image ,display_name:displayName  , username , email } = user
+  
+  const [logout , {isLoading}] = useLogoutMutation();
+  const {onOpen: onOpenEditModals} = useModal('EditModals')
+
 
   const  handleLogout = ()=>{
-    dispatch(logoutUser());
+    logout(undefined)
+   
   }
 
-  const handleClick = (whatToUpdate : string , updateFn:Function)=>{
-    onOpenEditModal({user , whatToUpdate , updateFn})
+  
+  const handleEditDisplayName = ()=>{
+    onOpenEditModals({user , whatToUpdate:'displayname'});
+  }
+  const handleEditImage = ()=>{
+    onOpenEditModals({user , whatToUpdate:'image'});
+  }
+  const handleEditUsername = ()=>{
+    onOpenEditModals({user , whatToUpdate:'username'});
+  }
+  const handleEditEmail = ()=>{
+    onOpenEditModals({user , whatToUpdate:'email'});
   }
 
-  const updateImage = async (image : File | undefined , password : string)=>{
-    if(image){
-        const res = await update_image(user.id , image , password)
-        console.log(res.data)
-        if([200,201,202,204].includes(res.status)) dispatch(updateUser({image:res.data}));
-        return  res;
-    }
 
-  }
-
-  const updateDisplayName = async (newDisplayName : string , password : string)=>{    
-    const res = await update_display_name(user.id , newDisplayName , password)
-    console.log(res)
-    if([200,201,202,204].includes(res.status)) dispatch(updateUser({display_name:res.data}));
-    return  res;
-  }
-
-  const updateUsername = async (newUsername : string , password:string)=>{
-    const res = await update_username(user.id , newUsername , password)
-    if([200,201,202,204].includes(res.status)) dispatch(updateUser({username:res.data}));
-    return  res;  
-}
-
-  const updateEmail = async (newEmail : string , password:string)=>{
-    const res = await update_email(user.id , newEmail , password);
-    if([200,201,202,204].includes(res.status)) dispatch(updateUser({email:res.data}));
-    return  res;
-  }
+  
 
     
   return (
     <div className={styles.container}>
         <div className={styles.top}>
-            <Link to='/' className={styles.back_link}>
+            <UnstyledButton onClick={()=>navigate(-1)} className={styles.back_link}>
                 <IoArrowBack/>
-            </Link>
+            </UnstyledButton>
 
             <UnstyledButton onClick={handleLogout} className={styles.logout_btn_container}>
                 <CiLogout/>
@@ -73,7 +60,7 @@ export default function ProfileSettings() {
 
         <div className={styles.inner_container}>
             <div className={styles.header}>
-                <UnstyledButton onClick={()=>handleClick('picture',updateImage)}  className={styles.picture}>
+                <UnstyledButton onClick={handleEditImage}  className={styles.picture}>
                     <img src={image} alt="" />
                 </UnstyledButton>
 
@@ -94,7 +81,7 @@ export default function ProfileSettings() {
                         <h2>Display name</h2>
                         <p>{displayName}</p>
                     </div>
-                    <UnstyledButton onClick={()=>handleClick('displayname',updateDisplayName)}>Edit</UnstyledButton>
+                    <UnstyledButton onClick={handleEditDisplayName}>Edit</UnstyledButton>
                 
                 </div>
 
@@ -103,7 +90,7 @@ export default function ProfileSettings() {
                         <h2>username</h2>
                         <p>{username}</p>
                     </div>
-                    <UnstyledButton onClick={()=>handleClick('username',updateUsername)}>Edit</UnstyledButton>
+                    <UnstyledButton onClick={handleEditUsername}>Edit</UnstyledButton>
                 </div>
 
 
@@ -112,7 +99,7 @@ export default function ProfileSettings() {
                         <h2>Email</h2>
                         <p>{email}</p>
                     </div>
-                    <UnstyledButton onClick={()=>handleClick('email',updateEmail)}>Edit</UnstyledButton>
+                    <UnstyledButton onClick={handleEditEmail}>Edit</UnstyledButton>
                 </div>
 
             </div>

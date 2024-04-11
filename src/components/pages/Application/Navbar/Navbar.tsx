@@ -16,15 +16,16 @@ import { RiGroupLine } from 'react-icons/ri';
 import { LuMessageSquare } from 'react-icons/lu';
 import { CiLogout } from 'react-icons/ci';
 import { GoPerson } from 'react-icons/go';
-import { logoutUser } from '@/redux/features/Auth/AuthSlice';
+import { logoutUser } from '@/redux/features/auth/authSlice';
+import { useGetUserQuery, useLogoutMutation } from '@/redux/features/auth/authApi';
 
 export default function Navbar() {
+    const {data:user} = useGetUserQuery(undefined);
+    const [logout] = useLogoutMutation();
     const {pathname} = useLocation();
-    const dispatch = useDispatch();
-    const user = useSelector(state=>state.auth.user)
     
     const handleLogout = ()=>{
-        dispatch(logoutUser())
+        logout(undefined)
     }
     
 
@@ -39,8 +40,8 @@ export default function Navbar() {
                     </Link>
                 </div>
 
-                <Link to='/' 
-                    className={`${pathname=='/' ? styles.active : ''} ${styles.section_link} ${styles.friends} ` }
+                <Link to='/friends' 
+                    className={`${pathname.match(/\/friends\/*/g) ? styles.active : ''} ${styles.section_link} ${styles.friends} ` }
                 >
                     <GoPerson/>
                     <p>Friends</p>

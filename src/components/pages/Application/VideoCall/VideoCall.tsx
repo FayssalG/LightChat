@@ -6,13 +6,13 @@ import { useEffect, useRef, useState } from 'react';
 import { IoClose } from 'react-icons/io5';
 import { FiCamera, FiMic, FiMicOff } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
-import { selectFriendByUsername } from '@/redux/features/Friend/FriendSlice';
+import { selectFriendByUsername } from '@/redux/features/friend/FriendSlice';
 import { useVideoCall } from '@/components/context/VideoCallProvider';
 import { MdCameraswitch } from 'react-icons/md';
 import { useCall } from '@/components/context/CallProvider/CallProvider';
 
 export default function VideoCall() {
-    const {localStreamRef, remoteStreamRef, callStatus , end:endFn, close:closeFn , muteMic, swapCamera ,otherPersonUsername  } = useCall()
+    const {localStreamRef, remoteStreamRef, callStatus , end:endFn, close:closeFn , muteMic, swapCamera ,otherPersonUsername  , cancelCall} = useCall()
     const videoCallStatus = callStatus.video
 
     const caller = useSelector(selectFriendByUsername(otherPersonUsername))
@@ -49,6 +49,10 @@ export default function VideoCall() {
         endFn();
     }
 
+    const handleCancelCall = ()=>{
+        cancelCall()
+    }
+
         
     return (
     <div className={styles.container}>
@@ -80,11 +84,19 @@ export default function VideoCall() {
 
 
             {   
-                (videoCallStatus === 'ongoing' || callStatus === 'calling') &&
+                (videoCallStatus === 'ongoing') &&
                 <UnstyledButton onClick={handleEndCall} className={styles.endcall_btn}>
                     <BiPhoneOff/> 
                 </UnstyledButton>
             }
+
+            {   
+                ( videoCallStatus === 'calling') &&
+                <UnstyledButton onClick={handleCancelCall} className={styles.endcall_btn}>
+                    <BiPhoneOff/> 
+                </UnstyledButton>
+            }
+
 
             {
                 videoCallStatus=='ongoing' &&

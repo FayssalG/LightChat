@@ -1,0 +1,50 @@
+.picture{
+    height: 100px;
+    width: 100px;
+    img{
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+    }
+}
+
+.name_username{
+    margin-top: 1rem;
+    .name{
+        font-weight: 700;
+        font-size: 1.2rem;
+    }
+    .username{
+        margin-top: .1rem;
+        font-size: 1.1;
+        font-weight: 200;
+    }
+}
+
+.btns{
+    margin-top: 1rem;
+    display: flex;
+    gap: 1rem;
+
+    button{
+        padding: .4em .7em;
+        border-radius: 2px;
+        &:hover{
+            opacity: .7;
+        }
+    }
+
+    .success{
+        background-color: var(--accent);
+    }
+    .danger{
+        background-color: var(--danger);
+    }
+    .neutral{
+        background-color: grey;
+    }
+    .disabled{
+        background-color: var(--accent);
+        opacity: .5;
+    }
+}

@@ -4,17 +4,14 @@ import useAuth from '@/components/hooks/useAuth';
 import { useRef, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import Spinner from '@/components/shared/Spinner/Spinner';
-import { useDispatch, useSelector } from 'react-redux';
-import { registerUser } from '@/redux/features/Auth/AuthSlice';
+import {useRegisterMutation } from '@/redux/features/auth/authApi';
+import { useLazyInitCsrfQuery } from '@/redux/features/baseApi';
 
 export default function Register() {
+    const [initCsrf ] = useLazyInitCsrfQuery();
+    const [register , {isLoading , error}] = useRegisterMutation()
     const {isAuth } = useAuth();
-    // const [errors  , setErrors] = useState({email : '' , displayName : '' , username:'',password:''})
-    const errors = useSelector(state=>state.auth.registerError)
-    const status = useSelector(state=>state.auth.registerStatus)
-    const isLoading = status == 'loading'
-
-    const dispatch = useDispatch()
+    const errors = error?.data?.errors
     
     const emailRef = useRef(null)
     const usernameRef = useRef(null)
@@ -26,16 +23,17 @@ export default function Register() {
         e.preventDefault();
         const email = emailRef.current?.value;
         const  username = usernameRef.current?.value;
-        const  displayName = displayNameRef.current?.value;
+        const  display_name = displayNameRef.current?.value;
         const  password = passwordRef.current?.value;
-        const  passwordConfirmation = passwordConfirmationRef.current?.value;
+        const  password_confirmation = passwordConfirmationRef.current?.value;
 
-        dispatch(registerUser({email , displayName , username , password , passwordConfirmation}))
+        initCsrf(null).then(()=>{
+            register({email , display_name , username , password , password_confirmation})
+        })
     }
 
     if(isAuth)  return <Navigate replace to={'/'} /> 
 
-    console.log({errors})
   return (
     <div className={styles.container}>
         <div className={styles.inner_container}>

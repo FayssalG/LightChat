@@ -2,17 +2,20 @@ import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import styles from './FriendDetailsModal.module.css';
 import { IoClose } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectFriendById, setFriendAsUnblocked, setSelectedFriend } from '@/redux/features/Friend/FriendSlice';
+import { selectFriendById, setFriendAsUnblocked, setSelectedFriend } from '@/redux/features/friend/FriendSlice';
 import useModal from '../useModal';
 import { BaseModal } from '../BaseModal';
-import { unBlockUser } from '@/redux/features/Block/BlockSlice';
+import { useUnBlockUserMutation } from '@/redux/features/block/blockApi';
+import { useState } from 'react';
 
 export default function FriendDetailsModal(props)   {
+    const [unBlockUser] = useUnBlockUserMutation();
     const {friend , onClose , isOpen} = props
-    const {isBlocked} = useSelector((state)=>selectFriendById(state,friend.user_id));    
-    const dispatch = useDispatch();
+    const {isBlocked , isStillFriend} = friend;
+    const [isBlockedState , setIsBlockedState] = useState(isBlocked)    
+    const [isStillFriendState , setIsStillFriendState] = useState(isStillFriend)    
 
-    console.log({friend})
+
 
     const {onOpen: onOpenConfirmRemoveFriendModal} = useModal('ConfirmRemoveFriendModal')
     const {onOpen: onOpenConfirmBlockFriendModal} = useModal('ConfirmBlockFriendModal')
@@ -28,7 +31,10 @@ export default function FriendDetailsModal(props)   {
     }
 
     const handleUnblock = ()=>{
-        dispatch(unBlockUser(friend))    
+        unBlockUser(friend.username)    
+        .then(()=>{
+            setIsBlockedState(false);
+        })
     }
 
 
@@ -70,10 +76,17 @@ export default function FriendDetailsModal(props)   {
 
             <div className={styles.footer}>
                 <UnstyledButton onClick={()=>null} className={styles.success_btn}>Send a message</UnstyledButton>
-                <UnstyledButton className={styles.danger_btn} onClick={handleOpenRemoveModal}>Remove Friend</UnstyledButton>
+                
+                {
+                    isStillFriend ?
+                    <UnstyledButton className={styles.danger_btn} onClick={handleOpenRemoveModal}>Remove Friend</UnstyledButton>
+                    : !isBlockedState &&
+                    <UnstyledButton className={styles.success_btn} onClick={()=>null}>Send friend request</UnstyledButton>
+
+                }
 
                 {
-                    !isBlocked ?
+                    !isBlockedState ?
                     <UnstyledButton className={styles.danger_btn} onClick={handleOpenBlockModal}>Block</UnstyledButton>
                     :
                     <UnstyledButton className={styles.success_btn} onClick={handleUnblock}>Unblock</UnstyledButton>

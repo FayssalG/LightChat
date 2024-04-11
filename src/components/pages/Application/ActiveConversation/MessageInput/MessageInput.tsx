@@ -3,13 +3,14 @@ import { IoSend } from "react-icons/io5";
 import { CiCirclePlus } from "react-icons/ci";
 import UnstyledButton from '../../../../shared/UnstyledButton/UnstyledButton';
 import { useDispatch, useSelector } from 'react-redux';
-import { sendMessage, sendMessageWithAttachment } from '@/redux/features/Conversation/ConversationSlice';
 import { ChangeEvent, useRef, useState } from 'react';
 import AttachmentPreview from './AttachmentPreview/AttachmentPreview';
+import { useSendMessageMutation, useSendMessageWithAttachmentMutation } from '@/redux/features/Conversation/conversationApi';
 
-export default function MessageInput({friend}) {
+export default function MessageInput({friendId , conversationId}) {
+  const [sendMessage] = useSendMessageMutation();
+  const [sendMessageWithAttachment] = useSendMessageWithAttachmentMutation();
   const user : User = useSelector(state=>state.auth.user);
-  const dispatch = useDispatch();
 
   const [attachment , setAttachment] : [File | null , Function] = useState(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -18,9 +19,9 @@ export default function MessageInput({friend}) {
     e.preventDefault();
     let newMessage = {
       id: Math.floor(Math.random()*2000), //set a random id for now  
-      conversation_id : friend.conversation_id,
+      conversation_id : conversationId,
       sender_id :  user.id ,
-      receiver_id:friend.user_id , 
+      receiver_id:friendId , 
       isSent:false,
       isSeen:false,
       text : '',
@@ -30,15 +31,15 @@ export default function MessageInput({friend}) {
     if(attachment){
       newMessage = {...newMessage,
         text:inputRef.current.value,
-        attachment : attachment ? attachment : null
+        attachment : attachment 
       }
-      dispatch(sendMessageWithAttachment(newMessage))  
+      sendMessageWithAttachment(newMessage)
     }
     else if(inputRef.current.value){
       newMessage = {...newMessage,
         text:inputRef.current.value,
       }
-      dispatch(sendMessage(newMessage))
+      sendMessage(newMessage)
     }
     
     inputRef.current.value = '';
