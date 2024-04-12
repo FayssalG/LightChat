@@ -37,10 +37,11 @@
     }
 
     .active_conversation{
+
         background-image: url('/logoLight.png');
         background-color: var(--primary);
         background-position: center;
-        background-size: 400px;    
+        background-size: 400px ;    
         background-repeat: no-repeat;    
         padding: .5rem;        
         @media (max-width:1000px) {

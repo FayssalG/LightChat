@@ -1,4 +1,4 @@
-import styles from './Application.module.css';
+import styles from './Dashboard.module.css';
 import ActiveConversation from "./ActiveConversation/ActiveConversation";
 import Navbar from "./Navbar/Navbar";
 
@@ -17,7 +17,7 @@ import { baseApi } from '@/redux/features/baseApi';
 import { openConversation } from '@/redux/features/Conversation/ConversationSlice';
 import { useGetUserQuery } from '@/redux/features/auth/authApi';
 
-export default function Application() {
+export default function Dashboard() {
   const {isVerified} : {isVerified : Boolean} = useGetUserQuery(undefined , {
     selectFromResult : ({data})=>({
       isVerified : (data?.email_verified_at !== null)

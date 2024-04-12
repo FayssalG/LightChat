@@ -1,11 +1,9 @@
 import styles from './App.module.css';
 import {BrowserRouter , Route , Routes , Navigate, Outlet} from 'react-router-dom'
-import Application from './components/pages/Application/Application';
 import ProfileSettings from './components/pages/ProfileSettings/ProfileSettings';
 import Login from './components/pages/Auth/Login/Login';
 import Register from './components/pages/Auth/Register/Register';
 import { useEffect, useState } from 'react';
-import useAuth from './components/hooks/useAuth';
 import Loading from './components/shared/Loading/Loading';
 import ResetPassword from './components/pages/Auth/ResetPassword/ResetPassword';
 
@@ -16,14 +14,8 @@ import VideoCallProvider from './components/context/VideoCallProvider';
 import FriendsSection from './components/pages/Application/Sections/Friends/FriendsSection';
 import ConversationsSection from './components/pages/Application/Sections/Conversations/ConversationsSection';
 import GroupsSection from './components/pages/Application/Sections/Groups/GroupsSection';
-import ActiveConversation from './components/pages/Application/ActiveConversation/ActiveConversation';
 import CallProvider from './components/context/CallProvider/CallProvider';
-import { fetchUser } from './redux/features/auth/authSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { clearFriends, fetchFriends } from './redux/features/friend/FriendSlice';
-import { clearConversations, fetchConversations, fetchMessages } from './redux/features/Conversation/ConversationSlice';
-import { clearBlockedUsers, fetchBlockedUsers } from './redux/features/block/blockSlice';
-import { clearRequests, fetchRequests } from './redux/features/friendRequest/friendRequestSlice';
+import { useDispatch} from 'react-redux';
 
 
 import { useGetUserQuery, useLazyGetUserQuery } from './redux/features/auth/authApi';
@@ -34,6 +26,7 @@ import { useGetFriendRequestsQuery, useLazyGetFriendRequestsQuery } from './redu
 import FriendsListing from './components/pages/Application/Sections/Friends/FriendsListing/FriendsListing';
 import PendingFriendsListing from './components/pages/Application/Sections/Friends/PendingFriendsListing/PendingFriendsListing';
 import BlockedListing from './components/pages/Application/Sections/Friends/BlockedListing/BlockedListing';
+import Dashboard from './components/pages/Application/Dashboard';
 
 function App() {
   
@@ -44,7 +37,7 @@ function App() {
           <Routes>
             <Route element={<ProtectedRoute/>}>
              
-              <Route path='/' element={<Application/>}>
+              <Route path='/' element={<Dashboard/>}>
                 <Route path='/friends' element={<FriendsSection/>}>
                   <Route path='/friends' element={<FriendsListing/>}></Route>
                   <Route path='/friends/pending' element={<PendingFriendsListing/>}></Route>

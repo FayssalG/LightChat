@@ -13,11 +13,10 @@ export default function Message({messageRef ,   message , friend} : any) {
   const {text , attachment , isSent , isSeen} = message;
 
   const type = message?.sender_id == user.id ? 'self' : null;
-  const message_style_classname = type == 'self' ? styles.message_self : styles.message_other  
+  let message_style_classname = type == 'self' ? styles.message_self : styles.message_other  
   
-
   return (
-    <div ref={messageRef} style={{opacity:isSent===false ? 0.5 : 1}} className={styles.message+' '+message_style_classname}>
+    <div ref={messageRef} data-loading={isSent===false}   className={styles.message+' '+message_style_classname}>
        
         <div className={styles.message_infos}>
           <span className={styles.sender}>{type=='self' ? 'You' : friend.display_name}</span>

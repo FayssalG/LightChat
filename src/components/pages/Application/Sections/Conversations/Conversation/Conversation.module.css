@@ -1,12 +1,17 @@
 .conversation[data-selected=true]{
     background-color: var(--primary-dark);        
+    border-radius: .4rem;
+    border-bottom: 1px solid var(--accent);
+    
 }
 
 .conversation{
+    background-color: var(--primary-dark);        
     border-radius: .4rem;
+
     display: flex;
     gap: .5rem;
-    padding: .4rem;
+    padding: .7rem .4rem;
     align-items: center;
 
     .picture{
@@ -21,27 +26,18 @@
         }
     }
 
-    .name_lastmsg{
+    .name{
         flex-grow: 1;
-        .name{
+        .display_name{
             font-weight: 400;
             font-size: 1rem;
         }
-        .lastmsg{
+        .username{
             margin-top: .2rem;
             font-weight: 200;
             font-size: .9rem;
             display: flex;
             justify-content: space-between;
-            .text{
-                font-style: italic;
-                width: 50px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-            .time{
-
-            }
         
         }
     }

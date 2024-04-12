@@ -4,5 +4,28 @@
     width: 100%;
     display: grid;
     place-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
+.logo_img{
+    width: 170px;
+    animation: pulse 2s ease infinite;
+}
+
+@keyframes pulse{
+    0%{
+        opacity: .1;
+        transform: scale(.99);
+    }
+    50%{
+        opacity: 1;
+        transform: scale(1);
+    }
+    100%{
+        opacity: .1;
+        transform: scale(.99);
+    }
+
+}

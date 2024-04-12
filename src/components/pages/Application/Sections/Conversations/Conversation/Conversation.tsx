@@ -33,18 +33,22 @@ export default function Conversation({conversation} : {conversation : Conversati
   // const lastMessage  : FriendMessage | {} = useSelector(state=>selectMessageById(state,lastMessageId));
 
   return (
-    <div data-selected={isSelected} className={styles.conversation}>
+    <UnstyledButton  onClick={handleSelectConversation} data-selected={isSelected} className={styles.conversation}>
         <div className={styles.picture}>
             <img src={conversation.interlocutor.image} alt="avatar" />
         </div>
 
-        <UnstyledButton className={styles.name_lastmsg} onClick={handleSelectConversation}>
-            <h2 className={styles.name}>{conversation.interlocutor.display_name}</h2>
+        <div className={styles.name}>
+            <h2 className={styles.display_name}>{conversation.interlocutor.display_name}</h2>
             {/* <div className={styles.lastmsg}>
               <p className={styles.text}> {lastMessage?.text || null} </p>
               <p className={styles.time}> {lastMessage?.created_at || null} </p>
             </div> */}
-        </UnstyledButton>
+            <p className={styles.username}>
+              @{conversation.interlocutor.username}
+            </p>
+
+        </div>
 
         <div data-visible={unSeenMessages?.length != 0} className={styles.notread_marker}> 
             {unSeenMessages?.length}
@@ -53,7 +57,7 @@ export default function Conversation({conversation} : {conversation : Conversati
         <UnstyledButton className={styles.close} onClick={handleCloseConversation}>
             <IoClose/>
         </UnstyledButton>
-    </div>
+    </UnstyledButton>
 
   )
 }

@@ -4,6 +4,7 @@
     height: 100%;
     overflow-y: auto;
     background-color: var(--secondary);
+    box-shadow: 0 0 10px #111;
     border-radius: 1rem;
         
     flex-grow: 1;
