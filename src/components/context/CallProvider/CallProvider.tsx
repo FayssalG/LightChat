@@ -39,7 +39,6 @@ export default function CallProvider({children}) {
 
 
     useEffect(()=>{
-        console.log('RE RENDER')
         if(socket){
             socket.on('cancel-receiving-call' , ()=>{
                 setIsReceivingVideoCall(false)
@@ -47,6 +46,7 @@ export default function CallProvider({children}) {
             })
 
             socket.on('receiving-call' , ({from , signal , callType })=>{
+                    console.log('tst')
 
                 // if(callStatus.audio == 'ongoing' || callStatus.video == 'ongoing' ){
                 //     socket.emit('busy');
@@ -184,21 +184,22 @@ export default function CallProvider({children}) {
 
     
     const callVideo = async (toUsername : string)=>{
-        const stream = await navigator.mediaDevices.getUserMedia({
-            audio:true,
-            video:true
-        })
-        
-        
         setOtherPersonUsername(toUsername)
         
         setCallStatus(prev=>{
             return {...prev, video: 'calling'}
         })
 
+        const stream = await navigator.mediaDevices.getUserMedia({
+            audio:true,
+            video:true
+        })
         
-        localStreamRef.current.srcObject = stream
-
+        
+        
+        if(localStreamRef.current){
+            localStreamRef.current.srcObject = stream
+        }        
         streamRef.current = stream
 
  
@@ -231,10 +232,7 @@ export default function CallProvider({children}) {
         })
 
         peer.on('stream' , (mediaStream)=>{
-            remoteStreamRef.current.srcObject = mediaStream
-            console.log('test')
-            console.log({MEDAIA:remoteStreamRef.current.srcObject})
-
+            remoteStreamRef.current.srcObject = mediaStream        
         })
 
         peerConnRef.current = peer
@@ -249,7 +247,10 @@ export default function CallProvider({children}) {
             })
             streamRef.current = stream
 
+            setOtherPersonUsername(personCallingUsername)
+
             setIsReceivingVideoCall(false)
+
             setCallStatus(prev=>{
                 return {...prev, video: 'ongoing'}
             })
@@ -264,8 +265,10 @@ export default function CallProvider({children}) {
             })
     
             peer.on('stream' , (mediaStream)=>{
-                remoteStreamRef.current.srcObject = mediaStream
-                localStreamRef.current.srcObject = stream
+                if(remoteStreamRef.current && localStreamRef.current){
+                    remoteStreamRef.current.srcObject = mediaStream
+                    localStreamRef.current.srcObject = stream
+                }
     
             })
     

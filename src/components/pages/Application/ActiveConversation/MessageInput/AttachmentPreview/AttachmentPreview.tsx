@@ -11,13 +11,18 @@ export default function AttachmentPreview({attachment , setAttachment}) {
   }
   
   const renderAttachment = ()=>{
-
-    
-  
+    console.log({attachment})
     if(attachment.type.split('/')[0] == 'image'){
       const attachmentUrl = URL.createObjectURL(attachment);
       return <img className={styles.image_attachment} src={attachmentUrl} alt="" />      
-    }else{
+    }
+    else if(attachment.type.split('/')[0] == 'video'){
+      const attachmentUrl = URL.createObjectURL(attachment);
+      return <video className={styles.image_attachment} src={attachmentUrl} alt="" />      
+
+    }
+    
+    else{
       const attachmeExtension = attachment.name.slice((attachment.name.lastIndexOf('.')-1 >>> 0) + 2);
       console.log({attachmeExtension})
       return (

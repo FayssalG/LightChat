@@ -42,7 +42,6 @@ export default function ActiveConversation({activeConversation , isFetching}) {
 
     
     useEffect(()=>{
-        console.log('RERENDER USEEFFECT')
         if(activeConversation){
             if(lastMsg && lastMsg?.sender_id == interlocutor?.user_id && lastMsg?.isSeen == false ) {
                 markMessagesSeen(activeConversation.conversation_id);

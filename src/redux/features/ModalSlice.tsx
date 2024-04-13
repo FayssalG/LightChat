@@ -38,7 +38,7 @@ const ModalSlice = createSlice({
         }
       },
 
-      EditModal : {
+      EditModals : {
         open : false,
         meta : {
             user : null,
@@ -47,9 +47,8 @@ const ModalSlice = createSlice({
         }
       },
 
-
-
     },
+
     reducers: {
         closeModal:(state , action)=>{
             state[action.payload].open=false;

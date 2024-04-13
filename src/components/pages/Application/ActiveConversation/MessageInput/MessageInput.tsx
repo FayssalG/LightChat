@@ -9,7 +9,7 @@ import { useSendMessageMutation, useSendMessageWithAttachmentMutation } from '@/
 
 export default function MessageInput({friendId , conversationId}) {
   const [sendMessage] = useSendMessageMutation();
-  const [sendMessageWithAttachment] = useSendMessageWithAttachmentMutation();
+  const [sendMessageWithAttachment ] = useSendMessageWithAttachmentMutation();
   const user : User = useSelector(state=>state.auth.user);
 
   const [attachment , setAttachment] : [File | null , Function] = useState(null);

@@ -63,12 +63,25 @@ export default function Dashboard() {
       })
 
 
-      socket.on('message-received' , ({message , sender} : {message:FriendMessage , sender:Friend})=>{
+      socket.on('message-received' , ({message} : {message:FriendMessage , sender:Friend})=>{
         if(message){
           dispatch(openConversation(message.conversation_id))
           dispatch(baseApi.util.invalidateTags(['Messages']))
         }
       })
+
+      socket.on('message-updated' , ({message })=>{
+        if(message){
+          dispatch(baseApi.util.invalidateTags(['Messages']))
+        }
+      })
+
+      socket.on('message-deleted' , ({message })=>{
+        if(message){
+          dispatch(baseApi.util.invalidateTags(['Messages']))
+        }
+      })
+
 
       
       socket.on('messages-seen' , (conversationId : string)=>{
@@ -78,6 +91,7 @@ export default function Dashboard() {
           dispatch(baseApi.util.invalidateTags(['Messages']))
         }
       })
+
 
 
       

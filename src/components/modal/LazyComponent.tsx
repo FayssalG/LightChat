@@ -2,7 +2,6 @@ import { closeModal } from "@/redux/features/ModalSlice";
 import { Suspense, lazy, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ErrorBoundary from "../error-boundary/ErrorBoundary";
-import useBiAnimation from "../hooks/useBiAnimation";
 
 interface ILazyComponentProps{
     filename : string;

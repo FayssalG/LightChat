@@ -32,11 +32,12 @@ export const conversationApi = baseApi.injectEndpoints({
             })
           )
           try{
-            await queryFulfilled
+            const {data} = await queryFulfilled
+
             dispatch(
               conversationApi.util.updateQueryData('getMessages' , undefined , (draft)=>{
                 return draft.map(msg => {
-                  if(msg.id == message.id) return {...msg , isSent : true}
+                  if(msg.id == message.id) return data
                   return msg  
                 });
               })
@@ -70,11 +71,11 @@ export const conversationApi = baseApi.injectEndpoints({
             })
           )
           try{
-            await queryFulfilled
+            const {data} = await queryFulfilled
             dispatch(
               conversationApi.util.updateQueryData('getMessages' , undefined , (draft)=>{
                 return draft.map(msg => {
-                  if(msg.id == message.id) return {...msg , isSent : true}
+                  if(msg.id == message.id) return data
                   return msg  
                 });
               })
@@ -105,8 +106,59 @@ export const conversationApi = baseApi.injectEndpoints({
             }
         },
         // invalidatesTags:['Messages']
-      })
+      }),
       
+      updateMessage : builder.mutation({
+        query : ({message_id , text})=>({
+          url:'/api/conversations/update-message',
+          method: 'POST',
+          body: {message_id , text}
+        }),
+
+        async onQueryStarted(args , {dispatch , queryFulfilled}){
+          const patchedResult = dispatch(
+            conversationApi.util.updateQueryData('getMessages' , undefined , (draft)=>{
+              return draft.map((msg)=>{
+                if(msg.id == args.message_id) return {...msg , text:args.text}
+                return msg
+              })
+            })
+          )
+
+          try{
+            await queryFulfilled;
+          }catch(err){
+            console.log({err})
+            patchedResult.undo();
+          }
+        }
+      }),
+
+      deleteMessage : builder.mutation({
+        query : (message_id)=>({
+          url:'/api/conversations/delete-message',
+          method:'POST',
+          body : {message_id}
+        }),
+
+        async onQueryStarted(args , {dispatch,queryFulfilled}){
+          const patchedResult = dispatch(
+            conversationApi.util.updateQueryData('getMessages' ,undefined , (draft)=>{
+              return draft.filter(msg=>msg.id != args);
+            } )
+          )
+          try{
+            await queryFulfilled
+          }catch(err){
+            patchedResult.undo();
+          }
+        }
+
+      })
+
+      
+
+
     })
 
 
@@ -115,6 +167,8 @@ export const conversationApi = baseApi.injectEndpoints({
 })
 
 export const {
+  useDeleteMessageMutation,
+  useUpdateMessageMutation,
   useMarkMessagesSeenMutation,
   useSendMessageWithAttachmentMutation,
   useSendMessageMutation,

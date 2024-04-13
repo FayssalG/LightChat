@@ -1,8 +1,14 @@
 import {FileIcon ,  defaultStyles} from 'react-file-icon';
 import styles from './Attachment.module.css'
 import { GoFile } from "react-icons/go";
+import useModal from '@/components/modal/useModal';
 
 export default function Attachment({attachment}) {
+    const {onOpen:onOpenDisplayImageModal} = useModal('DisplayImageModal');
+
+    const handleDisplayImage = ()=>{
+      onOpenDisplayImageModal({imageSrc:attachment.url})
+    }
 
     const renderAttachmeent = ()=>{
         if(attachment){
@@ -10,7 +16,11 @@ export default function Attachment({attachment}) {
           const extension = attachment.name.split('.')[1];
           switch(type){
             case 'image':
-              return <img className={styles.image_attachment} src={attachment.url}></img>
+              return <img onClick={handleDisplayImage} className={styles.image_attachment} src={attachment.url}></img>
+            
+            case 'video':
+              return <video className={styles.video_attachment} controls src={attachment.url}></video>
+
             case 'application':
               return (
                 <>

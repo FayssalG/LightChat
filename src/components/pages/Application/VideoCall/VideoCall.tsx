@@ -10,12 +10,19 @@ import { selectFriendByUsername } from '@/redux/features/friend/FriendSlice';
 import { useVideoCall } from '@/components/context/VideoCallProvider';
 import { MdCameraswitch } from 'react-icons/md';
 import { useCall } from '@/components/context/CallProvider/CallProvider';
+import { useGetFriendsQuery } from '@/redux/features/friend/friendApi';
 
 export default function VideoCall() {
-    const {localStreamRef, remoteStreamRef, callStatus , end:endFn, close:closeFn , muteMic, swapCamera ,otherPersonUsername  , cancelCall} = useCall()
-    const videoCallStatus = callStatus.video
+    const {localStreamRef, remoteStreamRef, callStatus , end:endFn, close:closeFn , muteMic, swapCamera ,otherPersonUsername  , cancelCall} = useCall();
+    const videoCallStatus = callStatus.video;
 
-    const caller = useSelector(selectFriendByUsername(otherPersonUsername))
+    const {caller} = useGetFriendsQuery(undefined , {
+        selectFromResult: ({data})=>({
+            caller : data.find(f=>f.username==otherPersonUsername)
+        })
+    })
+
+    console.log({caller,otherPersonUsername})
     const [cameraFacing , setCameraFacing]= useState('user')
     const [isMuted , setIsMuted] = useState(false)
     

@@ -13,7 +13,6 @@
     align-content: space-around;
 
     @media (max-width:1000px){
-        background-color: var(--primary);
         z-index: 5;
         position: fixed;
         /* max-height: revert; */

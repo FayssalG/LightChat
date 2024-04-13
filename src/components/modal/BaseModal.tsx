@@ -3,7 +3,6 @@
 import { memo, MouseEventHandler, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import styles from './BaseModal.module.css';
-import useBiAnimation from '../hooks/useBiAnimation';
 
 export interface IBaseModalProps {
   show: boolean;
@@ -33,13 +32,14 @@ export const BaseModal = memo((props: IBaseModalProps) => {
       onClose();
     }
   };
-
-  return createPortal(
+  
+  return createPortal(  
     <div onClick={handleOutsideClick} className={styles.container}>
-        <div  onClick={handleInsideClick}>
+        <div className={styles.inner_container} onClick={handleInsideClick}>
           {children}
         </div>
-    </div>,
+    </div>
+    ,
     root
   );
 });
