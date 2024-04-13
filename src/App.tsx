@@ -27,11 +27,18 @@ import FriendsListing from './components/pages/Application/Sections/Friends/Frie
 import PendingFriendsListing from './components/pages/Application/Sections/Friends/PendingFriendsListing/PendingFriendsListing';
 import BlockedListing from './components/pages/Application/Sections/Friends/BlockedListing/BlockedListing';
 import Dashboard from './components/pages/Application/Dashboard';
+import { Slide, ToastContainer } from 'react-toastify';
 
 function App() {
   
   return (
     <div className={styles.container}>
+      <ToastContainer
+          autoClose={2500}
+          theme='dark'
+          transition={Slide}
+      />
+
       <SkeletonTheme baseColor='#313131' highlightColor='#525252'>
         <BrowserRouter>
           <Routes>

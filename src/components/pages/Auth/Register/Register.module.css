@@ -14,6 +14,9 @@
     width: 500px;
     max-height: 100svh;
     background-color: var(--primary);
+
+    animation: fadeIn .5s ease forwards;
+
     @media (max-width:700px) {
         padding-top: 4rem;
         width: 100%;
@@ -79,3 +82,11 @@
 }
 
 
+@keyframes fadeIn {
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}

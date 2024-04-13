@@ -1,9 +1,11 @@
+import 'react-toastify/ReactToastify.css';
 import CallNotification from './CallNotification/CallNotification';
 
 import { createContext, useContext, useEffect, useRef, useState } from "react"
 import { useSocket } from "../SocketProvider"
 import Peer from 'simple-peer';
 import useAuth from "../../hooks/useAuth";
+import { Slide, ToastContainer, Zoom, toast } from 'react-toastify';
 
 const CallContext = createContext()
 export function useCall(){
@@ -184,58 +186,63 @@ export default function CallProvider({children}) {
 
     
     const callVideo = async (toUsername : string)=>{
-        setOtherPersonUsername(toUsername)
+        try{
+            setOtherPersonUsername(toUsername)
         
-        setCallStatus(prev=>{
-            return {...prev, video: 'calling'}
-        })
-
-        const stream = await navigator.mediaDevices.getUserMedia({
-            audio:true,
-            video:true
-        })
-        
-        
-        
-        if(localStreamRef.current){
-            localStreamRef.current.srcObject = stream
-        }        
-        streamRef.current = stream
-
- 
-        
-        const peer = new Peer({
-            initiator:true,
-            trickle:false,
-            stream : stream
-
-        })
-
-        socket.once('call-accepted' , (signal)=>{
             setCallStatus(prev=>{
-                return {...prev, video: 'ongoing'}
+                return {...prev, video: 'calling'}
             })
-            peer.signal(signal)
-        })
-
-        socket.once('call-rejected' , ()=>{
-            stopStream()
-           setCallStatus(prev=>{
-                return {...prev, video: 'ended'}
+   
+            const stream = await navigator.mediaDevices.getUserMedia({
+                audio:true,
+                video:true
             })
-        })
 
+            if(localStreamRef.current){
+                localStreamRef.current.srcObject = stream
+            }        
+
+            streamRef.current = stream
+
+            const peer = new Peer({
+                initiator:true,
+                trickle:false,
+                stream : stream
+            })
+
+            socket.once('call-accepted' , (signal)=>{
+                setCallStatus(prev=>{
+                    return {...prev, video: 'ongoing'}
+                })
+                peer.signal(signal)
+            })
+    
+            socket.once('call-rejected' , ()=>{
+                stopStream()
+               setCallStatus(prev=>{
+                    return {...prev, video: 'ended'}
+                })
+            })
+    
+            
+    
+            peer.on('signal' , (signal)=>{
+                socket.emit('call' , {from:user.username, signal , to:toUsername , callType:'video'});
+            })
+    
+            peer.on('stream' , (mediaStream)=>{
+                remoteStreamRef.current.srcObject = mediaStream        
+            })
+    
+            peerConnRef.current = peer
         
+        }catch(err){
+            setCallStatus(prev=>({...prev,video:'idle'}))
+            toast.error(err.message+' !',{
+                position:'top-center',
+            })
+        }
 
-        peer.on('signal' , (signal)=>{
-            socket.emit('call' , {from:user.username, signal , to:toUsername , callType:'video'});
-        })
-
-        peer.on('stream' , (mediaStream)=>{
-            remoteStreamRef.current.srcObject = mediaStream        
-        })
-
-        peerConnRef.current = peer
     }
 
 
@@ -300,11 +307,14 @@ export default function CallProvider({children}) {
 
     
     const cancelCall = ()=>{
-        peerConnRef.current.destroy()
         socket.emit('cancel' , otherPersonUsername)
+
         setCallStatus(prev=>{
             return {video:'idle', audio: 'idle'}
         })
+
+        stopStream();
+        // peerConnRef.current.destroy()
     }
 
 
@@ -368,11 +378,14 @@ export default function CallProvider({children}) {
     }
 
     return (
-        <CallContext.Provider value={value}>
-            {isReceivingAudioCall && <CallNotification personCallingUsername={personCallingUsername} callStatus={callStatus.audio} answer={answerAudio} reject={reject}/>}
-            {isReceivingVideoCall && <CallNotification personCallingUsername={personCallingUsername} callStatus={callStatus.video} answer={answerVideo} reject={reject}/>}
+        <>
+            <CallContext.Provider value={value}>
+                {isReceivingAudioCall && <CallNotification personCallingUsername={personCallingUsername} callStatus={callStatus.audio} answer={answerAudio} reject={reject}/>}
+                {isReceivingVideoCall && <CallNotification personCallingUsername={personCallingUsername} callStatus={callStatus.video} answer={answerVideo} reject={reject}/>}
             
-            {children}
-        </CallContext.Provider>
+                {children}
+            </CallContext.Provider>
+
+        </>
     )
 }

@@ -1,17 +1,14 @@
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import styles from './ResetPassword.module.css';
-import { useRef, useState } from 'react';
-import useAuth from '@/components/hooks/useAuth';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useRef } from 'react';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import Spinner from '@/components/shared/Spinner/Spinner';
-import { useDispatch, useSelector } from 'react-redux';
-import {openPasswordResetSuccessAlert} from '@/redux/features/UiSlice';
 import PasswordResetSuccessAlert from '@/components/alerts/PasswordResetSuccessAlert/PasswordResetSuccessAlert';
-import { passwordReset } from '@/redux/features/auth/authSlice';
 import { useResetPasswordMutation } from '@/redux/features/auth/authApi';
+import { toast } from 'react-toastify';
 
 export default function ResetPassword() {
-    const dispatch = useDispatch()
+    const navigate = useNavigate();
     const [resetPassword , {isLoading , error}] = useResetPasswordMutation();
     const errors = error?.data?.errors
     
@@ -29,7 +26,12 @@ export default function ResetPassword() {
     
         resetPassword({token,email,password,password_confirmation})
         .then(()=>{
-            dispatch(openPasswordResetSuccessAlert())
+            toast.success('Password has been reset Successfully !',{
+                position : 'top-center'
+            })            
+            setTimeout(()=>{
+                navigate('/login')
+            },2000)
         })
     }
     

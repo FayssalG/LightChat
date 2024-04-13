@@ -16,6 +16,7 @@ import {useGetConversationsQuery } from '@/redux/features/Conversation/conversat
 import { baseApi } from '@/redux/features/baseApi';
 import { openConversation } from '@/redux/features/Conversation/ConversationSlice';
 import { useGetUserQuery } from '@/redux/features/auth/authApi';
+import { toast } from 'react-toastify';
 
 export default function Dashboard() {
   const {isVerified} : {isVerified : Boolean} = useGetUserQuery(undefined , {
@@ -42,7 +43,12 @@ export default function Dashboard() {
   useEffect(()=>{
     if(socket){
       socket.on('request-received' , (data)=>{
-        dispatch(baseApi.util.invalidateTags(['Requests']))        
+        dispatch(baseApi.util.invalidateTags(['Requests']))
+        console.log({data})
+        toast.info(data.username + 'Has sent you a friend request' , {
+          theme:'colored',
+          position : 'top-right'
+        })        
       })
 
       socket.on('request-deleted' , (data)=>{
@@ -50,10 +56,15 @@ export default function Dashboard() {
       })
 
       
-      socket.on('request-accepted' , (data)=>{
-        if(data){
+      socket.on('request-accepted' , ({friend})=>{
+        if(friend){
           dispatch(baseApi.util.invalidateTags(['Friends'  ,  'Requests' , 'Conversations']))
         }
+        
+        toast.info(friend.username + 'Accepted you request' , {
+          theme:'colored',
+          position : 'top-right'
+        })
       })
 
       
@@ -63,11 +74,9 @@ export default function Dashboard() {
       })
 
 
-      socket.on('message-received' , ({message} : {message:FriendMessage , sender:Friend})=>{
-        if(message){
-          dispatch(openConversation(message.conversation_id))
-          dispatch(baseApi.util.invalidateTags(['Messages']))
-        }
+      socket.on('message-received' , ({message,sender} : {message:FriendMessage , sender:Friend})=>{
+        dispatch(openConversation(message.conversation_id))
+        dispatch(baseApi.util.invalidateTags(['Messages']))
       })
 
       socket.on('message-updated' , ({message })=>{
