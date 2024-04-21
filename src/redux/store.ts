@@ -30,7 +30,7 @@ const conversationPersistConfig = {
 const authPersistConfig = {
     key:'auth',
     storage,
-    whitelist : ['isAuth' , 'isVerified'] 
+    whitelist : ['token' , 'isVerified'] 
 }
 
 const saga = createSagaMiddleware()

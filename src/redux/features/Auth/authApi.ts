@@ -9,9 +9,17 @@ export const authApi = baseApi.injectEndpoints({
                 body: credentials
             }),
         }),
+
+        refreshToken : builder.mutation({
+            query:()=>({
+                url:'/refresh-token',
+                method:'POST'
+            })
+        }),
+
         getUser : builder.query({
             query : ()=>({
-                url : '/api/user'
+                url : '/user'
             }),
             providesTags: ['User'],
         }),
@@ -39,6 +47,8 @@ export const authApi = baseApi.injectEndpoints({
                 body:data
             })
         }),
+
+
         forgotPassword : builder.mutation({
             query : (data)=>({
                 url : '/forgot-password',
@@ -78,7 +88,7 @@ export const authApi = baseApi.injectEndpoints({
         }),
         updateImage : builder.mutation({
             query:(data)=>({
-                url: '/api/user/image/update',
+                url: '/user/image/update',
                 method: 'POST',
                 body:data,
                 headers:{
@@ -89,7 +99,7 @@ export const authApi = baseApi.injectEndpoints({
         }),
         updateEmail : builder.mutation({
             query:(data)=>({
-                url: '/api/user/email/update',
+                url: '/user/email/update',
                 method: 'POST',
                 body:data
             }),
@@ -100,6 +110,7 @@ export const authApi = baseApi.injectEndpoints({
 })
 
 export const {
+    useRefreshTokenMutation,
     useLoginMutation , 
     useLogoutMutation , 
     useGetUserQuery,

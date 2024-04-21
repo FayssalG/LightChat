@@ -5,14 +5,14 @@ export const conversationApi = baseApi.injectEndpoints({
     endpoints: (builder)=>({
       getConversations : builder.query({
         query: ()=>({
-          url:'/api/conversations',
+          url:'/conversations',
         }),
         providesTags:['Conversations']
       }),
 
       getMessages : builder.query({
         query: ()=>({
-          url:'/api/conversations/messages',
+          url:'/conversations/messages',
         }),
         providesTags:['Messages']
 
@@ -20,7 +20,7 @@ export const conversationApi = baseApi.injectEndpoints({
 
       sendMessage : builder.mutation({
         query :({receiver_id , text})=>({
-          url : '/api/conversations/send-message',
+          url : '/conversations/send-message',
           method:'POST',
           body: {receiver_id , text}
         }),
@@ -52,7 +52,7 @@ export const conversationApi = baseApi.injectEndpoints({
       
       sendMessageWithAttachment : builder.mutation({
         query :({receiver_id , text , attachment})=>({
-          url : '/api/conversations/send-message-attachment',
+          url : '/conversations/send-message-attachment',
           method:'POST',
           headers:{
             'Content-Type':'multipart/form-data'
@@ -89,7 +89,7 @@ export const conversationApi = baseApi.injectEndpoints({
 
       markMessagesSeen : builder.mutation({
         query: (conversation_id)=>({
-          url:'/api/conversations/messages-seen',
+          url:'/conversations/messages-seen',
           method:'POST',
           body:{conversation_id}
         }),
@@ -110,7 +110,7 @@ export const conversationApi = baseApi.injectEndpoints({
       
       updateMessage : builder.mutation({
         query : ({message_id , text})=>({
-          url:'/api/conversations/update-message',
+          url:'/conversations/update-message',
           method: 'POST',
           body: {message_id , text}
         }),
@@ -136,7 +136,7 @@ export const conversationApi = baseApi.injectEndpoints({
 
       deleteMessage : builder.mutation({
         query : (message_id)=>({
-          url:'/api/conversations/delete-message',
+          url:'/conversations/delete-message',
           method:'POST',
           body : {message_id}
         }),

@@ -6,23 +6,21 @@ import useAuth from '@/components/hooks/useAuth';
 import { Link, Navigate } from 'react-router-dom';
 import { useRef, useState } from 'react';
 import Spinner from '@/components/shared/Spinner/Spinner';
-import { IoCheckmark } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginUser, passwordForgot } from '@/redux/features/auth/authSlice';
 import { useForgotPasswordMutation, useLoginMutation } from '@/redux/features/auth/authApi';
 import { useLazyInitCsrfQuery } from '@/redux/features/baseApi';
 
 export default function Login() {
     const [initCsrf] = useLazyInitCsrfQuery()
-    const [login , {isLoading:isLoadingLogin , error:loginErr}] = useLoginMutation();    
-    const [forgotPassword , {isLoading:isLoadingForgotPassword , error:forgotPasswordErr}] = useForgotPasswordMutation()
+    const [login , {isLoading:isLoadingLogin , error:loginErrs}] = useLoginMutation();    
+    const [forgotPassword , {isLoading:isLoadingForgotPassword , error:forgotPasswordErr,reset:resetForgotPassword}] = useForgotPasswordMutation()
 
     const isLoading = isLoadingForgotPassword || isLoadingLogin
-
-    const loginError = loginErr?.data?.message
+    
+    const loginErrors = loginErrs?.data?.errors
     const forgotPasswordError = forgotPasswordErr?.data?.message
 
-    const {isAuth  } = useAuth();
+    const token = useSelector(state=>state.auth.token);
     const emailRef  = useRef(null);
     const passwordRef = useRef(null);
 
@@ -32,23 +30,25 @@ export default function Login() {
         const email : string = emailRef.current.value;
         const password : string = passwordRef.current.value;
 
-        initCsrf(null).
-        then(()=>{
+        // initCsrf(null).
+        // then(()=>{
+            resetForgotPassword();
             login({email,password})
-        })
+        // })
     }
 
     function handleForgot(e : React.MouseEvent<HTMLAnchorElement>) {
         e.preventDefault();
         const email : string = emailRef.current.value;
       
-        initCsrf(null).
-        then(()=>{
+        // initCsrf(null).
+        // then(()=>{
             forgotPassword({email})            
-        })
+        // })
     }
     
-    if(isAuth)  return <Navigate replace to={'/'} /> 
+    console.log({loginErrs})
+    if(token)  return <Navigate replace to={'/'} /> 
 
     return (
         <div className={styles.container}>
@@ -58,10 +58,19 @@ export default function Login() {
                     <div className= {`${styles.input_container} ${styles.email}`} >
                         <p className={styles.label}>Email</p>
                         <input ref={emailRef} type="text" placeholder='Email' />
+                        { loginErrors?.email && 
+                            <p className={styles.error}>{loginErrors?.email}</p>
+                        }
+                        {
+                          forgotPasswordError && 
+                              <p className={styles.error}>{forgotPasswordError}</p> 
+                        }
                     </div>
+
                     <div className= {`${styles.input_container} ${styles.password}`} >
                         <p className={styles.label}>Password</p>
                         <input ref={passwordRef} type="password" placeholder='Password' />
+                        { loginErrors?.password && <p className={styles.error}>{loginErrors?.password}</p>}
                     </div>
                     <p className={styles.forgot_password}>
                         {!isLoading && <a onClick={handleForgot}>Forgot password?</a>}
@@ -76,13 +85,10 @@ export default function Login() {
                         </div>
                     </label> */}
 
-                    <p className={styles.error}>
-                        { loginError ? loginError : '' }
-                    </p>
-                    <p className={styles.error}>
-                        { forgotPasswordError ? forgotPasswordError : '' }
-                    </p>
-
+                    {(loginErrors && !loginErrors?.email && !loginErrors?.password)
+                        && 
+                        <p className={styles.error}>{loginErrors}</p>
+                    }
 
                     <UnstyledButton disabled={isLoading} className={styles.submit_btn}>
                         {isLoading ? <Spinner size={25}/> : 'Log In'}

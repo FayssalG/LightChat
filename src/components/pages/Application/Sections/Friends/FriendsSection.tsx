@@ -4,16 +4,30 @@ import { useState } from 'react';
 import useModal from '@/components/modal/useModal';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import SectionContainer from '../SectionContainer';
+import FriendsListing from './FriendsListing/FriendsListing';
+import BlockedListing from './BlockedListing/BlockedListing';
+import PendingFriendsListing from './PendingFriendsListing/PendingFriendsListing';
 
 export default function FriendsSection() {
-  const {pathname} = useLocation();
   const {onOpen : onOpenAddFriendModal } = useModal('AddFriendModal');
+  const [activeSubSection , setActiveSubSection] = useState('all');
+
 
   const handleAddFriend = ()=>{
       onOpenAddFriendModal(null)
   }
 
   
+  const renderSubSection = ()=>{
+    switch(activeSubSection){
+      case 'all':
+        return <FriendsListing/>
+      case 'blocked':
+        return <BlockedListing/>
+      case 'pending':
+        return <PendingFriendsListing/>  
+    }
+  } 
   
   return (
     <SectionContainer>
@@ -28,15 +42,15 @@ export default function FriendsSection() {
           </div>
 
           <div className={styles.filters}>
-            <Link to='/friends' data-active={pathname=='/friends' ? true : false}>All</Link>
-            <Link to='/friends/blocked' data-active={pathname=='/friends/blocked' ? true : false}>Blocked</Link>
-            <Link to='/friends/pending' data-active={pathname=='/friends/pending' ? true : false}>Pending</Link>
+            <UnstyledButton onClick={()=>setActiveSubSection('all')} data-active={activeSubSection=='all' ? true : false}>All</UnstyledButton>
+            <UnstyledButton onClick={()=>setActiveSubSection('blocked')}  data-active={activeSubSection=='blocked' ? true : false}>Blocked</UnstyledButton>
+            <UnstyledButton onClick={()=>setActiveSubSection('pending')}  data-active={activeSubSection=='pending' ? true : false}>Pending</UnstyledButton>
           </div>  
         </div>
 
 
         <div className={styles.friends_list}>
-          <Outlet/>            
+          {renderSubSection()}
         </div>
 
         

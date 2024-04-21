@@ -1,0 +1,53 @@
+.container{
+    position: absolute;
+    bottom:  100%;
+    left: 0;
+    width: 100%;
+    background-color: var(--primary-dark);
+    padding: 1em;
+    @media (max-width:1000px) {
+        
+    }
+
+    .close{
+        cursor: pointer;
+        right: -10px;
+        top: -10px;
+        background-color: var(--secondary);
+        width: 25px;
+        height: 25px;
+        border-radius: .2rem;
+        position: absolute;
+        &:hover{
+            color: var(--danger);
+        }
+    }
+
+    .image_attachment{
+        max-width: 250px;
+        max-height: 250px;
+        object-fit:cover;
+    }
+
+    .file_attachment{
+        margin-bottom: 5rem;
+        max-width: 100px;
+        max-height: 100px;
+        @media (max-width:700px) {
+                        
+        }
+        .attachment_name{
+            color: var(--accent);
+            font-size: .9rem;
+            bottom: 0;
+            padding: .4em;
+            p{
+                color: inherit;
+                text-decoration: none;
+            }
+        }
+    
+    }
+
+
+}

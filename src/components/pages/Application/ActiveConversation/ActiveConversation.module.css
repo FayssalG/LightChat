@@ -1,4 +1,14 @@
 .container{
+    height: 100%;
+    display: flex;
+    gap: .5rem;
+
+    .details{
+        /* display: none; */
+    }
+}
+
+.inner_container{
     /* border: 2px solid white;
     border-radius: 1rem; */
     height: 100%;
@@ -23,17 +33,17 @@
 }
 
 @media (max-width:1000px){
-    .container[data-visible='true']{
+    .inner_container[data-visible='true']{
         display: block;
     }
     
-    .container[data-visible='false']{
+    .inner_container[data-visible='false']{
         display: none;
     }
     
 }
 
-.inner_container{
+.body{
     padding: .5em;
     overflow-y: auto;
     

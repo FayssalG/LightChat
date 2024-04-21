@@ -4,8 +4,17 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 
 export const baseApi = createApi({
     reducerPath : 'baseApi',
-    baseQuery : axiosBaseQuery({baseUrl:'https://192.168.1.13:8000'}),
-    tagTypes: ['User' ,'Friends' , 'Requests' , 'blocks' ,'Conversations','Messages'],
+    baseQuery : axiosBaseQuery({
+        transformResponse : response=>response,
+        prepareHeaders(headers, {getState}) {
+            const token = (getState() as RootState).auth.token;
+            if(token){
+                headers.Authorization = `Bearer ${token.access_token}`;
+            }
+            return headers;
+        },
+    }),
+    tagTypes: ['User' ,'Friends' , 'Requests' , 'blocks' ,'Conversations','Messages' , 'groups' , 'groupMessages'],
 
     endpoints : (builder)=>({
         initCsrf : builder.query({

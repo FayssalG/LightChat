@@ -4,7 +4,7 @@ const UiSlice = createSlice({
     name : 'ui',
     initialState : {
         globalLoading : false,
-        visibleSection : 'friends',
+        activeSection : 'friends',
         conversationVisibility : false,
         showEditModal : false, 
         showFriendDetailsModal:false,
@@ -20,8 +20,8 @@ const UiSlice = createSlice({
             state.globalLoading = action.payload;
         },
 
-        changeVisibleSection : (state , action)=>{
-            state.visibleSection = action.payload;
+        changeActiveSection : (state , action)=>{
+            state.activeSection = action.payload;
         },
         hideConversationOnMobile : (state )=>{
             state.conversationVisibility = false;
@@ -92,7 +92,7 @@ const UiSlice = createSlice({
 export default UiSlice.reducer;
 export const {
     setGlobalLoading,
-    changeVisibleSection , 
+    changeActiveSection , 
     hideConversationOnMobile,
     showConversationOnMobile,
     toggleShowEditModal,

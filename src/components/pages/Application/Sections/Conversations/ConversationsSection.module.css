@@ -27,16 +27,37 @@
     }
 }
 
-
-.conversations_list{
-    margin-top: 1rem;
-    margin-left: .9rem;
-    padding-inline-end: .5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    height: 75%;
+.conversations_container{
     overflow-y: scroll;
+    height: 500px;
+    max-height: 700px;
+    .group_conversations_list{
+        p{
+            font-size: .8rem;
+            font-weight: 200;
+        }
+        padding-bottom: 2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        margin-top: 1rem;
+        margin-left: .9rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .conversations_list{
+        p{
+            font-size: .8rem;
+            font-weight: 200;
+        }
+        margin-top: 1rem;
+        margin-left: .7rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
 }
+
 
 

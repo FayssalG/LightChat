@@ -6,23 +6,26 @@ const authSlice = createSlice({
     name:'auth',
     initialState : {
         isAuth :  false,
+        token : null,
         isVerified : false,
-        user  : {},
+        user  : null,
     },
     
     reducers:{},
     
     extraReducers : (builder)=>{
+
         builder.addMatcher(
             authApi.endpoints.login.matchFulfilled,
             (state , action)=>{
-                state.isAuth = true
+                state.token = action.payload
             }
         ),
+
+        
         builder.addMatcher(
             authApi.endpoints.getUser.matchFulfilled,
             (state , action)=>{
-                state.isAuth = true
                 state.user = action.payload
                 if(action.payload.email_verified_at) state.isVerified = true
             }
@@ -30,22 +33,31 @@ const authSlice = createSlice({
         builder.addMatcher(
             authApi.endpoints.getUser.matchRejected,
             (state , action)=>{
-                state.isAuth = false;
-                state.user = {};
+                state.token = null;
+                state.user = null;
             }
         ),
+
+        builder.addMatcher(
+            authApi.endpoints.refreshToken.matchRejected,
+            (state , action)=>{
+                state.token = action.payload;
+            }
+        ),
+
+
         builder.addMatcher(
             authApi.endpoints.logout.matchFulfilled,
             (state , action)=>{
-                state.isAuth = false;
-                state.user = {};
+                state.token = null
+                state.user = null;
                       
             }
         ),
         builder.addMatcher(
             authApi.endpoints.register.matchFulfilled,
-            (state )=>{
-                state.isAuth = true;
+            (state , action)=>{
+                state.token = action.payload;
             }
         )
 

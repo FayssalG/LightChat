@@ -5,14 +5,14 @@ export const blockApi = baseApi.injectEndpoints({
     endpoints: (builder)=>({
         getBlockedUsers : builder.query<BlockedUser[] , undefined>({
             query : ()=>({
-                url:'/api/friends/blocked',   
+                url:'/friends/blocked',   
             }),
             providesTags:['blocks' ]
         }),
 
         blockUser : builder.mutation({
             query:(username)=>({
-                url:'/api/friends/block',
+                url:'/friends/block',
                 method: 'POST',
                 body:{username}
             }),
@@ -36,7 +36,7 @@ export const blockApi = baseApi.injectEndpoints({
 
         unBlockUser : builder.mutation({
             query:(username)=>({
-                url:'/api/friends/unblock',
+                url:'/friends/unblock',
                 method: 'POST',
                 body:{username}
             }),

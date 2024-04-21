@@ -5,7 +5,7 @@ interface IConversationState{
     error : string | null,
     status : 'idle' | 'loading' | 'succeeded'  | 'failed',
     conversations : [Conversation?],
-    activeConversationId : string | null,
+    activeConversation : {id:string , type:string} | null,
     openConversationsIds : [string?],
 }  
 
@@ -22,7 +22,7 @@ const initialState = conversationsAdapter.getInitialState({
     error : null,
     status : 'idle' ,
     messages : messagesAdapter.getInitialState(),
-    activeConversationId : null,
+    activeConversation : null,
     openConversationsIds : []
 })
 
@@ -31,7 +31,7 @@ const ConversationSlice = createSlice({
     initialState ,
     reducers: {
         setActiveConversation : (state,action )=>{
-            state.activeConversationId = action.payload        
+            state.activeConversation = action.payload        
         },
         openConversation : (state , action)=>{
           
@@ -51,8 +51,8 @@ const ConversationSlice = createSlice({
 
         closeConversation : (state ,action)=>{
             const conversationId = action.payload;
-            if(conversationId == state.activeConversationId){
-                state.activeConversationId = null;
+            if(conversationId == state.activeConversation){
+                state.activeConversation = null;
             }
             conversationsAdapter.updateOne(state, {
                 id: conversationId,

@@ -1,16 +1,16 @@
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import styles from './Register.module.css';
-import useAuth from '@/components/hooks/useAuth';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import Spinner from '@/components/shared/Spinner/Spinner';
 import {useRegisterMutation } from '@/redux/features/auth/authApi';
 import { useLazyInitCsrfQuery } from '@/redux/features/baseApi';
+import { useSelector } from 'react-redux';
 
 export default function Register() {
     const [initCsrf ] = useLazyInitCsrfQuery();
     const [register , {isLoading , error}] = useRegisterMutation()
-    const {isAuth } = useAuth();
+    const token = useSelector(state=>state.auth.token);
     const errors = error?.data?.errors
     
     const emailRef = useRef(null)
@@ -27,12 +27,12 @@ export default function Register() {
         const  password = passwordRef.current?.value;
         const  password_confirmation = passwordConfirmationRef.current?.value;
 
-        initCsrf(null).then(()=>{
+        // initCsrf(null).then(()=>{
             register({email , display_name , username , password , password_confirmation})
-        })
+        // })
     }
 
-    if(isAuth)  return <Navigate replace to={'/'} /> 
+    if(token)  return <Navigate replace to={'/'} /> 
 
   return (
     <div className={styles.container}>

@@ -15,10 +15,10 @@ import FriendsSection from './components/pages/Application/Sections/Friends/Frie
 import ConversationsSection from './components/pages/Application/Sections/Conversations/ConversationsSection';
 import GroupsSection from './components/pages/Application/Sections/Groups/GroupsSection';
 import CallProvider from './components/context/CallProvider/CallProvider';
-import { useDispatch} from 'react-redux';
+import { useDispatch, useSelector} from 'react-redux';
 
 
-import { useGetUserQuery, useLazyGetUserQuery } from './redux/features/auth/authApi';
+import { useGetTokenQuery, useGetUserQuery, useLazyGetUserQuery, useRefreshTokenMutation } from './redux/features/auth/authApi';
 import { useGetFriendsQuery, useLazyGetFriendsQuery } from './redux/features/friend/friendApi';
 import { useGetBlockedUsersQuery, useLazyGetBlockedUsersQuery } from './redux/features/block/blockApi';
 import { useGetConversationsQuery, useGetMessagesQuery, useLazyGetConversationsQuery, useLazyGetMessagesQuery } from './redux/features/Conversation/conversationApi';
@@ -28,6 +28,10 @@ import PendingFriendsListing from './components/pages/Application/Sections/Frien
 import BlockedListing from './components/pages/Application/Sections/Friends/BlockedListing/BlockedListing';
 import Dashboard from './components/pages/Application/Dashboard';
 import { Slide, ToastContainer } from 'react-toastify';
+import { useLazyGetGroupsQuery } from './redux/features/group/groupApi';
+import { useGetGroupMessagesQuery , useLazyGetGroupMessagesQuery} from './redux/features/Conversation/groupConversationApi';
+import ActiveGroupConversation from './components/pages/Application/ActiveGroupConversation/ActiveGroupConversation';
+import ActiveConversation from './components/pages/Application/ActiveConversation/ActiveConversation';
 
 function App() {
   
@@ -45,15 +49,9 @@ function App() {
             <Route element={<ProtectedRoute/>}>
              
               <Route path='/' element={<Dashboard/>}>
-                <Route path='/friends' element={<FriendsSection/>}>
-                  <Route path='/friends' element={<FriendsListing/>}></Route>
-                  <Route path='/friends/pending' element={<PendingFriendsListing/>}></Route>
-                  <Route path='/friends/blocked' element={<BlockedListing/>}></Route>
-                </Route>
-                <Route path='/conversations' element={<ConversationsSection/>}></Route>
-                <Route path='/groups' element={<GroupsSection/>}></Route>
-              </Route>
-              
+                <Route path='/group/:convId' element={<ActiveGroupConversation/>}></Route>            
+                <Route path='/friend/:convId' element={<ActiveConversation/>}></Route>            
+              </Route>              
               <Route path='/profil' element={<ProfileSettings/>}></Route>          
             </Route>
 
@@ -71,56 +69,53 @@ function App() {
 
 
 function ProtectedRoute(){
-  const {data:user,isLoading:isLoadingUser} = useGetUserQuery(undefined);
-  const {isLoading:isLoadingFriends} = useGetFriendsQuery(undefined);
-  const {isLoading:isLoadingRequests} = useGetFriendRequestsQuery(undefined);
-  const {isLoading:isLoadingBlocks} = useGetBlockedUsersQuery(undefined);
-  const {isLoading:isLoadingConversations} = useGetConversationsQuery(undefined);
-  const {isLoading:isLoadingMessages} = useGetMessagesQuery(undefined);
-  console.log({user})
-  // const [getFriendRequests, {isLoading:isLoadingFriends}] = useLazyGetFriendsQuery();
-  // const [getFriends , {isLoading:isLoadingRequests}] = useLazyGetFriendRequestsQuery();
-  // const [getBlockedUsers , {isLoading:isLoadingBlocks}] = useLazyGetBlockedUsersQuery();
-  // const [getConversations , {isLoading:isLoadingConversations}] = useLazyGetConversationsQuery();
-  // const [getMessages , {isLoading:isLoadingMessages}] = useLazyGetMessagesQuery();
+  const token = useSelector(state=>state.auth.token);  
   
-  const dispatch = useDispatch()
-  // const isAuth = useSelector(state=>state.auth.isAuth)
-  const isLoading = isLoadingFriends || isLoadingConversations 
-  || isLoadingBlocks || isLoadingMessages || isLoadingUser || isLoadingRequests;
+  const [refreshToken] = useRefreshTokenMutation();
+  
+  const [getUser] = useLazyGetUserQuery();
+  const [getFriendRequests] = useLazyGetFriendsQuery();
+  const [getFriends ] = useLazyGetFriendRequestsQuery();
+  const [getGroups ] = useLazyGetGroupsQuery();
+  const [getGroupMessages] = useLazyGetGroupMessagesQuery();
+  const [getBlockedUsers ] = useLazyGetBlockedUsersQuery();
+  const [getConversations  ] = useLazyGetConversationsQuery();
+  const [getMessages ] = useLazyGetMessagesQuery();
+  
+  const [isLoadingAll , setIsLoadingAll] = useState(true)
 
   useEffect(()=>{
-    if(user){
-      // getFriends(undefined);
-      // getFriendRequests(undefined);
-      // getBlockedUsers(undefined);
-      // getConversations(undefined)
-      // getMessages(undefined)
-      // dispatch(fetchFriends());
-      // dispatch(fetchRequests())
-      // dispatch(fetchBlockedUsers());
-      // dispatch(fetchConversations());
-      // dispatch(fetchMessages());
+    if(token){
+      const tokenExpiry = token.expires_in + token.created_at; //in seconds
+      const now = Date.now() / 1000; // in seconds
+      if(tokenExpiry - now <= 1 ) refreshToken(undefined);  
     }
-    else{
-      // dispatch(clearFriends())
-      // dispatch(clearRequests())
-      // dispatch(clearConversations())
-      // dispatch(clearBlockedUsers())
-   }
 
-  },[dispatch , user])
+   if(token){
+      Promise.all([
+        getUser(undefined),
+        getFriends(undefined),
+        getGroups(undefined),
+        getGroupMessages(undefined),
+        getFriendRequests(undefined),
+        getConversations(undefined),
+        getMessages(undefined),
+        getBlockedUsers(undefined)
+      ])
+      .finally(()=>{
+        setIsLoadingAll(false)
+      })
+   }
+  },[token])
 
   // if user is authenticated show the component otherwise redirect to login page
-  if(isLoading) return <Loading/>
+  if(!token) return <Navigate replace to='/login' />
 
-  if(!user) return <Navigate replace to='/login' />
-
+  if(isLoadingAll) return <Loading/>
 
   
   return( 
     <SocketProvider>
-
       <CallProvider>
         <VideoCallProvider>
           <Outlet/>      

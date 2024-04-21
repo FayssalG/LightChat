@@ -30,13 +30,46 @@
         }
     }
 
+    
+    .btns {
+        display: flex;
+        gap: .5rem;
+        button{
+            width: fit-content;
+            height: fit-content;
+            padding: .5em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            background-color: var(--accent);
+            &:hover{
+                opacity: .5;
+            }
+            svg{
+                width: 20px;
+                height: 20px;                        
+            }
+        }
+        
+        .danger{
+            background-color: unset;
+            border:1px solid var(--danger);
+            color: var(--danger);
+        }
+        .success{
+            background-color: var(--success);
+        }
+        
+    }
+
     .options{
         .options_btn{
             cursor: pointer;
             height: 30px;
             width: 30px;
             border-radius: 50%;
-            background-color: var(--primary);
+            /* background-color: var(--primary); */
             padding: .3em;            
             svg{
                 opacity: .5;

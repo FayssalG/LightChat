@@ -17,6 +17,12 @@ import { baseApi } from '@/redux/features/baseApi';
 import { openConversation } from '@/redux/features/Conversation/ConversationSlice';
 import { useGetUserQuery } from '@/redux/features/auth/authApi';
 import { toast } from 'react-toastify';
+import { useGetGroupsQuery } from '@/redux/features/group/groupApi';
+import ActiveGroupConversation from './ActiveGroupConversation/ActiveGroupConversation';
+import FriendsSection from './Sections/Friends/FriendsSection';
+import ConversationsSection from './Sections/Conversations/ConversationsSection';
+import GroupsSection from './Sections/Groups/GroupsSection';
+import GroupDetails from './Details/GroupDetails/GroupDetails';
 
 export default function Dashboard() {
   const {isVerified} : {isVerified : Boolean} = useGetUserQuery(undefined , {
@@ -26,14 +32,6 @@ export default function Dashboard() {
   });
   const socket = useSocket()
   
-  const activeConversationId = useSelector(state=>state.conversation.activeConversationId) 
-  const {activeConversation , isFetching} = useGetConversationsQuery(undefined , {
-    selectFromResult : ({data,isFetching})=>({
-      isFetching,
-      activeConversation : data?.find(c=>c.conversation_id==activeConversationId)
-    })
-  });
-
   const {callStatus}= useCall()
 
   const dispatch = useDispatch();
@@ -44,8 +42,7 @@ export default function Dashboard() {
     if(socket){
       socket.on('request-received' , (data)=>{
         dispatch(baseApi.util.invalidateTags(['Requests']))
-        console.log({data})
-        toast.info(data.username + 'Has sent you a friend request' , {
+        toast.info('@'+data.username + ' has sent you a friend request' , {
           theme:'colored',
           position : 'top-right'
         })        
@@ -61,7 +58,7 @@ export default function Dashboard() {
           dispatch(baseApi.util.invalidateTags(['Friends'  ,  'Requests' , 'Conversations']))
         }
         
-        toast.info(friend.username + 'Accepted you request' , {
+        toast.info('@'+friend.username + ' has accepted your request' , {
           theme:'colored',
           position : 'top-right'
         })
@@ -78,6 +75,12 @@ export default function Dashboard() {
         dispatch(openConversation(message.conversation_id))
         dispatch(baseApi.util.invalidateTags(['Messages']))
       })
+
+      socket.on('group-message-received' , ({groupMessage} : {message:FriendMessage , sender:Friend})=>{
+        console.log({groupMessage})
+        dispatch(baseApi.util.invalidateTags(['groupMessages']))
+      })
+
 
       socket.on('message-updated' , ({message })=>{
         if(message){
@@ -111,6 +114,18 @@ export default function Dashboard() {
     }
   },[socket])
  
+  const activeSection = useSelector(state=>state.ui.activeSection)
+  const renderSections = ()=>{
+    switch(activeSection){
+      case 'friends' :
+        return <FriendsSection/>
+      case 'conversations' : 
+        return <ConversationsSection/>
+      case 'groups' : 
+        return <GroupsSection/>
+
+    }
+  }
 
   return (
     <div className={styles.container}>
@@ -124,23 +139,17 @@ export default function Dashboard() {
             </div>
 
             <div className={styles.sections}>
-              <Outlet/>
+              {renderSections()}
             </div>          
 
               <div className={styles.active_conversation}>
-                  {
-                    activeConversation &&
-                    <ActiveConversation 
-                      isFetching={isFetching} 
-                      activeConversation={activeConversation}
-                    />               
-                  }
+                  <Outlet/>
               </div>          
             
-            <div className={styles.voice_call}>
-                {['calling' , 'ongoing'].includes(callStatus.audio) && <VoiceCall />}
-                {['calling' , 'ongoing'].includes(callStatus.video)  && <VideoCall/>}
-            </div>                    
+
+            {['calling' , 'ongoing'].includes(callStatus.audio) && <VoiceCall />}
+            {['calling' , 'ongoing'].includes(callStatus.video)  && <VideoCall/>}
+                    
         </div>        
 
     </div>

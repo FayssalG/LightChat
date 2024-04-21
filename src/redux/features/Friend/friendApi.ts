@@ -5,7 +5,7 @@ export const friendApi = baseApi.injectEndpoints({
 
       getFriends : builder.query({
         query : ()=>({
-            url : '/api/friends/accepted',
+            url : '/friends/accepted',
             method:'GET',
         }),        
 
@@ -22,7 +22,7 @@ export const friendApi = baseApi.injectEndpoints({
 
       unFriend : builder.mutation({
         query: (friendship_id)=>({
-            url:'/api/friends/remove',
+            url:'/friends/remove',
             method:'POST',
             body:{friendship_id}
         }),        

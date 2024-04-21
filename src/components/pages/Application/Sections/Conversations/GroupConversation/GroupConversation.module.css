@@ -1,0 +1,77 @@
+.conversation[data-selected=true]{
+    background-color: var(--primary-dark);        
+    border-radius: .4rem;
+    border-bottom: 1px solid var(--accent);
+    
+}
+
+.conversation{
+    background-color: var(--primary-dark);
+            
+    border-radius: .4rem;
+
+    display: flex;
+    gap: .5rem;
+    padding: .7rem .4rem;
+    align-items: center;
+
+    .picture{
+        width: 40px;
+        height: 40px;
+        border-radius: .2rem;
+        position: relative;
+        img{
+            border-radius: .2rem;
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    .name{
+        flex-grow: 1;
+        .display_name{
+            font-weight: 400;
+            font-size: 1rem;
+        }
+        .username{
+            margin-top: .2rem;
+            font-weight: 200;
+            font-size: .9rem;
+            display: flex;
+            justify-content: space-between;
+        
+        }
+    }
+
+    .notread_marker{        
+        width: 17px;
+        height: 17px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-weight: 700;
+        font-size: .5rem;
+        color: var(--primary);
+        background-color: var(--success);
+    }
+
+    .notread_marker[data-visible=false]{
+        display: none;
+    }
+
+    .close{
+        display: none;
+        svg{
+            opacity: .5;
+            width: 25px;
+            height: 25px;
+        }
+    }
+
+    &:hover{
+        .close{
+            display: block;
+        }
+    }
+}

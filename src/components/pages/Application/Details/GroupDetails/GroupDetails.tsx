@@ -1,0 +1,69 @@
+import avatar from '@/assets/avatar.png';
+import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
+import styles from './GroupDetails.module.css';
+import { IoClose } from 'react-icons/io5';
+import Member from './Member/Member';
+import { useRemoveMemberMutation } from '@/redux/features/group/groupApi';
+import { useSendRequestMutation } from '@/redux/features/friendRequest/friendRequestApi';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { changeActiveSection } from '@/redux/features/UiSlice';
+
+export default function GroupDetails({onClose , group}) {
+    const navigate = useNavigate();
+    const dispatch = useDispatch()
+    const user= useSelector(state=>state.auth.user);
+    const [removeMember] = useRemoveMemberMutation();
+    const [addFriend] = useSendRequestMutation();
+
+    const handleSendMessage = (convId)=>{
+        dispatch(changeActiveSection('conversations'))
+        navigate('/friend/'+convId)
+    }
+    const handleRemoveMember = (member)=>{
+        removeMember({member_id:member.id , group_id:member.pivot.group_id})
+    }
+    const handleAddFriend = (username)=>{
+        addFriend(username);
+    }
+
+    return (
+    <div  className={styles.container}>
+        <UnstyledButton onClick={onClose} className={styles.close}  >
+            <IoClose/>
+        </UnstyledButton>
+
+        <div className={styles.header}>
+            <div className={styles.picture}>
+                <img src={group.image.url} alt="" />
+            </div>         
+            <div className={styles.groupname}>
+                {group.name}
+            </div>       
+        </div>
+
+        <div className={styles.body}>
+            <p>Members</p>
+            <div className={styles.members_list}>
+                {
+                    group.members.map((member : string)=>{
+                        if(user.id == member.id) return null    
+                        return <Member 
+                            key={member.id} 
+                            onRemove={handleRemoveMember} 
+                            isAdmin={group.admin_id==user.id} 
+                            member={member}
+                            onAddFriend={handleAddFriend}
+                            onSendMessage={handleSendMessage}
+                        />
+                    })
+                }
+            </div>
+        </div>
+
+        <div className={styles.footer}>
+            <UnstyledButton className={styles.danger_btn} >Quit the group</UnstyledButton>
+        </div>
+    </div>
+    )
+}

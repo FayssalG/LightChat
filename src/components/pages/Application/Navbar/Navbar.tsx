@@ -2,27 +2,21 @@ import { Link, useLocation } from 'react-router-dom'
 ;
 import styles from './Navbar.module.css';
 import avatar from '../../../../assets/avatar.png';
-import { FaUserFriends } from "react-icons/fa";
-import { BiMessageSquare, BiSolidMessageSquare } from "react-icons/bi";
-import { MdGroups, MdOutlineGroup } from "react-icons/md";
-import { IoLogOut, IoPersonOutline } from "react-icons/io5";
-import { useDispatch, useSelector } from 'react-redux';
-import {  changeVisibleSection } from '../../../../redux/features/UiSlice';
+import { BiMessageSquare} from "react-icons/bi";
 import UnstyledButton from '../../../shared/UnstyledButton/UnstyledButton';
-import useAuth from '@/components/hooks/useAuth';
 import { LiaUserFriendsSolid } from 'react-icons/lia';
-import { HiOutlineUserGroup } from 'react-icons/hi';
-import { RiGroupLine } from 'react-icons/ri';
-import { LuMessageSquare } from 'react-icons/lu';
-import { CiLogout } from 'react-icons/ci';
-import { GoPerson } from 'react-icons/go';
-import { logoutUser } from '@/redux/features/auth/authSlice';
 import { useGetUserQuery, useLogoutMutation } from '@/redux/features/auth/authApi';
+import { GoPerson } from 'react-icons/go';
+import { CiLogout } from 'react-icons/ci';
+import { useDispatch, useSelector } from 'react-redux';
+import { changeActiveSection } from '@/redux/features/UiSlice';
 
 export default function Navbar() {
+    const activeSection = useSelector(state=>state.ui.activeSection);
+    const dispatch = useDispatch();
     const {data:user} = useGetUserQuery(undefined);
     const [logout] = useLogoutMutation();
-    const {pathname} = useLocation();
+    
     
     const handleLogout = ()=>{
         logout(undefined)
@@ -40,30 +34,30 @@ export default function Navbar() {
                     </Link>
                 </div>
 
-                <Link to='/friends' 
-                    className={`${pathname.match(/\/friends\/*/g) ? styles.active : ''} ${styles.section_link} ${styles.friends} ` }
+                <UnstyledButton onClick={()=>dispatch(changeActiveSection('friends'))} 
+                    className={`${activeSection=='friends' ? styles.active : ''} ${styles.section_link} ${styles.friends} ` }
                 >
                     <GoPerson/>
                     <p>Friends</p>
-                </Link>
+                </UnstyledButton>
 
-                <Link to='/conversations' 
-                    className={`${pathname=='/conversations' ? styles.active : ''} ${styles.section_link} ${styles.conversations} ` }
+                <UnstyledButton onClick={()=>dispatch(changeActiveSection('conversations'))} 
+                    className={`${activeSection=='conversations' ? styles.active : ''} ${styles.section_link} ${styles.conversations} ` }
                 
                 >
                     
                     <BiMessageSquare />
                     <p>Messages</p>
 
-                </Link>
+                </UnstyledButton>
 
-                <Link to='/groups' 
-                    className={`${pathname=='/groups' ? styles.active : ''} ${styles.section_link} ${styles.groups} ` }                
+                <UnstyledButton onClick={()=>dispatch(changeActiveSection('groups'))} 
+                    className={`${activeSection=='groups' ? styles.active : ''} ${styles.section_link} ${styles.groups} ` }                
                 >
                 
                     <LiaUserFriendsSolid />
                     <p>Groups</p>
-                </Link>
+                </UnstyledButton>
          
             </div>
 

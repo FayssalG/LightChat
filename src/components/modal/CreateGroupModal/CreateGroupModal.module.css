@@ -13,7 +13,7 @@
 
 .inner_container{
     padding: 1em;
-    min-width:  500px;
+    min-width:  700px;
     border-radius: .5rem;
     background-color: var(--secondary);
     @media (max-width:700px) {
@@ -33,19 +33,56 @@
         /* grid-template-columns: max-content 1fr;
         align-items: center; */
         gap: 2rem;
-        
+ 
         .group_picture{
+            margin: auto;
+            position: relative;
             width: 90px;
             height: 90px;
-            img{
-                height: 100%;
-                width: 100%;
+            border-radius: 50%;
+            transition: padding 200ms ease;
+            &::after{
+                content: 'EDIT';
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-weight: 500;
+                position: absolute;
                 border-radius: 50%;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+            }
+            &:hover{
+                padding: .2em;
+                border: 1px solid white;
+            }
+            
+            img{
+                object-fit: cover;
+                border-radius: 100%;
+                width: 100%;
+                height: 100%;
+            }
+            input{
+                cursor: pointer;
+                opacity: 0;
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                z-index: 1;
             }
         }
 
+
         .group_name{
+            margin: auto;
             input{
+                color: inherit;
                 border-radius: .2rem;
                 padding: .8em 1em ;
                 border: none;
@@ -54,6 +91,7 @@
         }
 
         .group_members{
+            height: 300px;
             padding-block: .5rem;
             border-radius: .2rem;
             background-color: var(--primary);
@@ -64,10 +102,9 @@
             }
 
             .friends_list{
+                height: 100%;
                 padding-inline: .9rem;
                 overflow-y: auto;
-                min-height: 40px;
-                max-height: 300px;    
                 margin-top: .9rem;
                 display: flex;
                 flex-direction: column;
@@ -75,12 +112,17 @@
             }
                          
         }   
+
+        .error{
+            color: var(--danger);
+            font-size: .9rem;
+        }
     }
 
     .footer{
-        margin-top: 2rem;
+        margin-top: 1rem;
         @media (max-width:700px) {
-            margin-top: 9rem;
+            margin-top: 1rem;
         }
         button{
             border-radius: .2rem;

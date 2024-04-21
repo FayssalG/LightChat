@@ -4,7 +4,7 @@ export const friendRequestApi = baseApi.injectEndpoints({
     endpoints: (builder)=>({
       getFriendRequests : builder.query({
         query : ()=>({
-            url : '/api/friends/requests',
+            url : '/friends/requests',
             method:'GET',
         }),        
         providesTags: ['Requests']
@@ -12,7 +12,7 @@ export const friendRequestApi = baseApi.injectEndpoints({
 
       sendRequest : builder.mutation({
         query : (username)=>({
-            url : '/api/friends/send-request',
+            url : '/friends/send-request',
             method:'POST',
             body : {username}
         }),        
@@ -21,7 +21,7 @@ export const friendRequestApi = baseApi.injectEndpoints({
 
       acceptRequest : builder.mutation({
         query : (request_id)=>({
-            url : '/api/friends/accept-request',
+            url : '/friends/accept-request',
             method:'POST',
             body : {request_id}
         }),
@@ -48,7 +48,7 @@ export const friendRequestApi = baseApi.injectEndpoints({
 
       cancelRequest : builder.mutation({
         query : (request_id)=>({
-            url : '/api/friends/cancel-request',
+            url : '/friends/cancel-request',
             method:'POST',
             body : {request_id}
         }),
@@ -77,7 +77,7 @@ export const friendRequestApi = baseApi.injectEndpoints({
 
       ignoreRequest : builder.mutation({
         query : (request_id)=>({
-            url : '/api/friends/ignore-request',
+            url : '/friends/ignore-request',
             method:'POST',
             body : {request_id}
         }),        

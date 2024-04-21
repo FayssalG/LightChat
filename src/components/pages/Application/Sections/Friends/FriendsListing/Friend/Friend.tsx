@@ -32,8 +32,8 @@ export default function Friend({friend}) {
     setShowOptionsMenu(false)
     dispatch(showConversationOnMobile())
     dispatch(openConversation(friend.conversation_id));
-    dispatch(setActiveConversation(friend.conversation_id));
-    navigate('/conversations')
+    dispatch(setActiveConversation({id:friend.conversation_id , type:'friend'}));
+    navigate('/friend/'+friend.conversation_id)
   } 
 
   const handleFriendClick = ()=>{

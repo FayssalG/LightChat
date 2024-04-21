@@ -10,8 +10,10 @@ import { useVideoCall } from '@/components/context/VideoCallProvider';
 import { useEffect } from 'react';
 import { useCall } from '@/components/context/CallProvider/CallProvider';
 import { setActiveConversation } from '@/redux/features/Conversation/ConversationSlice';
+import { useNavigate } from 'react-router-dom';
 
-export default function Topbar({person}) {
+export default function Topbar({onOpenDetails,person}) {
+  const navigate= useNavigate()
   const dispatch = useDispatch();
   // const {call} = useAudioCall(); 
   // const {call : videoCall} = useVideoCall();
@@ -20,12 +22,13 @@ export default function Topbar({person}) {
   const {onOpen : onOpenFriendDetailsModal} = useModal('FriendDetailsModal'); 
 
   const handleOpenFriendDetails = ()=>{
-    onOpenFriendDetailsModal({friend:person})
+    onOpenDetails();
   }
 
 
   const handleClose=()=>{
     dispatch(setActiveConversation(null))
+    navigate('/')
   }
 
   console.log({person})
