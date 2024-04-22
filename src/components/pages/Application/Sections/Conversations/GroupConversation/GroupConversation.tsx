@@ -1,16 +1,12 @@
 import styles from './GroupConversation.module.css';
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
-import { closeConversation, openConversation, setActiveConversation} from '@/redux/features/Conversation/ConversationSlice';
+import { setActiveConversation} from '@/redux/features/Conversation/ConversationSlice';
 
-import { IoClose } from 'react-icons/io5';
-import { useDispatch, useSelector } from 'react-redux';
-import { showConversationOnMobile } from '@/redux/features/UiSlice';
-import { useGetMessagesQuery } from '@/redux/features/Conversation/conversationApi';
+import { useDispatch } from 'react-redux';
 import { useGetGroupsQuery } from '@/redux/features/group/groupApi';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { match } from 'assert';
 
-export default function GroupConversation({groupConversation} : {conversation : Conversation}) {
+export default function GroupConversation({groupConversation}) {
   const navigate = useNavigate();
   const {pathname} = useLocation();
   const {convId} = useParams() 
@@ -32,10 +28,10 @@ export default function GroupConversation({groupConversation} : {conversation : 
 
   const handleSelectConversation = ()=>{
     dispatch(setActiveConversation({id:groupConversation.id ,  type:'group'}))
-    // dispatch(openConversation(groupConversation.id))
     navigate('/group/'+groupConversation.id);
   }
 
+  
   // const handleCloseConversation = ()=>{
   //   dispatch(closeConversation(conversation.conversation_id));
   // }
@@ -61,8 +57,8 @@ export default function GroupConversation({groupConversation} : {conversation : 
 
         </div>
 
-        <div data-visible={[1]?.length != 0} className={styles.notread_marker}> 
-            {[1]?.length}
+        <div data-visible={[]?.length != 0} className={styles.notread_marker}> 
+            {[]?.length}
         </div>
 
     </UnstyledButton>

@@ -1,6 +1,6 @@
 import Friend from "./Friend/Friend";
-import FriendSkeleton from "../FriendSkeleton/FriendSkeleton";
 import { useGetFriendsQuery } from "@/redux/features/friend/friendApi";
+import LoadingSkeleton from "../../LoadingSkeleton/LoadingSkeleton";
 
 
 
@@ -12,7 +12,7 @@ export default function FriendsListing() {
   return (
     <>
         {
-        isFetching ? <FriendSkeleton/>
+        isFetching ? <LoadingSkeleton/>
         :
         friends.map((friend , key : number)=><Friend key={key} friend={friend}/>)}
 

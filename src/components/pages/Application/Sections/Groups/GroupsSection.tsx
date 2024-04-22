@@ -1,14 +1,13 @@
 import styles from './GroupsSection.module.css';
 import Group from './Group/Group';
 import UnstyledButton from '../../../../shared/UnstyledButton/UnstyledButton';
-import { useDispatch } from 'react-redux';
-import { openCreateGroupModal } from '@/redux/features/UiSlice';
 import useModal from '@/components/modal/useModal';
 import SectionContainer from '../SectionContainer';
 import { useGetGroupsQuery } from '@/redux/features/group/groupApi';
+import LoadingSkeleton from '../LoadingSkeleton/LoadingSkeleton';
 
 export default function GroupsSection() {
-  const {data:groups} = useGetGroupsQuery(undefined);
+  const {data:groups , isFetching} = useGetGroupsQuery(undefined);
   const {onOpen : onOpenCreateGroupModal} = useModal('CreateGroupModal');
 
   return (
@@ -23,6 +22,9 @@ export default function GroupsSection() {
 
         <div className={styles.groups_list}>
           {
+            isFetching ?
+            <LoadingSkeleton/>
+            :
             groups.map((group)=><Group group={group}/>)
           }
         </div>

@@ -1,7 +1,7 @@
 import Skeleton from 'react-loading-skeleton';
-import styles from './FriendSkeleton.module.css';
+import styles from './LoadingSkeleton.module.css';
 
-export default function FriendSkeleton() {
+export default function LoadingSkeleton() {
   return (
     
     <div className={styles.container}>

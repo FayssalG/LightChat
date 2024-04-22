@@ -37,7 +37,7 @@
     
     .search{
         margin-top: 1rem;
-        background-color:  var(--primary);
+        background-color:  var(--secondary);
         padding: .4em .9em;
         border-radius: .2rem;
         input{
@@ -60,12 +60,28 @@
             padding: .2em .4em;
             border-radius: .2rem ;
             font-weight: 200;
+            position: relative;
+            
+            p{
+            }
 
+            .notification_badge{
+                position: absolute;
+                width: 7px;
+                height: 7px;
+                background-color: var(--success);
+                border-radius: 50%;
+                z-index: -2;
+                right: -4px;
+                top: -1px;                    
+            }
+    
         }
         button[data-active=true] {
             color: white;
             background-color: var(--accent);
         }
+
 
         
     }

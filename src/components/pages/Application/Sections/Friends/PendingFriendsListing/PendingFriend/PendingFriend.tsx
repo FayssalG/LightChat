@@ -1,16 +1,9 @@
 import styles from './PendingFriend.module.css';
-import { IoMdMore } from "react-icons/io";
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
-import { RefObject, useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { openConfirmRemoveFriendModal, setIsLoading } from '@/redux/features/UiSlice';
+import { useSelector } from 'react-redux';
 import { IoClose } from 'react-icons/io5';
-import { accept_friend_request, cancel_friend_request, ignore_friend_request } from '@/axios/friend';
-import Spinner from '@/components/shared/Spinner/Spinner';
-import {  removeRequest } from '@/redux/features/friendRequest/friendRequestSlice';
-import { addFriend } from '@/redux/features/friend/FriendSlice';
-import FriendSkeleton from '../../FriendSkeleton/FriendSkeleton';
 import { useAcceptRequestMutation, useCancelRequestMutation, useIgnoreRequestMutation } from '@/redux/features/friendRequest/friendRequestApi';
+import LoadingSkeleton from '../../../LoadingSkeleton/LoadingSkeleton';
 
 
 export default function PendingFriend({pendingFriend} : {pendingFriend:FriendRequest}  ) {
@@ -58,7 +51,7 @@ export default function PendingFriend({pendingFriend} : {pendingFriend:FriendReq
     }
   }
 
-  if(isLoading) return <FriendSkeleton/>
+  if(isLoading) return <LoadingSkeleton/>
   
   return (
     <>

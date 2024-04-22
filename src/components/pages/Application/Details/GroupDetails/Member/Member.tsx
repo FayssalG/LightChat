@@ -7,11 +7,12 @@ import { MdGroupRemove } from 'react-icons/md';
 import { AiFillMessage } from 'react-icons/ai';
 
 export default function Member({member , isAdmin , onRemove , onAddFriend ,onSendMessage}) {
-    const {friend}= useGetFriendsQuery(undefined , {
+  const {friend}= useGetFriendsQuery(undefined , {
       selectFromResult : ({data})=>({
         friend : data?.find(f=>f.user_id == member.id)
       })
     })
+
 
     
     

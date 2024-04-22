@@ -3,7 +3,6 @@ import styles from './ResetPassword.module.css';
 import { useRef } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import Spinner from '@/components/shared/Spinner/Spinner';
-import PasswordResetSuccessAlert from '@/components/alerts/PasswordResetSuccessAlert/PasswordResetSuccessAlert';
 import { useResetPasswordMutation } from '@/redux/features/auth/authApi';
 import { toast } from 'react-toastify';
 

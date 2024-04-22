@@ -5,15 +5,16 @@ const UiSlice = createSlice({
     initialState : {
         globalLoading : false,
         activeSection : 'friends',
-        conversationVisibility : false,
-        showEditModal : false, 
-        showFriendDetailsModal:false,
-        showGroupDetailsModal : false,
-        showAddFriendModal : false,
-        showConfirmRemoveFriendModal : false,
-        showConfirmBlockFriendModal : false,
-        showCreateGroupModal : false,
-        showPasswordResetSuccessAlert : false,
+
+        notificationBadges : {
+            pending : false,
+            friends : false,
+            blocked : false,
+
+            groups : false,
+            conversations : false 
+        }
+
     },
     reducers: {
         setGlobalLoading : (state , action)=>{
@@ -23,68 +24,17 @@ const UiSlice = createSlice({
         changeActiveSection : (state , action)=>{
             state.activeSection = action.payload;
         },
-        hideConversationOnMobile : (state )=>{
-            state.conversationVisibility = false;
-        },
 
-        showConversationOnMobile : (state )=>{
-            state.conversationVisibility = true;
+        showBadge :  (state , action)=>{
+            type  BadgeType = 'friendRequests'|'friends'|'groups'|'conversations' 
+            const badge :  BadgeType = action.payload;
+            state.notificationBadges = {...state.notificationBadges , [badge]:true};
         },
-
-        toggleShowEditModal : (state )=>{
-            state.showEditModal = !state.showEditModal;
-        },
-
-        openFriendDetailsModal : (state )=>{
-            state.showFriendDetailsModal = true;
-        },
-        closeFriendDetailsModal : (state )=>{
-            state.showFriendDetailsModal = false;
-        },
-
-        openGroupDetailsModal : (state)=>{
-            state.showGroupDetailsModal = true;
-        },
-        closeGroupDetailsModal : (state)=>{
-            state.showGroupDetailsModal = false;
-        },
-
-
-        openAddFriendModal : (state)=>{
-            state.showAddFriendModal = true
-        },
-        closeAddFriendModal : (state)=>{
-            state.showAddFriendModal = false
-        },
-        
-        openConfirmRemoveFriendModal: (state)=>{
-            state.showConfirmRemoveFriendModal = true;
-        },
-        closeConfirmRemoveFriendModal: (state)=>{
-            state.showConfirmRemoveFriendModal = false;
-        },
-        
-        
-        openConfirmBlockFriendModal: (state)=>{
-            state.showConfirmBlockFriendModal = true;
-        },
-        closeConfirmBlockFriendModal: (state)=>{
-            state.showConfirmBlockFriendModal = false;
-        },
-        
-        openCreateGroupModal : (state)=>{
-            state.showCreateGroupModal = true
-        },
-        closeCreateGroupModal : (state)=>{
-            state.showCreateGroupModal = false
-        },
-
-        openPasswordResetSuccessAlert:(state)=>{
-            state.showPasswordResetSuccessAlert = true;
-        },
-        closePasswordResetSuccessAlert : (state)=>{
-            state.showPasswordResetSuccessAlert = false;
-        },
+        hideBadge :  (state , action)=>{
+            type  BadgeType = 'pending'|'friends'|'blocked'|'groups'|'conversations' 
+            const badge : BadgeType = action.payload;
+            state.notificationBadges = {...state.notificationBadges , [badge]:false};
+        }       
 
     }
 })
@@ -93,29 +43,7 @@ export default UiSlice.reducer;
 export const {
     setGlobalLoading,
     changeActiveSection , 
-    hideConversationOnMobile,
-    showConversationOnMobile,
-    toggleShowEditModal,
+    showBadge,
+    hideBadge
     
-    openFriendDetailsModal,
-    closeFriendDetailsModal,
-    
-    openAddFriendModal,
-    closeAddFriendModal,
-
-    openConfirmRemoveFriendModal,
-    closeConfirmRemoveFriendModal,
-
-    openConfirmBlockFriendModal,
-    closeConfirmBlockFriendModal,
-
-    openCreateGroupModal,
-    closeCreateGroupModal,
-
-    openGroupDetailsModal,
-    closeGroupDetailsModal,
-
-    openPasswordResetSuccessAlert,
-    closePasswordResetSuccessAlert
-
 } = UiSlice.actions;

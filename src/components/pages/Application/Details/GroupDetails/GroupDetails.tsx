@@ -10,8 +10,9 @@ import { useNavigate } from 'react-router-dom';
 import { changeActiveSection } from '@/redux/features/UiSlice';
 import AddMembers from './AddMembers/AddMembers';
 import { useEffect, useState } from 'react';
+import useModal from '@/components/modal/useModal';
 
-export default function GroupDetails({onClose , group}) {
+export default function GroupDetails({onClose , group }) {
     const navigate = useNavigate();
     const dispatch = useDispatch()
     const [removeMember] = useRemoveMemberMutation();
@@ -21,12 +22,16 @@ export default function GroupDetails({onClose , group}) {
     const user= useSelector(state=>state.auth.user);
     const [shouldShowAddMembers , setShouldShowAddMembers] = useState(false);
 
+    const isAdmin=group.admin_id==user.id;
+
     const handleSendMessage = (convId)=>{
         dispatch(changeActiveSection('conversations'))
         navigate('/friend/'+convId)
     }
-    const handleRemoveMember = (member)=>{
-        removeMember({member_id:member.id , group_id:member.pivot.group_id})
+
+    const {onOpen : onOpenConfirmRemoveGroupMember} = useModal('ConfirmRemoveGroupMemberModal');  
+    const handleOpenConfirmRemoveMemberModal = (member)=>{
+        onOpenConfirmRemoveGroupMember({member:member , group:group})
     }
 
     const handleQuitGroup = ()=>{
@@ -75,9 +80,11 @@ export default function GroupDetails({onClose , group}) {
         <div className={styles.body}>
             <div className={styles.top}>
                 <p>Members</p>
-                <UnstyledButton onClick={()=>setShouldShowAddMembers(true)} className={styles.addmembers_btn}>
-                    Add members
-                </UnstyledButton>
+                {isAdmin &&
+                    <UnstyledButton onClick={()=>setShouldShowAddMembers(true)} className={styles.addmembers_btn}>
+                        Add members
+                    </UnstyledButton>                
+                }
             </div>
             <div className={styles.members_list}>
                 {
@@ -85,8 +92,8 @@ export default function GroupDetails({onClose , group}) {
                         if(user.id == member.id) return null    
                         return <Member 
                             key={member.id} 
-                            onRemove={handleRemoveMember} 
-                            isAdmin={group.admin_id==user.id} 
+                            onRemove={handleOpenConfirmRemoveMemberModal} 
+                            isAdmin={isAdmin} 
                             member={member}
                             onAddFriend={handleAddFriend}
                             onSendMessage={handleSendMessage}

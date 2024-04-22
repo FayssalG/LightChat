@@ -6,14 +6,20 @@ import { showConversationOnMobile} from '../../../../../../redux/features/UiSlic
 import { useEffect, useRef, useState } from 'react';
 import { IoMdMore } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
+import useModal from '@/components/modal/useModal';
 
 export default function Group({group}) {
   const navigate = useNavigate();
-  console.log({group})
+  const {onOpen : onOpenConfirmQuitGroupModal} = useModal('ConfirmQuitGroupModal');
 
   const handleOpenGroupConversation = ()=>{
     navigate('/group/'+group.group_conversation.id)
   }
+
+  const handleOpenQuitGroupModal = ()=>{
+    onOpenConfirmQuitGroupModal({group})
+  }
+
   const optionsRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(()=>{
@@ -37,12 +43,6 @@ export default function Group({group}) {
 
       <UnstyledButton onClick={handleOpenGroupConversation}  className={styles.name_lastmsg}>
           <h2 className={styles.name}>{group.name}</h2>
-          {/* <div className={styles.lastmsg}>
-            <p className={styles.text}>Hello guys</p>
-            <p className={styles.time}>4:00 PM</p>
-          
-          </div> */}
-
       </UnstyledButton>
         
       <div ref={optionsRef} className={styles.options} >
@@ -51,8 +51,9 @@ export default function Group({group}) {
           </UnstyledButton>
           <div data-visible={showOptionsMenu ? 'true' : 'false'}  className={styles.options_menu}>
             <ul>
-              <li className={styles.option}><UnstyledButton > Send a message </UnstyledButton></li>
-              <li className={styles.option+' '+styles.option_red }><UnstyledButton > Remove </UnstyledButton></li>
+              <li className={styles.option+' '+styles.option_red }>
+                <UnstyledButton onClick={handleOpenQuitGroupModal} > Quit Group </UnstyledButton>
+              </li>
             </ul>
           </div>
       </div>

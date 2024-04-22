@@ -86,9 +86,9 @@
     
 
     .section_link{
+        position: relative;
         justify-self: flex-start;
         align-self: center;
-
         color: inherit;
         text-decoration: unset;
         font-size: .7rem;
@@ -110,6 +110,21 @@
     
         p{
         
+        }
+
+        .notification_badge{
+            order: -1;
+            width: 7px;
+            height: 7px;
+            background-color: var(--success);
+            border-radius: 50%;
+            @media (max-width:1000px) {
+                position: absolute;
+                width: 25%;
+                height: 25%;
+                right: -1px;
+                top: 1px;                    
+            }
         }
 
         @media (max-width:1000px) {

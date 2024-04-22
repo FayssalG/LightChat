@@ -3,8 +3,8 @@ import styles from './Blocked.module.css';
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { unBlockUser } from '@/redux/features/block/blockSlice';
-import FriendSkeleton from '../../FriendSkeleton/FriendSkeleton';
 import { useUnBlockUserMutation } from '@/redux/features/block/blockApi';
+import LoadingSkeleton from '../../../LoadingSkeleton/LoadingSkeleton';
 
 
 export default function Blocked({blocked}) {
@@ -15,7 +15,7 @@ export default function Blocked({blocked}) {
     unBlockUser(blocked.username)
   }
 
-  if(isLoading) return <FriendSkeleton/>
+  if(isLoading) return <LoadingSkeleton/>
   
   return (
     <>

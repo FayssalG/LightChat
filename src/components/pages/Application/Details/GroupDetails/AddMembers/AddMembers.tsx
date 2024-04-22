@@ -35,6 +35,7 @@ export default function AddMembers({onCloseAddMembers, group}) {
         <div className={styles.header}>
             <p>Chose members from you friends</p>
         </div>
+        
         <form id='addmembers_form' onSubmit={handleSubmit} className={styles.body}>
             <div className={styles.friends_list}>
                 {   friendsToAdd?.length ?

@@ -1,11 +1,9 @@
-import { selectActiveConversation, selectMessageById } from '@/redux/features/Conversation/ConversationSelectors';
 import styles from './Conversation.module.css';
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
-import { closeConversation, openConversation, setActiveConversation} from '@/redux/features/Conversation/ConversationSlice';
+import { closeConversation, openConversation} from '@/redux/features/Conversation/ConversationSlice';
 
 import { IoClose } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
-import { showConversationOnMobile } from '@/redux/features/UiSlice';
 import { useGetMessagesQuery } from '@/redux/features/Conversation/conversationApi';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
@@ -23,15 +21,16 @@ export default function Conversation({conversation} : {conversation : Conversati
 
   const dispatch = useDispatch()
   
-  const handleSelectConversation = ()=>{
-    dispatch(showConversationOnMobile());
-    // dispatch(setActiveConversation({id:conversation.conversation_id , type:'friend'}))
+  const handleSelectConversation = (e)=>{
+    
     navigate('/friend/'+conversation.conversation_id)
     dispatch(openConversation(conversation.conversation_id))
 
   }
 
-  const handleCloseConversation = ()=>{
+  const handleCloseConversation = (e)=>{
+    e.stopPropagation();
+    navigate('/');
     dispatch(closeConversation(conversation.conversation_id));
   }
 

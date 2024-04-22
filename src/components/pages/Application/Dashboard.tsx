@@ -12,19 +12,16 @@ import VoiceCall from './VoiceCall/VoiceCall';
 import VideoCall from './VideoCall/VideoCall';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useCall } from '@/components/context/CallProvider/CallProvider';
-import {useGetConversationsQuery } from '@/redux/features/Conversation/conversationApi';
 import { baseApi } from '@/redux/features/baseApi';
 import { openConversation } from '@/redux/features/Conversation/ConversationSlice';
 import { useGetUserQuery } from '@/redux/features/auth/authApi';
 import { toast } from 'react-toastify';
-import { useGetGroupsQuery } from '@/redux/features/group/groupApi';
-import ActiveGroupConversation from './ActiveGroupConversation/ActiveGroupConversation';
 import FriendsSection from './Sections/Friends/FriendsSection';
 import ConversationsSection from './Sections/Conversations/ConversationsSection';
 import GroupsSection from './Sections/Groups/GroupsSection';
+import { showBadge } from '@/redux/features/UiSlice';
 
 export default function Dashboard() {
-  const navigate = useNavigate();
   const {isVerified} : {isVerified : Boolean} = useGetUserQuery(undefined , {
     selectFromResult : ({data})=>({
       isVerified : (data?.email_verified_at !== null)
@@ -40,6 +37,8 @@ export default function Dashboard() {
   useEffect(()=>{
     if(socket){
       socket.on('request-received' , (data)=>{
+        dispatch(showBadge('pending'));
+
         dispatch(baseApi.util.invalidateTags(['Requests']))
         toast.info('@'+data.username + ' has sent you a friend request' , {
           theme:'colored',
@@ -53,6 +52,8 @@ export default function Dashboard() {
 
       
       socket.on('request-accepted' , ({friend})=>{
+        dispatch(showBadge('friends'));
+        
         if(friend){
           dispatch(baseApi.util.invalidateTags(['Friends'  ,  'Requests' , 'Conversations']))
         }
@@ -70,6 +71,7 @@ export default function Dashboard() {
       })
 
       socket.on('message-received' , ({message,sender} : {message:FriendMessage , sender:Friend})=>{
+        dispatch(showBadge('conversations'));
         dispatch(openConversation(message.conversation_id))
         dispatch(baseApi.util.invalidateTags(['Messages']))
       })
@@ -87,7 +89,13 @@ export default function Dashboard() {
         }
       })
 
-
+      
+      socket.on('me-added-to-group' , ()=>{
+        console.log('me-added-to-group')
+        dispatch(showBadge('groups'));
+        dispatch(baseApi.util.invalidateTags(['groups']))
+      })
+      
       socket.on('members-added-to-group' , ()=>{
         dispatch(baseApi.util.invalidateTags(['groups']))
       })
@@ -119,11 +127,9 @@ export default function Dashboard() {
         }
       })
 
-
-
       
       socket.on('online-status-change' , ({userId , onlineStatus})=>{
-          dispatch(baseApi.util.invalidateTags(['Friends' ]));
+          dispatch(baseApi.util.invalidateTags(['Friends']));
       })
 
     }
@@ -131,15 +137,17 @@ export default function Dashboard() {
  
   const activeSection = useSelector(state=>state.ui.activeSection)
   const renderSections = ()=>{
-    switch(activeSection){
-      case 'friends' :
-        return <FriendsSection/>
-      case 'conversations' : 
-        return <ConversationsSection/>
-      case 'groups' : 
-        return <GroupsSection/>
+    if(activeSection.match(/friends/)){
+      return <FriendsSection/>    
+    }
+    else if(activeSection == 'conversations'){
+      return <ConversationsSection/>
+    }
+    else if(activeSection == 'groups'){
+      return <GroupsSection/>
 
     }
+
   }
 
   return (

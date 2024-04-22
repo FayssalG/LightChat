@@ -7,9 +7,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import useModal from '@/components/modal/useModal';
 import { openConversation, setActiveConversation } from '@/redux/features/Conversation/ConversationSlice';
 
-import FriendSkeleton from '../../FriendSkeleton/FriendSkeleton';
-import { showConversationOnMobile} from '@/redux/features/UiSlice';
-import { useUnFriendMutation } from '@/redux/features/friend/friendApi';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -20,7 +17,6 @@ export default function Friend({friend}) {
   const optionsRef = useRef<HTMLDivElement | null>(null)
 
   const {onOpen : onOpenConfirmRemoveFriendModal} = useModal('ConfirmRemoveFriendModal');
-  const {onOpen : onOpenFriendDetailsModal} = useModal('FriendDetailsModal');
 
 
   const handleRemoveClick = ()=>{
@@ -30,7 +26,6 @@ export default function Friend({friend}) {
 
   const handleSendMessageClick= ()=>{
     setShowOptionsMenu(false)
-    dispatch(showConversationOnMobile())
     dispatch(openConversation(friend.conversation_id));
     dispatch(setActiveConversation({id:friend.conversation_id , type:'friend'}));
     navigate('/friend/'+friend.conversation_id)

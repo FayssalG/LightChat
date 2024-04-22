@@ -1,28 +1,18 @@
-import { get_friend_requests } from "@/axios/friend";
-import { setFriends, setPendingFriends } from "@/redux/features/friend/FriendSlice";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import PendingFriend from "./PendingFriend/PendingFriend";
-import FriendSkeleton from "../FriendSkeleton/FriendSkeleton";
 import { useGetFriendRequestsQuery } from "@/redux/features/friendRequest/friendRequestApi";
+import LoadingSkeleton from "../../LoadingSkeleton/LoadingSkeleton";
+import PendingFriend from "./PendingFriend/PendingFriend";
 
 
 
 
 
 export default function PendingFriendsListing() {
-  const {data:friendRequests , isLoading} = useGetFriendRequestsQuery();
-
-
-  // const friendRequests : [Friend?] = useSelector(state=>state.friendRequest.requests);
-    
-    console.log({friendRequests})
-  
-
+  const {data:friendRequests , isLoading} = useGetFriendRequestsQuery(undefined);
+      
     return (
     <>
         {isLoading ?
-            <FriendSkeleton/>
+            <LoadingSkeleton/>
           :
           friendRequests.map((request , key : number)=><PendingFriend key={key} pendingFriend={request}/>)
         }

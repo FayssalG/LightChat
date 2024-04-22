@@ -1,30 +1,32 @@
 import styles from './FriendsSection.module.css';
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useModal from '@/components/modal/useModal';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import SectionContainer from '../SectionContainer';
 import FriendsListing from './FriendsListing/FriendsListing';
 import BlockedListing from './BlockedListing/BlockedListing';
 import PendingFriendsListing from './PendingFriendsListing/PendingFriendsListing';
+import { changeActiveSection, hideBadge } from '@/redux/features/UiSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function FriendsSection() {
+  const activeSection = useSelector(state=>state.ui.activeSection);
+  const notificationBadges = useSelector((state)=>state.ui.notificationBadges);
+  const dispatch = useDispatch();
   const {onOpen : onOpenAddFriendModal } = useModal('AddFriendModal');
-  const [activeSubSection , setActiveSubSection] = useState('all');
-
 
   const handleAddFriend = ()=>{
       onOpenAddFriendModal(null)
   }
-
   
   const renderSubSection = ()=>{
-    switch(activeSubSection){
-      case 'all':
+    switch(activeSection){
+      case 'friends':
         return <FriendsListing/>
-      case 'blocked':
+      case 'friends/blocked':
         return <BlockedListing/>
-      case 'pending':
+      case 'friends/pending':
         return <PendingFriendsListing/>  
     }
   } 
@@ -42,9 +44,29 @@ export default function FriendsSection() {
           </div>
 
           <div className={styles.filters}>
-            <UnstyledButton onClick={()=>setActiveSubSection('all')} data-active={activeSubSection=='all' ? true : false}>All</UnstyledButton>
-            <UnstyledButton onClick={()=>setActiveSubSection('blocked')}  data-active={activeSubSection=='blocked' ? true : false}>Blocked</UnstyledButton>
-            <UnstyledButton onClick={()=>setActiveSubSection('pending')}  data-active={activeSubSection=='pending' ? true : false}>Pending</UnstyledButton>
+            <UnstyledButton onClick={()=>dispatch(changeActiveSection('friends'))} data-active={activeSection=='friends'}>
+              <p>All</p>
+              {   
+                notificationBadges?.friends && 
+                <div className={styles.notification_badge}></div>
+              }
+            </UnstyledButton>
+
+            <UnstyledButton onClick={()=>dispatch(changeActiveSection('friends/blocked'))}  data-active={activeSection=='friends/blocked'}>
+              <p>Blocked</p>
+              {   
+                notificationBadges?.blocked && 
+                <div className={styles.notification_badge}></div>
+              }
+            </UnstyledButton>
+            
+            <UnstyledButton onClick={()=>dispatch(changeActiveSection('friends/pending'))}  data-active={activeSection=='friends/pending'}>
+              <p>Pending</p>
+              {   
+                notificationBadges?.pending && 
+                <div className={styles.notification_badge}></div>
+              }
+            </UnstyledButton>
           </div>  
         </div>
 
