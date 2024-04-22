@@ -25,6 +25,7 @@
     @media (max-width:1000px){
         z-index: 5;
         position: fixed;
+        border-radius: 0;
         /* max-height: revert; */
         width: 100svw;
         top: 0;

@@ -3,7 +3,7 @@ import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import styles from './GroupDetails.module.css';
 import { IoClose } from 'react-icons/io5';
 import Member from './Member/Member';
-import { useRemoveMemberMutation } from '@/redux/features/group/groupApi';
+import { useQuitGroupMutation, useRemoveMemberMutation } from '@/redux/features/group/groupApi';
 import { useSendRequestMutation } from '@/redux/features/friendRequest/friendRequestApi';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -15,6 +15,7 @@ export default function GroupDetails({onClose , group}) {
     const navigate = useNavigate();
     const dispatch = useDispatch()
     const [removeMember] = useRemoveMemberMutation();
+    const [quitGroup] = useQuitGroupMutation();
     const [addFriend] = useSendRequestMutation();
 
     const user= useSelector(state=>state.auth.user);
@@ -27,6 +28,11 @@ export default function GroupDetails({onClose , group}) {
     const handleRemoveMember = (member)=>{
         removeMember({member_id:member.id , group_id:member.pivot.group_id})
     }
+
+    const handleQuitGroup = ()=>{
+        quitGroup({group_id:group.id})
+    }
+
     const handleAddFriend = (username)=>{
         addFriend(username);
     }
@@ -75,7 +81,7 @@ export default function GroupDetails({onClose , group}) {
         </div>
 
         <div className={styles.footer}>
-            <UnstyledButton className={styles.danger_btn} >Quit the group</UnstyledButton>
+            <UnstyledButton onClick={handleQuitGroup} className={styles.danger_btn} >Quit the group</UnstyledButton>
         </div> 
         </>
         }

@@ -36,8 +36,16 @@ export const groupApi = baseApi.injectEndpoints({
                 body:{group_id,new_members_ids}
             }),
             invalidatesTags : ['groups']
-        }) 
+        }) ,
 
+        quitGroup : builder.mutation({
+            query:({group_id})=>({
+                url : '/groups/quit',
+                method : 'POST',
+                body:{group_id}
+            }),
+            invalidatesTags : ['groups']
+        }),
 
     })    
 });
@@ -47,5 +55,6 @@ export const {
     useLazyGetGroupsQuery,
     useCreateGroupMutation,
     useRemoveMemberMutation,
+    useQuitGroupMutation,
     useAddMembersMutation
 } = groupApi
