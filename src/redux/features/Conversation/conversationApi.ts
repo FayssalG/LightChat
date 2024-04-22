@@ -63,11 +63,10 @@ export const conversationApi = baseApi.injectEndpoints({
         async onQueryStarted(message , {dispatch , queryFulfilled }){
           const patchedResult = dispatch(
             conversationApi.util.updateQueryData('getMessages' , undefined , (draft)=>{
-              const url = URL.createObjectURL(message.attachment)
-              const type	= message.attachment.type
-              const name = message.attachment.name
-    
-              draft.push({...message , attachment:{url,type,name}})
+                const url = URL.createObjectURL(message.attachment)
+                const type	= message.attachment.type
+                const name = message.attachment.name  
+                draft.push({...message , attachment:{url,type,name}})
             })
           )
           try{

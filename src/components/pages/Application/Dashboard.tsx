@@ -10,7 +10,7 @@ import NoActiveConversation from './NoActiveConverastion/NoActiveConversation';
 
 import VoiceCall from './VoiceCall/VoiceCall';
 import VideoCall from './VideoCall/VideoCall';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { useCall } from '@/components/context/CallProvider/CallProvider';
 import {useGetConversationsQuery } from '@/redux/features/Conversation/conversationApi';
 import { baseApi } from '@/redux/features/baseApi';
@@ -22,9 +22,9 @@ import ActiveGroupConversation from './ActiveGroupConversation/ActiveGroupConver
 import FriendsSection from './Sections/Friends/FriendsSection';
 import ConversationsSection from './Sections/Conversations/ConversationsSection';
 import GroupsSection from './Sections/Groups/GroupsSection';
-import GroupDetails from './Details/GroupDetails/GroupDetails';
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const {isVerified} : {isVerified : Boolean} = useGetUserQuery(undefined , {
     selectFromResult : ({data})=>({
       isVerified : (data?.email_verified_at !== null)
@@ -35,7 +35,6 @@ export default function Dashboard() {
   const {callStatus}= useCall()
 
   const dispatch = useDispatch();
-
 
   //listen for changes in friend requests
   useEffect(()=>{
@@ -70,15 +69,9 @@ export default function Dashboard() {
         dispatch(baseApi.util.invalidateTags(['Friends']));
       })
 
-
       socket.on('message-received' , ({message,sender} : {message:FriendMessage , sender:Friend})=>{
         dispatch(openConversation(message.conversation_id))
         dispatch(baseApi.util.invalidateTags(['Messages']))
-      })
-
-      socket.on('group-message-received' , ({groupMessage} : {message:FriendMessage , sender:Friend})=>{
-        console.log({groupMessage})
-        dispatch(baseApi.util.invalidateTags(['groupMessages']))
       })
 
 
@@ -95,6 +88,28 @@ export default function Dashboard() {
       })
 
 
+      socket.on('members-added-to-group' , ()=>{
+        dispatch(baseApi.util.invalidateTags(['groups']))
+      })
+
+      socket.on('member-removed-from-group' , ()=>{
+        dispatch(baseApi.util.invalidateTags(['groups']))
+      })
+      
+      socket.on('group-message-received' , ({groupMessage} : {message:FriendMessage , sender:Friend})=>{
+        dispatch(baseApi.util.invalidateTags(['groupMessages']))
+      })
+
+      socket.on('group-message-updated' , ({groupMessage})=>{
+        if(groupMessage){
+          dispatch(baseApi.util.invalidateTags(['groupMessages']))
+        }
+      })
+      socket.on('group-message-deleted' , ({groupMessage })=>{
+        if(groupMessage){
+          dispatch(baseApi.util.invalidateTags(['groupMessages']))
+        }
+      })
       
       socket.on('messages-seen' , (conversationId : string)=>{
         console.log({conversationId})

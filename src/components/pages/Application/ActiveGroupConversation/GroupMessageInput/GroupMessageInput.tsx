@@ -7,15 +7,17 @@ import { ChangeEvent, useRef, useState } from 'react';
 import AttachmentPreview from './AttachmentPreview/AttachmentPreview';
 import { useSendMessageMutation, useSendMessageWithAttachmentMutation } from '@/redux/features/Conversation/conversationApi';
 import { useGetGroupsQuery } from '@/redux/features/group/groupApi';
-import { useSendGroupMessageMutation } from '@/redux/features/Conversation/groupConversationApi';
+import { useSendGroupMessageMutation, useSendGroupMessageWithAttachmentMutation } from '@/redux/features/Conversation/groupConversationApi';
+import { group } from 'console';
 
 export default function GroupMessageInput({groupId }) {
   const [sendGroupMessage] = useSendGroupMessageMutation();
-//   const [sendMessageWithAttachment ] = useSendMessageWithAttachmentMutation();
+  const [sendGroupMessageWithAttachment] = useSendGroupMessageWithAttachmentMutation();
+
   const user : User = useSelector(state=>state.auth.user);
-  const {groupConversationId} = useGetGroupsQuery(undefined , {
+  const {group} = useGetGroupsQuery(undefined , {
     selectFromResult : ({data})=>({
-        groupConversationId : data?.find(g=>g.id==groupId)?.group_conversation?.id
+        group : data?.find(g=>g.id==groupId)
     })
   })
 
@@ -26,7 +28,8 @@ export default function GroupMessageInput({groupId }) {
     e.preventDefault();
     let newGroupMessage = {
       id: Math.floor(Math.random()*2000), //set a random id for now  
-      group_conversation_id : groupConversationId,
+      group_conversation_id : group.group_conversation.id,
+      receivers_ids : group.members.filter(m=>m.id!=user.id).map(m=>m.id),
       sender_id :  user.id ,
       isSent:false,
       text : '',
@@ -34,11 +37,11 @@ export default function GroupMessageInput({groupId }) {
     }
 
     if(attachment){
-      newMessage = {...newMessage,
+      newGroupMessage = {...newGroupMessage,
         text:inputRef.current.value,
         attachment : attachment 
       }
-      // sendMessageWithAttachment(newMessage)
+      sendGroupMessageWithAttachment(newGroupMessage)
     }
     else if(inputRef.current.value){
       newGroupMessage = {...newGroupMessage,

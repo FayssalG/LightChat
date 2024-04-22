@@ -35,6 +35,7 @@ export default function MessageInput({friendId , conversationId}) {
       }
       sendMessageWithAttachment(newMessage)
     }
+    
     else if(inputRef.current.value){
       newMessage = {...newMessage,
         text:inputRef.current.value,

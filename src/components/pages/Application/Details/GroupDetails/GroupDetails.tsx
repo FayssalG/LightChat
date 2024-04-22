@@ -8,13 +8,17 @@ import { useSendRequestMutation } from '@/redux/features/friendRequest/friendReq
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { changeActiveSection } from '@/redux/features/UiSlice';
+import AddMembers from './AddMembers/AddMembers';
+import { useState } from 'react';
 
 export default function GroupDetails({onClose , group}) {
     const navigate = useNavigate();
     const dispatch = useDispatch()
-    const user= useSelector(state=>state.auth.user);
     const [removeMember] = useRemoveMemberMutation();
     const [addFriend] = useSendRequestMutation();
+
+    const user= useSelector(state=>state.auth.user);
+    const [shouldShowAddMembers , setShouldShowAddMembers] = useState(false);
 
     const handleSendMessage = (convId)=>{
         dispatch(changeActiveSection('conversations'))
@@ -29,6 +33,10 @@ export default function GroupDetails({onClose , group}) {
 
     return (
     <div  className={styles.container}>
+        { shouldShowAddMembers ?
+        <AddMembers onCloseAddMembers={()=>setShouldShowAddMembers(false)} group={group}/>
+            :
+        <>
         <UnstyledButton onClick={onClose} className={styles.close}  >
             <IoClose/>
         </UnstyledButton>
@@ -43,10 +51,15 @@ export default function GroupDetails({onClose , group}) {
         </div>
 
         <div className={styles.body}>
-            <p>Members</p>
+            <div className={styles.top}>
+                <p>Members</p>
+                <UnstyledButton onClick={()=>setShouldShowAddMembers(true)} className={styles.addmembers_btn}>
+                    Add members
+                </UnstyledButton>
+            </div>
             <div className={styles.members_list}>
                 {
-                    group.members.map((member : string)=>{
+                    group.members.map((member)=>{
                         if(user.id == member.id) return null    
                         return <Member 
                             key={member.id} 
@@ -63,7 +76,9 @@ export default function GroupDetails({onClose , group}) {
 
         <div className={styles.footer}>
             <UnstyledButton className={styles.danger_btn} >Quit the group</UnstyledButton>
-        </div>
+        </div> 
+        </>
+        }
     </div>
     )
 }

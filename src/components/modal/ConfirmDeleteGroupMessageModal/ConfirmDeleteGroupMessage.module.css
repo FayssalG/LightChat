@@ -1,0 +1,54 @@
+.container{
+    color: white;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.inner_container {
+    padding: 2em;
+    border-radius: .2rem;
+    background-color: var(--secondary);
+
+    .header{
+        h3{
+            font-size: 1.4rem;
+        }
+    }
+
+    
+    .body{
+        margin-top: 1rem;
+        p{
+            max-width: 400px;
+            font-size: 1rem;
+            font-weight: 200;
+            span{
+                font-weight: 500;
+            }
+        }
+    }
+
+    .footer{
+        margin-top: 2rem;
+        button{
+            border-radius: .2rem;
+            padding: .7em 1.2em;
+            &:hover{
+                opacity: .5;
+            }
+        
+        }
+        .cancel_btn{
+        }
+        .remove_btn{
+            background-color: var(--danger);
+        }
+    }
+}

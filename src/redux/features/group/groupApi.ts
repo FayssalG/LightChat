@@ -1,5 +1,3 @@
-import axiosBaseQuery from "@/axios/axiosBaseQuery";
-import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseApi } from "../baseApi";
 
 export const groupApi = baseApi.injectEndpoints({
@@ -31,11 +29,11 @@ export const groupApi = baseApi.injectEndpoints({
             invalidatesTags : ['groups']
         }),
         
-        addMember : builder.mutation({
-            query:({group_id,member_id})=>({
-                url : '/groups/add-member',
+        addMembers : builder.mutation({
+            query:({group_id,new_members_ids})=>({
+                url : '/groups/add-members',
                 method : 'POST',
-                body:{group_id,member_id}
+                body:{group_id,new_members_ids}
             }),
             invalidatesTags : ['groups']
         }) 
@@ -49,5 +47,5 @@ export const {
     useLazyGetGroupsQuery,
     useCreateGroupMutation,
     useRemoveMemberMutation,
-    useAddMemberMutation
+    useAddMembersMutation
 } = groupApi

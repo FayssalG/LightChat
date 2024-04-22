@@ -30,7 +30,6 @@ export default function CreateGroupModal(props) {
         
         const members_ids = formData.getAll('member');
 
-        console.log({group_name,group_image , members_ids})
         const data = {
             group_name,
             members_ids
