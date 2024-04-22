@@ -71,7 +71,7 @@ export const authApi = baseApi.injectEndpoints({
         }), 
         updateDisplayName : builder.mutation({
             query:(data)=>({
-                url: '/api/user/displayname/update',
+                url: '/user/displayname/update',
                 method: 'POST',
                 body:data
             }),
@@ -80,7 +80,7 @@ export const authApi = baseApi.injectEndpoints({
         
         updateUsername : builder.mutation({
             query:(data)=>({
-                url: '/api/user/username/update',
+                url: '/user/username/update',
                 method: 'POST',
                 body:data
             }),

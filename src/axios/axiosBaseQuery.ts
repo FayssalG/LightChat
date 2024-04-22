@@ -2,7 +2,7 @@ import type { BaseQueryApi, BaseQueryFn } from "@reduxjs/toolkit/query";
 import type { AxiosRequestConfig, AxiosRequestHeaders } from "axios";
 import Axios from "axios";
 
-const API_BASE_URL: string = /*"https://project-c-backend.vercel.app/_api"*/  "https://192.168.1.13:8000/_api";
+const API_BASE_URL: string = "https://project-c-backend.vercel.app/_api" /*"https://192.168.1.13:8000/_api"*/;
 const axios = Axios.create({ baseURL: API_BASE_URL } );
 
 export declare namespace API {

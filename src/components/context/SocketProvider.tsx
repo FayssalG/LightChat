@@ -19,7 +19,7 @@ export default function SocketProvider({children}) {
   useEffect(()=>{
     //https://192.168.1.13:5000
     //https://project-c-socket.onrender.com
-    const newSocket = io('https://192.168.1.13:5000',{
+    const newSocket = io('https://project-c-socket.onrender.com',{
       query : {
         username : user.username,
         userId : user.id,
