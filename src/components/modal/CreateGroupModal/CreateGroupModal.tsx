@@ -4,12 +4,14 @@ import avatar from '@/assets/avatar.png';
 import FriendToAdd from './FriendToAdd/FriendToAdd';
 import { BaseModal } from '../BaseModal';
 import { useGetFriendsQuery } from '@/redux/features/friend/friendApi';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useCreateGroupMutation } from '@/redux/features/group/groupApi';
 import Spinner from '@/components/shared/Spinner/Spinner';
+import { toast } from 'react-toastify';
 
 export default function CreateGroupModal(props) {
-    const [createGroup , {isLoading , error}] = useCreateGroupMutation();
+    const {onClose} = props
+    const [createGroup , {isLoading , error , isSuccess}] = useCreateGroupMutation();
     const {data:friends} = useGetFriendsQuery(undefined);
     const [imagePreivew , setImagePreview] = useState();
 
@@ -35,9 +37,17 @@ export default function CreateGroupModal(props) {
             members_ids
         }
         if(group_image) data.group_image = group_image;
-        createGroup(data);
+        createGroup(data)
     }
     
+    useEffect(()=>{
+        if(isSuccess) {
+            toast.success(`Group was successfully created ` , {
+                position:'top-center'
+            })
+            onClose()
+        };
+    },[isSuccess])
 
     return (
     <BaseModal show={props.isOpen} onClose={props.onClose}>
@@ -66,6 +76,10 @@ export default function CreateGroupModal(props) {
                         }                    
                     </div>
                 </div>
+                {
+                    isSuccess &&
+                    <p className={styles.success}>Group Created</p>
+                }
                 <div className={styles.error}>
                     <p>{error?.data?.errors?.group_name}</p>   
                     <p>{error?.data?.errors?.members_ids}</p>   

@@ -112,7 +112,10 @@
             }
                          
         }   
-
+        .success{
+            color: var(--success);
+            font-size: .9rem;
+        }
         .error{
             color: var(--danger);
             font-size: .9rem;
