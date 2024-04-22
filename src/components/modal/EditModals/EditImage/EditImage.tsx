@@ -26,7 +26,10 @@ export default function EditImage(props) {
     const handleUpdate = (e:React.FormEvent)=>{
         e.preventDefault();
         updateImage({id:user.id , image:imageRef.current?.files[0] , password:passwordRef?.current?.value})
-        .then(()=>onClose());
+        .then((res)=>{
+            if(res?.status <= 400)
+            onClose()    
+        });
     }
 
    

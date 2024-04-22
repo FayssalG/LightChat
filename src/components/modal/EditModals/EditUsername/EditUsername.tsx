@@ -19,7 +19,10 @@ export default function EditUsername(props) {
     const handleUpdate = (e:React.FormEvent)=>{
         e.preventDefault();
         updateUsername({username:usernameRef?.current?.value , password:passwordRef?.current?.value})
-        .then(()=>onClose());
+        .then((res)=>{
+            if(res?.status <= 400)
+            onClose()    
+        });
     }
 
    

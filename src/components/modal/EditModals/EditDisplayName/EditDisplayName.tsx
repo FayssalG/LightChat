@@ -19,7 +19,10 @@ export default function EditDisplayName(props) {
     const handleUpdate = (e:React.FormEvent)=>{
         e.preventDefault();
         updateDisplayName({display_name:displayNameRef?.current?.value , password:passwordRef?.current?.value})
-        .then(()=>onClose());
+        .then((res)=>{
+            if(res?.status <= 400)
+            onClose()
+        });
     }
 
    

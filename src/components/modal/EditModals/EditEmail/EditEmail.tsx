@@ -19,7 +19,10 @@ export default function EditEmail(props) {
     const handleUpdate = (e:React.FormEvent)=>{
         e.preventDefault();
         updateEmail({email:emailRef?.current?.value , password:passwordRef?.current?.value})
-        .then(()=>onClose());
+        .then((res)=>{
+            if(res?.status <= 400)
+            onClose()    
+        });
     }
 
    
