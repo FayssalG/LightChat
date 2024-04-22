@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { changeActiveSection } from '@/redux/features/UiSlice';
 import AddMembers from './AddMembers/AddMembers';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function GroupDetails({onClose , group}) {
     const navigate = useNavigate();
@@ -36,6 +36,22 @@ export default function GroupDetails({onClose , group}) {
     const handleAddFriend = (username)=>{
         addFriend(username);
     }
+
+    //handle closing with the back button
+    useEffect(()=>{
+        window.history.pushState(null, document.title, window.location.href);
+
+        const handleCloseOnBackButton = (event) => {
+            event.preventDefault();
+            onClose()
+        };
+
+        window.addEventListener('popstate', handleCloseOnBackButton);
+    
+        return () => window.removeEventListener('popstate', handleCloseOnBackButton);
+    
+    },[])
+
 
     return (
     <div  className={styles.container}>

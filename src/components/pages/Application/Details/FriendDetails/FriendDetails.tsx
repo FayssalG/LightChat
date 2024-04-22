@@ -1,11 +1,27 @@
 import UnstyledButton from '@/components/shared/UnstyledButton/UnstyledButton';
 import styles from './FriendDetails.module.css';
 import { IoClose } from 'react-icons/io5';
+import { useEffect } from 'react';
 
 
 export default function FriendDetails({friend , onClose}) {
   
   
+    //handle closing with the back button
+    useEffect(()=>{
+        window.history.pushState(null, document.title, window.location.href);
+
+        const handleCloseOnBackButton = (event) => {
+            event.preventDefault();
+            onClose()
+        };
+
+        window.addEventListener('popstate', handleCloseOnBackButton);
+    
+        return () => window.removeEventListener('popstate', handleCloseOnBackButton);
+    
+    },[])
+
   return (
   <div className={styles.container}>
       
