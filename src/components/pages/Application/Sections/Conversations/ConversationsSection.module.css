@@ -45,6 +45,18 @@
         gap: 1rem;
     }
 
+    .no_conversations{
+        height: 100%;
+        font-size: .9rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        p{
+            opacity: .7;
+            font-weight: 200;
+        }
+    }
+    
     .conversations_list{
         p{
             font-size: .8rem;

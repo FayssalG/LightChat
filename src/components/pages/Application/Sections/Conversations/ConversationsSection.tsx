@@ -30,8 +30,14 @@ export default function ConversationsSection() {
             <p className={styles.subtext}>Recent conversations</p>
         </div>
         
-        <div className={styles.conversations_container}>
 
+        <div className={styles.conversations_container}>
+        { (!groupConversations?.length && !openConversations?.length) ?
+          <div className={styles.no_conversations}>
+            <p>No Conversations to show</p>
+          </div> 
+          :
+          <>
           <div className={styles.group_conversations_list}>
               <p>Groups</p>
               {
@@ -54,6 +60,8 @@ export default function ConversationsSection() {
                 })
             }         
           </div>
+          </>
+        }
       </div>
     </SectionContainer>
   )
