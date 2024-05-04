@@ -1,25 +1,23 @@
 import 'react-toastify/ReactToastify.css';
 import CallNotification from './CallNotification/CallNotification';
-
 import { createContext, useContext, useEffect, useRef, useState } from "react"
 import { useSocket } from "../SocketProvider"
 import Peer from 'simple-peer';
-import useAuth from "../../hooks/useAuth";
-import { Slide, ToastContainer, Zoom, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
 
-const CallContext = createContext()
+const CallContext = createContext(undefined)
 export function useCall(){
     return useContext(CallContext)
 }
 
 export default function CallProvider({children}) {    
-    const {user} = useAuth();
+    const user = useSelector(state=>state.auth.user);
     const socket = useSocket()
     
     const [isReceivingAudioCall , setIsReceivingAudioCall] = useState(false)
     const [isReceivingVideoCall , setIsReceivingVideoCall] = useState(false)
     
-    // const [status , setStatus] : ['idle'| 'ongoing' | 'ended' | 'calling'  , Function] = useState('idle');
     const [callStatus , setCallStatus] = useState({audio:'idle' , video:'idle'});
 
     const [otherPersonUsername , setOtherPersonUsername ] = useState('')
@@ -27,14 +25,14 @@ export default function CallProvider({children}) {
     const [callerSignal , setCallerSignal] = useState(null)
 
 
-    const streamRef = useRef(null)
-    const localStreamRef = useRef(null);
-    const remoteStreamRef = useRef(null);
+    const streamRef = useRef<MediaStream | null>(null)
+    const localStreamRef = useRef<HTMLInputElement>(null);
+    const remoteStreamRef = useRef<HTMLInputElement>(null);
     const peerConnRef =useRef(null) 
 
 
     const stopStream = async ()=>{
-        streamRef.current.getTracks().forEach((track)=>{
+        streamRef?.current?.getTracks().forEach((track)=>{
             track.stop()
         })
     }
@@ -352,13 +350,42 @@ export default function CallProvider({children}) {
         }
     }
 
+
+    const shareScreen = async ()=>{
+        try{
+            if(streamRef.current){
+                const tracks = streamRef.current.getTracks()
+                tracks.forEach((track)=>{
+                    track.stop()
+                });
+                const newStream =  await navigator.mediaDevices.getDisplayMedia({
+                    video : {
+                        displaySurface : 'borwser'
+                    },
+                });
+
+                peerConnRef?.current?.replaceTrack(
+                    peerConnRef.current.streams[0].getVideoTracks()[0],
+                    newStream.getVideoTracks()[0],
+                    peerConnRef.current.streams[0]
+                )
+                    
+                
+                streamRef.current = newStream 
+                localStreamRef.current.srcObject = newStream;
+            }
+        }catch(err){
+            console.log(err)
+        }
+    }
+
+
+
     const muteMic = ()=>{
         streamRef.current.getAudioTracks().forEach((track)=>track.enabled = !track.enabled)
     }
 
-
     const value = {
-
         callAudio, 
         answerAudio,
         callVideo,
@@ -368,6 +395,7 @@ export default function CallProvider({children}) {
         cancelCall,
         muteMic,
         swapCamera,
+        shareScreen,
         callStatus,
         isReceivingAudioCall, 
         isReceivingVideoCall, 

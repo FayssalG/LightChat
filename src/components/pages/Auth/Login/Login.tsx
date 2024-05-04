@@ -8,46 +8,37 @@ import { useRef, useState } from 'react';
 import Spinner from '@/components/shared/Spinner/Spinner';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForgotPasswordMutation, useLoginMutation } from '@/redux/features/auth/authApi';
-import { useLazyInitCsrfQuery } from '@/redux/features/baseApi';
 
 export default function Login() {
-    const [initCsrf] = useLazyInitCsrfQuery()
     const [login , {isLoading:isLoadingLogin , error:loginErrs}] = useLoginMutation();    
     const [forgotPassword , {isLoading:isLoadingForgotPassword , error:forgotPasswordErr,reset:resetForgotPassword}] = useForgotPasswordMutation()
 
     const isLoading = isLoadingForgotPassword || isLoadingLogin
     
-    const loginErrors = loginErrs?.data?.errors
-    const forgotPasswordError = forgotPasswordErr?.data?.message
+    const loginErrors : {email:[string?] , password:[string?]}  = loginErrs?.data?.errors
+    const forgotPasswordError : string = forgotPasswordErr?.data?.message
 
-    const token = useSelector(state=>state.auth.token);
-    const emailRef  = useRef(null);
-    const passwordRef = useRef(null);
+    const token : string = useSelector(state=>state.auth.token);
+    const emailRef  = useRef<HTMLInputElement >(null);
+    const passwordRef = useRef<HTMLInputElement>(null);
 
 
     function handleLogin(e : React.FormEvent) {
         e.preventDefault()
-        const email : string = emailRef.current.value;
-        const password : string = passwordRef.current.value;
+        const email  = emailRef?.current?.value;
+        const password = passwordRef?.current?.value;
 
-        // initCsrf(null).
-        // then(()=>{
-            resetForgotPassword();
-            login({email,password})
-        // })
+        resetForgotPassword();
+        login({email,password})
     }
 
     function handleForgot(e : React.MouseEvent<HTMLAnchorElement>) {
         e.preventDefault();
-        const email : string = emailRef.current.value;
+        const email  = emailRef?.current?.value;
       
-        // initCsrf(null).
-        // then(()=>{
-            forgotPassword({email})            
-        // })
+        forgotPassword({email})            
     }
     
-    console.log({loginErrs})
     if(token)  return <Navigate replace to={'/'} /> 
 
     return (

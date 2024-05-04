@@ -1,47 +1,20 @@
-import { createEntityAdapter, createSelector, createSlice } from "@reduxjs/toolkit";
-import { conversationApi } from "./conversationApi";
+import { createSlice } from "@reduxjs/toolkit";
 
 interface IConversationState{
-    error : string | null,
-    status : 'idle' | 'loading' | 'succeeded'  | 'failed',
-    conversations : [Conversation?],
-    activeConversation : {id:string , type:string} | null,
     openConversationsIds : [string?],
 }  
 
 
-
-export const conversationsAdapter  = createEntityAdapter({
-    selectId : (conversation)=>conversation.conversation_id
-})
-
-export const messagesAdapter = createEntityAdapter()
-
-
-const initialState = conversationsAdapter.getInitialState({
-    error : null,
-    status : 'idle' ,
-    messages : messagesAdapter.getInitialState(),
-    activeConversation : null,
+const initialState : IConversationState = {
     openConversationsIds : []
-})
+}
 
 const ConversationSlice = createSlice({
     name : 'conversation',
     initialState ,
     reducers: {
-        setActiveConversation : (state,action )=>{
-            state.activeConversation = action.payload        
-        },
         openConversation : (state , action)=>{
-          
-            conversationsAdapter.updateOne(state,  {
-                id: action.payload,
-                changes : {
-                    isOpen : true
-                }
-            });
-            
+                      
             if(!state.openConversationsIds.includes(action.payload)){
                 state.openConversationsIds.push(action.payload);
             }
@@ -51,15 +24,6 @@ const ConversationSlice = createSlice({
 
         closeConversation : (state ,action)=>{
             const conversationId = action.payload;
-            if(conversationId == state.activeConversation){
-                state.activeConversation = null;
-            }
-            conversationsAdapter.updateOne(state, {
-                id: conversationId,
-                changes : {
-                    isOpen : false
-                }
-            });
             
             state.openConversationsIds = state.openConversationsIds.filter(id=>id!=conversationId)
         },
@@ -73,7 +37,6 @@ const ConversationSlice = createSlice({
 export default ConversationSlice.reducer;
 
 export const {
-    setActiveConversation,
     closeConversation , 
     openConversation ,
 } = ConversationSlice.actions;  

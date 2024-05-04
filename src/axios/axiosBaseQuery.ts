@@ -52,7 +52,6 @@ const axiosBaseQuery = <
   Meta
 > => {
   return async (args, api, extraOptions) => {
-       console.log({args:getRequestConfig(args),api,extraOptions})
 
     try {
       const requestConfig = getRequestConfig(args);

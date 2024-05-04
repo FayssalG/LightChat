@@ -3,7 +3,6 @@ import { createSlice } from "@reduxjs/toolkit";
 const UiSlice = createSlice({
     name : 'ui',
     initialState : {
-        globalLoading : false,
         activeSection : 'friends',
 
         notificationBadges : {

@@ -4,20 +4,26 @@ import { useRef } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import Spinner from '@/components/shared/Spinner/Spinner';
 import {useRegisterMutation } from '@/redux/features/auth/authApi';
-import { useLazyInitCsrfQuery } from '@/redux/features/baseApi';
 import { useSelector } from 'react-redux';
 
+
+type RegisterErrors = {
+    email : [string?],
+    password : [string?],
+    username : [string?],
+    display_name : [string?]
+} 
+
 export default function Register() {
-    const [initCsrf ] = useLazyInitCsrfQuery();
     const [register , {isLoading , error}] = useRegisterMutation()
-    const token = useSelector(state=>state.auth.token);
-    const errors = error?.data?.errors
+    const token : string = useSelector(state=>state.auth.token);
+    const errors : RegisterErrors = error?.data?.errors
     
-    const emailRef = useRef(null)
-    const usernameRef = useRef(null)
-    const displayNameRef = useRef(null)
-    const passwordRef = useRef(null)
-    const passwordConfirmationRef = useRef(null)
+    const emailRef = useRef<HTMLInputElement>(null)
+    const usernameRef = useRef<HTMLInputElement>(null)
+    const displayNameRef = useRef<HTMLInputElement>(null)
+    const passwordRef = useRef<HTMLInputElement>(null)
+    const passwordConfirmationRef = useRef<HTMLInputElement>(null)
 
     const handleRegister = (e : React.FormEvent ) =>{
         e.preventDefault();
@@ -27,9 +33,7 @@ export default function Register() {
         const  password = passwordRef.current?.value;
         const  password_confirmation = passwordConfirmationRef.current?.value;
 
-        // initCsrf(null).then(()=>{
-            register({email , display_name , username , password , password_confirmation})
-        // })
+        register({email , display_name , username , password , password_confirmation})
     }
 
     if(token)  return <Navigate replace to={'/'} /> 

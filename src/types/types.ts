@@ -14,28 +14,24 @@ interface Friend {
     display_name : string,
     username : string,
     image : string,
-    isFriend : boolean,
-    isBlocked : boolean,
     online_status: string | Date,
 }
 
 interface Conversation {
-    isOpen? : boolean,
-    friend_id: string,
     conversation_id :string,
-    messagesIds : [number?]
+    friend_id: string,
 }
 
 
 interface FriendMessage{
-    isSent? : boolean,
-    isReceived? : boolean,
-    created_at? : string,
-    conversation_id : string,
     id:string,
+    conversation_id : string,
+    created_at : string,
     sender_id : string,
     receiver_id : string,
     text : string,
+    isSeen : boolean,
+    isSent? : boolean,
 }
 
 
@@ -58,3 +54,23 @@ interface BlockedUser {
 }
 
 
+
+interface Group  {
+    id:string,
+    name:string
+    admin_id : string,
+    members : [Member],
+    group_conversation : GroupConverastion
+}
+
+interface Member{
+    id:string,
+    username:string,
+    display_name:string,
+    image : {url : string}
+}
+
+interface GroupConverastion{
+    id:string,
+    group_id : string,
+}

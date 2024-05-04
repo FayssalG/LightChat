@@ -10,9 +10,6 @@ import ConversationReducer from "./features/Conversation/ConversationSlice";
 import FriendRequestReducer from "./features/friendRequest/friendRequestSlice";
 import BlockReducer from './features/block/blockSlice';
 
-import rootSaga from './sagas';
-import { authApi } from './features/auth/authApi';
-import { friendApi } from './features/friend/friendApi';
 import { baseApi } from './features/baseApi';
 
 const conversationPersistConfig = {
@@ -21,11 +18,7 @@ const conversationPersistConfig = {
     whitelist : ['openConversationsIds'] 
 }
 
-// const friendPersistConfig = {
-//     key:'friend',
-//     storage,
-//     blacklist : ['status','error'] 
-// }
+
 
 const authPersistConfig = {
     key:'auth',

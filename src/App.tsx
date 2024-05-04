@@ -10,28 +10,22 @@ import ResetPassword from './components/pages/Auth/ResetPassword/ResetPassword';
 import SocketProvider from '@/components/context/SocketProvider';
 import { SkeletonTheme } from 'react-loading-skeleton';
 
-import VideoCallProvider from './components/context/VideoCallProvider';
-import FriendsSection from './components/pages/Application/Sections/Friends/FriendsSection';
-import ConversationsSection from './components/pages/Application/Sections/Conversations/ConversationsSection';
-import GroupsSection from './components/pages/Application/Sections/Groups/GroupsSection';
 import CallProvider from './components/context/CallProvider/CallProvider';
-import { useDispatch, useSelector} from 'react-redux';
+import { useSelector} from 'react-redux';
 
 
-import { useGetTokenQuery, useGetUserQuery, useLazyGetUserQuery, useRefreshTokenMutation } from './redux/features/auth/authApi';
-import { useGetFriendsQuery, useLazyGetFriendsQuery } from './redux/features/friend/friendApi';
-import { useGetBlockedUsersQuery, useLazyGetBlockedUsersQuery } from './redux/features/block/blockApi';
-import { useGetConversationsQuery, useGetMessagesQuery, useLazyGetConversationsQuery, useLazyGetMessagesQuery } from './redux/features/Conversation/conversationApi';
-import { useGetFriendRequestsQuery, useLazyGetFriendRequestsQuery } from './redux/features/friendRequest/friendRequestApi';
-import FriendsListing from './components/pages/Application/Sections/Friends/FriendsListing/FriendsListing';
-import PendingFriendsListing from './components/pages/Application/Sections/Friends/PendingFriendsListing/PendingFriendsListing';
-import BlockedListing from './components/pages/Application/Sections/Friends/BlockedListing/BlockedListing';
-import Dashboard from './components/pages/Application/Dashboard';
+import {useLazyGetUserQuery, useRefreshTokenMutation } from './redux/features/auth/authApi';
+import {useLazyGetFriendsQuery } from './redux/features/friend/friendApi';
+import {useLazyGetBlockedUsersQuery } from './redux/features/block/blockApi';
+import {useLazyGetConversationsQuery, useLazyGetMessagesQuery } from './redux/features/Conversation/conversationApi';
+import { useLazyGetFriendRequestsQuery } from './redux/features/friendRequest/friendRequestApi';
+import Dashboard from './components/pages/Dashboard/Dashboard';
 import { Slide, ToastContainer } from 'react-toastify';
 import { useLazyGetGroupsQuery } from './redux/features/group/groupApi';
-import { useGetGroupMessagesQuery , useLazyGetGroupMessagesQuery} from './redux/features/Conversation/groupConversationApi';
-import ActiveGroupConversation from './components/pages/Application/ActiveGroupConversation/ActiveGroupConversation';
-import ActiveConversation from './components/pages/Application/ActiveConversation/ActiveConversation';
+import {useLazyGetGroupMessagesQuery} from './redux/features/Conversation/groupConversationApi';
+import ActiveGroupConversation from './components/pages/Dashboard/ActiveGroupConversation/ActiveGroupConversation';
+import ActiveConversation from './components/pages/Dashboard/ActiveConversation/ActiveConversation';
+import NotFound from './components/pages/NotFound/NotFound';
 
 function App() {
   
@@ -58,6 +52,8 @@ function App() {
             <Route path='/login' element={<Login/>}></Route>          
             <Route path='/register' element={<Register/>}></Route>          
             <Route path='/password-reset/:token' element={<ResetPassword/>}></Route>
+            <Route path='/*' element={<NotFound/>}></Route>          
+
           </Routes>
         </BrowserRouter>
     
@@ -117,9 +113,7 @@ function ProtectedRoute(){
   return( 
     <SocketProvider>
       <CallProvider>
-        <VideoCallProvider>
           <Outlet/>      
-        </VideoCallProvider>
       </CallProvider>
     </SocketProvider>
   )

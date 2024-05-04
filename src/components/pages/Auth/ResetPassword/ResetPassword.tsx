@@ -12,16 +12,16 @@ export default function ResetPassword() {
     const errors = error?.data?.errors
     
     const {token } = useParams()
-    const [query , setQuery] = useSearchParams()
+    const [query] = useSearchParams()
 
     const passwordRef = useRef<HTMLInputElement>(null)
     const confirmRef = useRef<HTMLInputElement>(null)
 
     const handleReset = (e : React.FormEvent)=>{
         e.preventDefault();
-        const email : string | null = query.get('email');
-        const password : string = passwordRef.current.value;
-        const password_confirmation : string   = confirmRef.current.value        
+        const email = query.get('email');
+        const password = passwordRef?.current?.value;
+        const password_confirmation   = confirmRef?.current?.value        
     
         resetPassword({token,email,password,password_confirmation})
         .then(()=>{

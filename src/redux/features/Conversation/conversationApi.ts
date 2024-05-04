@@ -5,14 +5,14 @@ export const conversationApi = baseApi.injectEndpoints({
     endpoints: (builder)=>({
       getConversations : builder.query({
         query: ()=>({
-          url:'/conversations',
+          url:'friends/conversations',
         }),
         providesTags:['Conversations']
       }),
 
       getMessages : builder.query({
         query: ()=>({
-          url:'/conversations/messages',
+          url:'friends/conversations/messages',
         }),
         providesTags:['Messages']
 
@@ -20,7 +20,7 @@ export const conversationApi = baseApi.injectEndpoints({
 
       sendMessage : builder.mutation({
         query :({receiver_id , text})=>({
-          url : '/conversations/send-message',
+          url : 'friends/conversations/send-message',
           method:'POST',
           body: {receiver_id , text}
         }),
@@ -52,7 +52,7 @@ export const conversationApi = baseApi.injectEndpoints({
       
       sendMessageWithAttachment : builder.mutation({
         query :({receiver_id , text , attachment})=>({
-          url : '/conversations/send-message-attachment',
+          url : 'friends/conversations/send-message-attachment',
           method:'POST',
           headers:{
             'Content-Type':'multipart/form-data'
@@ -88,7 +88,7 @@ export const conversationApi = baseApi.injectEndpoints({
 
       markMessagesSeen : builder.mutation({
         query: (conversation_id)=>({
-          url:'/conversations/messages-seen',
+          url:'friends/conversations/messages-seen',
           method:'POST',
           body:{conversation_id}
         }),
@@ -109,7 +109,7 @@ export const conversationApi = baseApi.injectEndpoints({
       
       updateMessage : builder.mutation({
         query : ({message_id , text})=>({
-          url:'/conversations/update-message',
+          url:'friends/conversations/update-message',
           method: 'POST',
           body: {message_id , text}
         }),
@@ -135,7 +135,7 @@ export const conversationApi = baseApi.injectEndpoints({
 
       deleteMessage : builder.mutation({
         query : (message_id)=>({
-          url:'/conversations/delete-message',
+          url:'friends/conversations/delete-message',
           method:'POST',
           body : {message_id}
         }),
